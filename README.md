@@ -20,9 +20,7 @@ npm install react-native-reanimated react-native-gesture-handler react-native-sc
 
 npx pod-install ios
 
-npm install @react-navigation/stack
-
-npm install @react-navigation/bottom-tabs
+npm install @react-navigation/stack @react-navigation/bottom-tabs
 
 npm install @react-native-community/async-storage
 
