@@ -13,10 +13,10 @@ export default class LoginScreen extends React.Component {
       password: "",
       secureTextEntry: true,
       check_textInputChange: false,
-      token: "592e41d655eb953bc6f3f39fa0372b2d0143bc86",
       showError: false,
     }
   }
+  
   textInputChange(val) {
     if (val.length !== 0) {
       this.setState({
@@ -30,31 +30,14 @@ export default class LoginScreen extends React.Component {
       })
     }
   }
-  /*
-  curl  --header "Content-type: application/json"
-        --request POST
-        --data '{"username": "admin", "password": "password123"}'
-        http://localhost:8000/api/v1/token-auth/
 
-        curl --header "Authorization: Token 592e41d655eb953bc6f3f39fa0372b2d0143bc86"
-        --head   "http://localhost:8000/api/v1/credential-check/"
-  */
   async handleLogin() {
-    console.log("Login from loginScreen")
     const body_data = {
       username: this.state.username,
       password: this.state.password,
     };
-    /*
-    const body_data = {
-      username: "admin",
-      password: "password123",
-    };
-    */
-    console.log(JSON.stringify(body_data));
     try {
-      const token_auth_url = BASE_URL + 'token-auth/'
-      let response = await fetch(token_auth_url, {
+      let response = await fetch(BASE_URL + 'token-auth/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -64,37 +47,15 @@ export default class LoginScreen extends React.Component {
 
       let data = await response.json();
       if (response.ok) {
-        console.log(data["token"]);
         this.setState({showError: false})
-        this.props.route.params.login(this.state.token)
+        this.props.route.params.login(data['token'])
       } else {
-        console.log(data);
         this.setState({showError: true});
         //Alert.alert("Unable to login :(")
       }
-
     } catch (error) {
       console.log(error);
       Alert.alert("Unable to reach the server")
-      
-
-    }
-
-
-  }
-
-  async checkCredentials() {
-    try {
-      const credential_check_url = BASE_URL + 'credential-check/'
-      let response = await fetch(credential_check_url, {
-        method: 'HEAD',
-        headers: {
-          'Authorization': 'Token ' + this.state.token
-        },
-      });
-      console.log(response.ok)
-    } catch (error) {
-      console.log(error)
     }
   }
 
@@ -161,18 +122,11 @@ export default class LoginScreen extends React.Component {
               onPress={() => this.handleLogin()} title="Login"
             />
             <Button title="Sign Up" />
-            <Button
-              title="Check Credentials"
-              onPress={() => this.checkCredentials()}
-            />
           </View>
         </View>
       </TouchableWithoutFeedback>
-
     );
   }
-
-
 }
 
 styles = StyleSheet.create({
@@ -218,5 +172,4 @@ styles = StyleSheet.create({
     color: 'red',
     fontSize: 20,
   },
-
 });

@@ -8,15 +8,15 @@ import { createStackNavigator } from '@react-navigation/stack'
 import ActivityFeedScreen from './screens/tabs/ActivityFeedScreen'
 import ProfileScreen from './screens/tabs/ProfileScreen'
 import SuggestionScreen from './screens/tabs/SuggestionScreen'
-import WorkoutsScreen from './screens/tabs/WorkoutsScreen'
+import WorkoutsTab from './screens/tabs/WorkoutsTab'
 import LoginScreen from './screens/loginScreen'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BASE_URL } from './helpers'
-import { YellowBox } from 'react-native';
+import { LogBox } from 'react-native';
 
-YellowBox.ignoreWarnings([
+LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
-]);
+])
 
 const Tab = createBottomTabNavigator();
 const RootStack = createStackNavigator();
@@ -50,7 +50,7 @@ function TabScreen({ route, navigation }) {
         }}
       >
         <Tab.Screen name="Activity" component={ActivityFeedScreen} />
-        <Tab.Screen name="Workouts" component={WorkoutsScreen} />
+        <Tab.Screen name="Workouts" component={WorkoutsTab} />
         <Tab.Screen name="Today" component={SuggestionScreen} />
         <Tab.Screen
             name="Profile"
@@ -66,7 +66,6 @@ export default class App extends Component {
     super(props)
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
-    console.log("Constructor ran")
     this.state = {
       isLoading: true,
       isLoggedIn: false,
@@ -104,7 +103,7 @@ export default class App extends Component {
   }
   async checkCredentials() {
     try {
-      let response = await fetch('http://localhost:8000/api/v1/credential-check/', {
+      let response = await fetch(BASE_URL + 'credential-check/', {
         method: 'HEAD',
         headers: {
           'Authorization': 'Token ' + this.state.token
@@ -123,6 +122,8 @@ export default class App extends Component {
         this.setState({token: value})
         approved = await this.checkCredentials()
         this.setState({isLoggedIn: approved, isLoading: false})
+      } else {
+        this.setState({isLoggedIn: false, isLoading: false})
       }
     } catch (error) {
       console.log(error)

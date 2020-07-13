@@ -1,49 +1,24 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 
-export default class Workout extends React.Component {
-    constructor(props) {
-        super(props)
-        /*
-        props:
-        navigation
-        id - for navigation
-        title
-        description
-        category
-        owner
-        */
-    }
-    render() {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.titleText}>
-                    400 Repeats
-                </Text>
-                <Text style={styles.descriptionText}>
-                    4x400m with 4 min rest{"\n"}
-                    Spikes are not reccomended{"\n"}
-                    70% effort
-                </Text>
-                <View>
-                    <TouchableOpacity>
-                        <View style={styles.runWorkoutView}>
-                            <Text style={styles.runWorkoutText}>
-                                Run Workout
-                            </Text>
-
-                        </View>
-                        
-
-                    </TouchableOpacity>
-
-                </View>
-
+export default function Workout({ navigation, item }) {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.titleText}>{item.title}</Text>
+            <Text style={styles.descriptionText}>{item.description}</Text>
+            <View>
+                <TouchableOpacity>
+                    <View style={styles.runWorkoutView}>
+                        <Text style={styles.runWorkoutText}>
+                            Run Workout
+                        </Text>
+                    </View>
+                </TouchableOpacity>
             </View>
 
-        );
-    }
+        </View>
 
+    );
 }
 
 const styles = StyleSheet.create({
