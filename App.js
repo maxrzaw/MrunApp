@@ -14,6 +14,7 @@ import SignupScreen from './screens/SignupScreen'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BASE_URL } from './helpers'
 import { LogBox } from 'react-native';
+import { AuthContext } from './components/context'
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
