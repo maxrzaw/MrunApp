@@ -16,7 +16,7 @@ export default class LoginScreen extends React.Component {
       showError: false,
     }
   }
-  
+
   textInputChange(val) {
     if (val.length !== 0) {
       this.setState({
@@ -118,10 +118,12 @@ export default class LoginScreen extends React.Component {
               : null}
 
             <Button
-              style={styles.button}
               onPress={() => this.handleLogin()} title="Login"
             />
-            <Button title="Sign Up" />
+            <Button 
+              title="Sign Up" 
+              onPress={() => this.props.navigation.navigate('Signup')}
+            />
           </View>
         </View>
       </TouchableWithoutFeedback>

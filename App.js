@@ -5,11 +5,12 @@ import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { createBottomTabNavigator} from '@react-navigation/bottom-tabs'
 import { createStackNavigator } from '@react-navigation/stack'
-import ActivityFeedScreen from './screens/tabs/ActivityFeedScreen'
-import ProfileScreen from './screens/tabs/ProfileScreen'
-import SuggestionScreen from './screens/tabs/SuggestionScreen'
-import WorkoutsTab from './screens/tabs/WorkoutsTab'
-import LoginScreen from './screens/loginScreen'
+import ActivityTab from './tabs/ActivityTab'
+import ProfileTab from './tabs/ProfileTab'
+import TodayTab from './tabs/TodayTab'
+import WorkoutsTab from './tabs/WorkoutsTab'
+import LoginScreen from './screens/LoginScreen'
+import SignupScreen from './screens/SignupScreen'
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import { BASE_URL } from './helpers'
 import { LogBox } from 'react-native';
@@ -49,12 +50,12 @@ function TabScreen({ route, navigation }) {
           inactiveTintColor: 'gray',
         }}
       >
-        <Tab.Screen name="Activity" component={ActivityFeedScreen} />
+        <Tab.Screen name="Activity" component={ActivityTab} />
         <Tab.Screen name="Workouts" component={WorkoutsTab} />
-        <Tab.Screen name="Today" component={SuggestionScreen} />
+        <Tab.Screen name="Today" component={TodayTab} />
         <Tab.Screen
             name="Profile"
-            component={ProfileScreen}
+            component={ProfileTab}
             initialParams={{logout: route.params.logout}}
         />
       </Tab.Navigator>
@@ -153,14 +154,17 @@ export default class App extends Component {
     } else {
       return (
         <NavigationContainer>
-          <RootStack.Navigator>
+          <RootStack.Navigator initialRouteName="Login">
             <RootStack.Screen
               name="Login"
               component={LoginScreen}
               initialParams={{login: this.login}}
             />
+            <RootStack.Screen
+              name="Signup"
+              component={SignupScreen}
+            />
           </RootStack.Navigator>
-
         </NavigationContainer>
       );
     }
