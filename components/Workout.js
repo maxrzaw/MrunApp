@@ -7,7 +7,9 @@ export default function Workout({ navigation, item }) {
             <Text style={styles.titleText}>{item.title}</Text>
             <Text style={styles.descriptionText}>{item.description}</Text>
             <View>
-                <TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => navigation.navigate("WorkoutDetail", {item: item})}
+                >
                     <View style={styles.runWorkoutView}>
                         <Text style={styles.runWorkoutText}>
                             Run Workout
