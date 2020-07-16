@@ -2,31 +2,74 @@ import * as React from 'react';
 import { useState, useEffect } from 'react'
 import { Text, View, FlatList } from 'react-native';
 import Workout from '../components/Workout'
-
-import { TextInput, Alert, Button } from 'react-native'
-workouts = [
-  { "id": 1, "title": "Test workout", "description": "This is a test workout", "category": "T", "owner": 2 },
-  { "id": 2, "title": "4x400m", "description": "4 min rest between reps.\nI don't recommend wearing spikes for these.", "category": "T", "owner": 1 },
-  { "id": 3, "title": "Lots of 100s", "description": "Run 100m and rest for 20 sec then run 100m again.\nDo this for 20-30 reps.", "category": "T", "owner": 1 },
-  { "id": 4, "title": "Lots of 100s", "description": "Run 100m and rest for 20 sec then run 100m again.\nDo this for 20-30 reps.", "category": "T", "owner": 1 },
-  { "id": 5, "title": "600s", "description": "4x600m 4 min rest.", "category": "T", "owner": 8 },
-  { "id": 9, "title": "test workout.", "description": "This is made from the activity summary.", "category": "T", "owner": 1 },
-  { "id": 10, "title": "400s", "description": "run lots of 400s.", "category": "T", "owner": 1 },
-  { "id": 11, "title": "400s", "description": "run lots of 400s.", "category": "T", "owner": 1 },
-];
+import { UserContext } from '../components/context'
+import { BASE_URL } from '../helpers'
 
 
 
 
 export default function WorkoutScreen({ navigation }) {
+
+  const { token } = React.useContext(UserContext);
+
   const [state, setState] = useState({
-    data: workouts,
-    page: 1,
+    data: null,
+    next: 1,
+    refreshing: false,
   });
 
+  const getData = async () => {
+    if (state.next != null) {
+      try {
+        let response = await fetch(BASE_URL + 'workouts/?page=' + state.next, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Token ' + token
+          },
+        });
+        let result = await response.json();
+        setState({
+          ...state,
+          data:
+            state.next == 1
+              ? result["workouts"]
+              : [...state.data, ...result["workouts"]],
+          next: result["next"],
+          refreshing: false,
+        });
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+  useEffect(() => {
+    try {
+      getData();
+    } catch (error) {
+      console.log(error);
+    }
+  }, []);
+
   const renderItem = ({ item }) => (
-    <Workout item={item} navigation={navigation}/> 
+    <Workout item={item} navigation={navigation} />
   );
+
+  const onRefresh = () => {
+    setState({
+      ...state,
+      data: null,
+      next: 1,
+      refreshing: true,
+    });
+    
+  }
+  // This handles refreshing once state is updated
+  useEffect(() => {
+    if (state.refreshing) {
+      getData();
+    }
+  }, [state.refreshing])
 
 
   return (
@@ -34,7 +77,11 @@ export default function WorkoutScreen({ navigation }) {
       <FlatList
         data={state.data}
         renderItem={renderItem}
+        onRefresh={() => onRefresh()}
+        refreshing={state.refreshing}
         keyExtractor={item => item.id.toString()}
+        onEndReached={() => getData()}
+        onEndReachedThreshold={0.5}
       />
     </View>
   );

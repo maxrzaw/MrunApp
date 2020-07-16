@@ -71,6 +71,7 @@ export default function LoginScreen({ navigation }) {
         });
 
         token = response_data['token'];
+        console.log("Token is: " + token);
 
         // send login data to context
         console.log("SignIn from LoginScreen");
@@ -150,132 +151,6 @@ export default function LoginScreen({ navigation }) {
   );
 }
 
-// export default class LoginScreen extends React.Component {
-//   constructor(props) {
-//     super(props)
-//     this.handleLogin = this.handleLogin.bind(this)
-//     this.state = {
-//       username: "",
-//       password: "",
-//       secureTextEntry: true,
-//       check_textInputChange: false,
-//       showError: false,
-//     }
-//   }
-
-//   textInputChange(val) {
-//     if (val.length !== 0) {
-//       this.setState({
-//         username: val,
-//         check_textInputChange: true,
-//       })
-//     } else {
-//       this.setState({
-//         username: val,
-//         check_textInputChange: false,
-//       })
-//     }
-//   }
-
-//   async handleLogin() {
-//     const body_data = {
-//       username: this.state.username,
-//       password: this.state.password,
-//     };
-//     try {
-//       let response = await fetch(BASE_URL + 'token-auth/', {
-//         method: 'POST',
-//         headers: {
-//           'Content-Type': 'application/json'
-//         },
-//         body: JSON.stringify(body_data),
-//       });
-
-//       let data = await response.json();
-//       if (response.ok) {
-//         this.setState({ showError: false })
-//         this.props.route.params.login(data['token'])
-//       } else {
-//         this.setState({ showError: true });
-//         //Alert.alert("Unable to login :(")
-//       }
-//     } catch (error) {
-//       console.log(error);
-//       Alert.alert("Unable to reach the server")
-//     }
-//   }
-
-//   handlePasswordChange(val) {
-//     this.setState({ password: val })
-//   }
-
-//   updateSecureTextEntry() {
-//     this.setState({ secureTextEntry: !this.state.secureTextEntry })
-//   }
-
-//   render() {
-//     return (
-//       <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessable={false}>
-//         <View style={styles.container}>
-//           <View style={styles.top}>
-//             <Text style={{ fontSize: 30 }}>This is a login screen!</Text>
-//           </View>
-//           <View style={styles.bottom}>
-//             <Text style={styles.bottomText}>Username</Text>
-//             <View style={styles.action}>
-//               <FontAwesome name="user-o" size={20} color="black" />
-//               <TextInput
-//                 style={styles.textInput}
-//                 placeholder="Your Username"
-//                 autocapitalize="none"
-//                 onChangeText={(val) => this.textInputChange(val)}
-//               />
-//               {this.state.check_textInputChange ?
-//                 <Feather
-//                   name="check-circle"
-//                   color="green"
-//                   size={20}
-//                 />
-//                 : null}
-//             </View>
-//             <Text style={[styles.bottomText, { marginTop: 30 }]}>Password</Text>
-//             <View style={[styles.action, { marginBottom: 25 }]}>
-//               <Feather
-//                 name="lock"
-//                 color="black"
-//                 size={20}
-//               />
-//               <TextInput
-//                 style={styles.textInput}
-//                 placeholder="password"
-//                 autocapitalize="none"
-//                 secureTextEntry={this.state.secureTextEntry}
-//                 onChangeText={(val) => this.handlePasswordChange(val)}
-//                 onSubmitEditing={() => this.handleLogin()} title="Login"
-//               />
-//               <TouchableOpacity onPress={() => this.updateSecureTextEntry()}>
-//                 <Feather name={this.state.secureTextEntry ? "eye-off" : "eye"} size={20} color="black" />
-//               </TouchableOpacity>
-//             </View>
-//             {this.state.showError ?
-//               <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-//                 <Text style={styles.errorText}>Incorrect username or password</Text>
-//               </View>
-//               : null}
-
-//             <Button
-//               onPress={() => this.handleLogin()} title="Login"
-//             />
-//             <Button
-//               title="Sign Up"
-//               onPress={() => this.props.navigation.navigate('Signup')}
-//             />
-//           </View>
-//         </View>
-//       </TouchableWithoutFeedback>
-//     );
-//   }
-// }
 
 styles = StyleSheet.create({
   container: {

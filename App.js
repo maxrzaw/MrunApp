@@ -8,7 +8,7 @@ import LoginScreen from './screens/LoginScreen'
 import SignupScreen from './screens/SignupScreen'
 import { BASE_URL } from './helpers'
 import { LogBox } from 'react-native';
-import { AuthContext } from './components/context'
+import { AuthContext, UserContext } from './components/context'
 import TabScreen from './tabs/TabScreen'
 
 LogBox.ignoreLogs([
@@ -19,6 +19,12 @@ LogBox.ignoreLogs([
 const RootStack = createStackNavigator();
 
 const App = () => {
+
+  const [state, setState] = useState({
+    user: null,
+    token: null,
+  });
+
   const initialLoginState = {
     isLoading: true,
     isLoggedIn: false,
@@ -69,6 +75,21 @@ const App = () => {
     }
   }
 
+  const getMe = async (token) => {
+    try {
+      let response = await fetch(BASE_URL + 'me/', {
+        method: 'GET',
+        headers: {
+          'Authorization': 'Token ' + token
+        },
+      });
+      let user = await response.json();
+      return user;
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
@@ -80,6 +101,16 @@ const App = () => {
       } catch (error) {
         console.log(error);
       }
+      try {
+        let user = await getMe(token);
+        setState({
+          ...state,
+          user: user,
+          token: token,
+        });
+      } catch (error) {
+        console.log(error);
+      }
       dispatch({ type: 'LOGIN', token: token });
     },
     signOut: async () => {
@@ -88,8 +119,13 @@ const App = () => {
       } catch (error) {
         console.log(error);
       }
+      setState({
+        ...state,
+        user: null,
+        token: null,
+      });
       dispatch({ type: 'LOGOUT' });
-    },
+    }
   }), []);
 
   useEffect(() => {
@@ -103,6 +139,15 @@ const App = () => {
         if (value !== null) {
           // validate credentials
           approved = await checkCredentials(value);
+          // get user id
+          if (approved) {
+            user = await getMe(value);
+            setState({
+              ...state,
+              user: user,
+              token: value,
+            });
+          }
           dispatch({ type: 'RETRIEVE_TOKEN', token: value, isLoggedIn: approved });
         } else {
           dispatch({ type: 'RETRIEVE_TOKEN', token: null, isLoggedIn: false });
@@ -122,15 +167,17 @@ const App = () => {
   } else if (loginState.isLoggedIn) {
     return (
       <AuthContext.Provider value={authContext}>
-        <NavigationContainer>
-          <RootStack.Navigator mode="modal" headerMode="none">
-            <RootStack.Screen
-              name="Main"
-              component={TabScreen}
-              options={{ headerShown: false }}
-            />
-          </RootStack.Navigator>
-        </NavigationContainer>
+        <UserContext.Provider value={state}>
+          <NavigationContainer>
+            <RootStack.Navigator mode="modal" headerMode="none">
+              <RootStack.Screen
+                name="Main"
+                component={TabScreen}
+                options={{ headerShown: false }}
+              />
+            </RootStack.Navigator>
+          </NavigationContainer>
+        </UserContext.Provider>
       </AuthContext.Provider>
     );
   }
