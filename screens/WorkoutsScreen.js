@@ -1,9 +1,10 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Text, View, FlatList } from 'react-native';
+import { Text, View, FlatList, StyleSheet } from 'react-native';
 import Workout from '../components/Workout'
 import { UserContext } from '../components/context'
 import { BASE_URL } from '../helpers'
+import { ButtonGroup } from 'react-native-elements';
 
 
 
@@ -12,16 +13,30 @@ export default function WorkoutScreen({ navigation }) {
 
   const { token } = React.useContext(UserContext);
 
+  const buttons = ['All', 'Track', 'Speed', 'Hill', 'Long', 'Core'];
+  const groups = {
+    1: 'T',
+    2: 'S',
+    3: 'H',
+    4: 'L',
+    5: 'C',
+  }
+
   const [state, setState] = useState({
     data: null,
     next: 1,
     refreshing: false,
+    selectedIndex: 1,
   });
 
   const getData = async () => {
     if (state.next != null) {
+      let filter = '';
+      if (state.selectedIndex > 0) {
+        filter = `&type=${groups[state.selectedIndex]}`
+      }
       try {
-        let response = await fetch(BASE_URL + 'workouts/?page=' + state.next, {
+        let response = await fetch(BASE_URL + `workouts/?page=${state.next}` + filter, {
           method: 'GET',
           headers: {
             'Authorization': 'Token ' + token
@@ -62,7 +77,7 @@ export default function WorkoutScreen({ navigation }) {
       next: 1,
       refreshing: true,
     });
-    
+
   }
   // This handles refreshing once state is updated
   useEffect(() => {
@@ -72,8 +87,30 @@ export default function WorkoutScreen({ navigation }) {
   }, [state.refreshing])
 
 
+  // This handles refreshing once index is changed
+  useEffect(() => {
+    console.log(groups[state.selectedIndex]);
+    getData();
+  }, [state.selectedIndex])
+
+  const updateIndex = (index) => {
+    setState({
+      ...state,
+      selectedIndex: index,
+      next: 1,
+    });
+    // console.log(groups[state.selectedIndex]);
+  }
+
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch' }}>
+      <ButtonGroup
+        selectedIndex={state.selectedIndex}
+        buttons={buttons}
+        containerStyle={styles.BtnGroup}
+        onPress={(val) => updateIndex(val)}
+      />
       <FlatList
         data={state.data}
         renderItem={renderItem}
@@ -86,3 +123,12 @@ export default function WorkoutScreen({ navigation }) {
     </View>
   );
 }
+
+styles = StyleSheet.create({
+  BtnGroup: {
+    height: 35,
+    marginHorizontal: 0,
+    marginTop: 0,
+    marginBottom: 0,
+  },
+});

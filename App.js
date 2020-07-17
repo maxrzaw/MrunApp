@@ -1,6 +1,6 @@
 import 'react-native-gesture-handler';
 import React, { useState, useEffect, Component } from 'react';
-import { StyleSheet, View, ActivityIndicator } from 'react-native';
+import { StyleSheet, View, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { createStackNavigator } from '@react-navigation/stack'
@@ -10,6 +10,7 @@ import { BASE_URL } from './helpers'
 import { LogBox } from 'react-native';
 import { AuthContext, UserContext } from './components/context'
 import TabScreen from './tabs/TabScreen'
+import NewWorkoutScreen from './screens/NewWorkoutScreen'
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -169,11 +170,18 @@ const App = () => {
       <AuthContext.Provider value={authContext}>
         <UserContext.Provider value={state}>
           <NavigationContainer>
-            <RootStack.Navigator mode="modal" headerMode="none">
+            <RootStack.Navigator mode="modal">
               <RootStack.Screen
                 name="Main"
                 component={TabScreen}
                 options={{ headerShown: false }}
+              />
+              <RootStack.Screen
+                name="NewWorkout"
+                component={NewWorkoutScreen}
+                options={{ 
+                  title: 'Add Workout',
+                }}
               />
             </RootStack.Navigator>
           </NavigationContainer>
