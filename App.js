@@ -179,9 +179,7 @@ const App = () => {
               <RootStack.Screen
                 name="NewWorkout"
                 component={NewWorkoutScreen}
-                options={{ 
-                  title: 'Add Workout',
-                }}
+                options={{ title: 'Add Workout' }}
               />
             </RootStack.Navigator>
           </NavigationContainer>

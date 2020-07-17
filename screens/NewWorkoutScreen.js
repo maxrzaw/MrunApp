@@ -36,6 +36,9 @@ export default function NewWorkoutScreen({ navigation }) {
       headerRight: () => (
         <Button onPress={() => save()} title="Save" />
       ),
+      headerLeft: () => (
+        <Button onPress={() => navigation.goBack()} title="Close" />
+      )
     });
   }, [navigation]);
   return (
