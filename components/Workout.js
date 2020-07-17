@@ -2,20 +2,26 @@ import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { mapCategory } from '../helpers'
 import Feather from 'react-native-vector-icons/Feather';
+import { UserContext } from '../components/context'
 
-export default function Workout({ navigation, item, deleteItem }) {
+export default function Workout({ navigation, item, deleteItem, user }) {
 
+  const canDelete = (item.owner == user.id);
 
   return (
     <View style={styles.container}>
-      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text style={styles.titleText}>{item.title}</Text>
-        <Feather 
-          name="trash-2" 
-          size={20} color="darkred" 
-          style={{marginRight: 5}}
-          onPress={() => deleteItem(item.id)}
-        />
+        {canDelete ?
+          <Feather
+            name="trash-2"
+            size={20} color="darkred"
+            style={{ marginRight: 5 }}
+            onPress={() => deleteItem(item.id)}
+          />
+          : null
+        }
+
       </View>
       <Text style={styles.descriptionText}>{item.description}</Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>

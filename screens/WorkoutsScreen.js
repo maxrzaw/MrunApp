@@ -11,7 +11,7 @@ import { ButtonGroup } from 'react-native-elements';
 
 export default function WorkoutScreen({ navigation }) {
 
-  const { token } = React.useContext(UserContext);
+  const { token, user } = React.useContext(UserContext);
 
   const buttons = ['All', 'Track', 'Speed', 'Hill', 'Long', 'Core'];
   const groups = {
@@ -29,8 +29,9 @@ export default function WorkoutScreen({ navigation }) {
     selectedIndex: 1,
   });
 
-  const handleDelete = async(workout_id) => {
-    Alert.alert(`Deleting Workout ${workout_id}!`)
+  const handleDelete = async (workout_id) => {
+    Alert.alert(`Deleting Workout ${workout_id}!`);
+
   };
 
   const getData = async () => {
@@ -71,7 +72,12 @@ export default function WorkoutScreen({ navigation }) {
   }, []);
 
   const renderItem = ({ item }) => (
-    <Workout item={item} navigation={navigation} deleteItem={handleDelete}/>
+    <Workout 
+      item={item}
+      navigation={navigation}
+      deleteItem={handleDelete}
+      user={user}
+    />
   );
 
   const onRefresh = () => {
