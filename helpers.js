@@ -16,4 +16,11 @@ export const globalStyles = StyleSheet.create( {
     }
 })
 
+export const mapCategory = {
+    'T': 'Track',
+    'S': 'Speed',
+    'H': 'Hill',
+    'L': 'Long',
+    'C': 'Core',
+  }
 

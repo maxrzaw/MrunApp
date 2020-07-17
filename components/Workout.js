@@ -1,18 +1,22 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { mapCategory } from '../helpers'
+import Feather from 'react-native-vector-icons/Feather';
 
-export default function Workout({ navigation, item }) {
+export default function Workout({ navigation, item, deleteItem }) {
 
-  const mapCategory = {
-    'T': 'TRACK',
-    'S': 'SPRINT',
-    'H': 'HILL',
-    'L': 'LONG',
-    'C': 'CORE',
-  }
+
   return (
     <View style={styles.container}>
-      <Text style={styles.titleText}>{item.title}</Text>
+      <View style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between'}}>
+        <Text style={styles.titleText}>{item.title}</Text>
+        <Feather 
+          name="trash-2" 
+          size={20} color="darkred" 
+          style={{marginRight: 5}}
+          onPress={() => deleteItem(item.id)}
+        />
+      </View>
       <Text style={styles.descriptionText}>{item.description}</Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <TouchableOpacity
@@ -50,8 +54,9 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'left',
-    marginTop: 5,
+    //marginTop: 5,
     marginHorizontal: 5,
+    paddingVertical: 5,
   },
   descriptionText: {
     textAlign: 'left',

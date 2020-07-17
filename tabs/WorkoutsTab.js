@@ -4,7 +4,6 @@ import { createStackNavigator } from '@react-navigation/stack'
 import WorkoutsScreen from '../screens/WorkoutsScreen'
 import ProfileScreen from '../screens/ProfileScreen'
 import WorkoutDetailScreen from '../screens/WorkoutDetailScreen'
-import NewWorkoutScreen from '../screens/NewWorkoutScreen'
 import Feather from 'react-native-vector-icons/Feather';
 
 const WorkoutStack = createStackNavigator();
@@ -37,11 +36,6 @@ export default function WorkoutTab({ navigation, item }) {
         name="WorkoutDetail"
         component={WorkoutDetailScreen}
         options={{ title: 'Workout' }}
-      />
-      <WorkoutStack.Screen
-        name="NewWorkout"
-        component={NewWorkoutScreen}
-        options={{ title: 'Add Workout' }}
       />
     </WorkoutStack.Navigator>
 

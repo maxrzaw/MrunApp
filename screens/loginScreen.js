@@ -102,8 +102,12 @@ export default function LoginScreen({ navigation }) {
             <TextInput
               style={styles.textInput}
               placeholder="Your Username"
-              autocapitalize="none"
+              autoCapitalize="none"
               onChangeText={(val) => textInputChange(val)}
+              returnKeyType="next"
+              onSubmitEditing={() => { this.passwordTextInput.focus(); }}
+              blurOnSubmit={false}
+              keyboardType={Platform.OS === 'ios' ? 'ascii-capable' : 'visible-password'}
             />
             {data.check_textInputChange ?
               <Feather
@@ -121,12 +125,14 @@ export default function LoginScreen({ navigation }) {
               size={20}
             />
             <TextInput
+              ref={(input) => { this.passwordTextInput = input; }}
               style={styles.textInput}
               placeholder="password"
-              autocapitalize="none"
+              autoCapitalize="none"
               secureTextEntry={data.secureTextEntry}
               onChangeText={(val) => handlePasswordChange(val)}
-              onSubmitEditing={() => handleLogin()} title="Login"
+              onSubmitEditing={() => handleLogin()} 
+              returnKeyType='go'
             />
             <TouchableOpacity onPress={() => updateSecureTextEntry()}>
               <Feather name={data.secureTextEntry ? "eye-off" : "eye"} size={20} color="black" />

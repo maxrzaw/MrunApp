@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react'
-import { Text, View, FlatList, StyleSheet } from 'react-native';
+import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
 import Workout from '../components/Workout'
 import { UserContext } from '../components/context'
 import { BASE_URL } from '../helpers'
@@ -28,6 +28,10 @@ export default function WorkoutScreen({ navigation }) {
     refreshing: false,
     selectedIndex: 1,
   });
+
+  const handleDelete = async(workout_id) => {
+    Alert.alert(`Deleting Workout ${workout_id}!`)
+  };
 
   const getData = async () => {
     if (state.next != null) {
@@ -67,7 +71,7 @@ export default function WorkoutScreen({ navigation }) {
   }, []);
 
   const renderItem = ({ item }) => (
-    <Workout item={item} navigation={navigation} />
+    <Workout item={item} navigation={navigation} deleteItem={handleDelete}/>
   );
 
   const onRefresh = () => {
