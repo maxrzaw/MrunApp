@@ -9,7 +9,7 @@ export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
-export const globalStyles = StyleSheet.create( {
+export const globalStyles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#fff',
@@ -22,5 +22,6 @@ export const mapCategory = {
     'H': 'Hill',
     'L': 'Long',
     'C': 'Core',
-  }
+}
+
 
