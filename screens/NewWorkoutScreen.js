@@ -1,10 +1,19 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { Text, View, Button, Alert, TextInput, TouchableWithoutFeedback, Keyboard, StyleSheet } from 'react-native';
+import { 
+  Text, 
+  View, 
+  Button, 
+  Alert, 
+  TextInput, 
+  TouchableWithoutFeedback, 
+  Keyboard, 
+  StyleSheet,
+  Modal
+} from 'react-native';
 import { BASE_URL, mapCategory } from '../helpers';
 import { UserContext } from '../components/context';
 import { Picker } from '@react-native-community/picker';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
 
@@ -19,6 +28,7 @@ export default function NewWorkoutScreen({ navigation }) {
     titleValid: false,
     descValid: false,
   });
+
 
   const dismiss = () => {
     Keyboard.dismiss();
@@ -191,4 +201,4 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
     justifyContent: 'center',
   }
-})
+});

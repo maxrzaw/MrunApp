@@ -31,7 +31,26 @@ export default function WorkoutScreen({ navigation }) {
 
   const handleDelete = async (workout_id) => {
     Alert.alert(`Deleting Workout ${workout_id}!`);
+    try {
+      let response = await fetch(`${BASE_URL}workouts/${workout_id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + token
+        },
+      });
 
+      // Wait for the response data
+      if (response.ok) {
+        setState({
+          ...state,
+          data: state.data.filter(item => item.id != workout_id),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Unable to reach the server")
+    }
   };
 
   const getData = async () => {
@@ -72,7 +91,7 @@ export default function WorkoutScreen({ navigation }) {
   }, []);
 
   const renderItem = ({ item }) => (
-    <Workout 
+    <Workout
       item={item}
       navigation={navigation}
       deleteItem={handleDelete}
