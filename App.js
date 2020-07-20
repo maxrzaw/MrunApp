@@ -120,12 +120,12 @@ const App = () => {
       } catch (error) {
         console.log(error);
       }
+      dispatch({ type: 'LOGOUT' });
       setState({
         ...state,
         user: null,
         token: null,
       });
-      dispatch({ type: 'LOGOUT' });
     }
   }), []);
 

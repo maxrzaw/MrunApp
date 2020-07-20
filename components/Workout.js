@@ -4,7 +4,9 @@ import { mapCategory } from '../helpers'
 import Feather from 'react-native-vector-icons/Feather';
 import { UserContext } from '../components/context'
 
-export default function Workout({ navigation, item, deleteItem, user }) {
+export default function Workout({ navigation, item, deleteItem }) {
+
+  const { user } = React.useContext(UserContext);
 
   const canDelete = (item.owner == user.id);
 
@@ -90,5 +92,4 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
   },
-
 });

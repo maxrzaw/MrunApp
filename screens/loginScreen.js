@@ -102,9 +102,6 @@ export default function LoginScreen({ navigation }) {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessable={false}>
       <View style={styles.container}>
-        <View style={styles.top}>
-          <Text style={{ fontSize: 30 }}>This is a login screen!</Text>
-        </View>
         <View style={styles.bottom}>
           <Text style={styles.bottomText}>Username</Text>
           <View style={styles.action}>
