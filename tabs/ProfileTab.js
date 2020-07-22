@@ -13,7 +13,6 @@ const ProfileStack = createStackNavigator();
 export default function ProfileTab({ navigation }) {
 
   const { user } = React.useContext(UserContext);
-  console.log("User in ProfileTab is: \n" + JSON.stringify(user));
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen
@@ -30,6 +29,11 @@ export default function ProfileTab({ navigation }) {
         name="Activities"
         component={ActivityFeedScreen}
         initialParams={{ user: user }}
+      />
+      <ProfileStack.Screen
+        name="ActivityFromWorkout"
+        component={ActivityFromWorkout}
+        options={{ title: "New Activity" }}
       />
     </ProfileStack.Navigator>
   );

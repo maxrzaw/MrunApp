@@ -76,7 +76,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
     } else {
       day = state.time.toDateString();
     }
-    time = state.time.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    time = state.time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
     return `${day} at ${time}`;
   }
 
@@ -96,12 +96,14 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
         },
         body: JSON.stringify(body_data),
       });
+      console.log(body_data);
       navigation.goBack();
     } catch (error) {
       console.log(error);
       Alert.alert("Unable to save. Check your network connection.")
     }
     console.log("Saved returned");
+    
   };
 
 

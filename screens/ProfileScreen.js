@@ -5,10 +5,13 @@ import {
   View,
   Button,
   StyleSheet,
-  FlatList
+  FlatList,
+  TouchableOpacity
 } from 'react-native';
-import { AuthContext, UserContext } from '../components/context'
+import { AuthContext, UserContext } from '../components/context';
 import { BASE_URL } from '../helpers';
+import Feather from 'react-native-vector-icons/Feather';
+import Activity from '../components/Activity';
 
 
 export default function ProfileScreen({ navigation, route }) {
@@ -19,24 +22,102 @@ export default function ProfileScreen({ navigation, route }) {
 
   const [userGroup, setUserGroup] = useState(null);
   const [userInGroup, setUserInGroup] = useState(false);
+  const [state, setState] = useState({
+    data: null,
+    next: 1,
+    refreshing: false,
+  });
+
+
+  const getData = async () => {
+    if (state.next != null) {
+      try {
+        url = `${BASE_URL}users/${user.id}/activities/?page=${state.next}`
+        let response = await fetch(url, {
+          method: 'GET',
+          headers: {
+            'Authorization': 'Token ' + token
+          },
+        });
+        let result = await response.json();
+        setState({
+          ...state,
+          data:
+            state.next == 1
+              ? result["activities"]
+              : [...state.data, ...result["activities"]],
+          next: result["next"],
+          refreshing: false,
+        });
+      } catch (error) {
+        console.log(error)
+      }
+    }
+  }
+
+
+  const renderItem = ({ item }) => (
+    <Activity
+      item={item}
+      navigation={navigation}
+    />
+  );
+
+  const onRefresh = () => {
+    setState({
+      ...state,
+      data: null,
+      next: 1,
+      refreshing: true,
+    });
+
+  }
+
+  // This handles refreshing once state is updated
+  useEffect(() => {
+    if (state.refreshing) {
+      getData();
+    }
+  }, [state.refreshing])
 
   const FlatListHeader = () => {
     return (
-      <View style={styles.headerContainer}>
-        <View style={styles.headerRow}>
-          <Text style={styles.fullNameText}>{`${selectedUser.first_name} ${selectedUser.last_name}`}</Text>
-          {userInGroup ?
-            <Text style={styles.groupText}>{userGroup.name}</Text>
-            : null
-          }
+      <>
+        <View style={styles.headerContainer}>
+          <View style={styles.headerRow}>
+            <Text style={styles.fullNameText}>{`${selectedUser.first_name} ${selectedUser.last_name}`}</Text>
+            {userInGroup ?
+              <Text style={styles.groupText}>{userGroup.name}</Text>
+              : null
+            }
+          </View>
+          <Text style={styles.bioText}>{selectedUser.bio}</Text>
         </View>
-        <Text style={styles.bioText}>{selectedUser.bio}</Text>
-      </View>
+        <View style={styles.headerContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('Workouts', { user: selectedUser })}
+            style={styles.workoutsRow}
+          >
+            <Text style={styles.workoutsText}>All Workouts</Text>
+            <Feather
+              name="chevron-right"
+              size={25} color="grey"
+              style={styles.workoutsArrow}
+            />
+          </TouchableOpacity>
+        </View>
+      </>
     );
   }
   useEffect(() => {
+    // Get data for flatlist
+    try {
+      getData();
+    } catch (error) {
+      console.log(error);
+    }
+    // Fetch data for flatlist Header
     async function fetchData() {
-      console.log("Fetch ran!");
       try {
         response = await fetch(`${BASE_URL}membership/?user=${selectedUser.id}`, {
           method: 'GET',
@@ -52,13 +133,10 @@ export default function ProfileScreen({ navigation, route }) {
         } else {
           setUserInGroup(false);
         }
-
-        console.log(response_data);
       } catch (error) {
         console.log(error);
       }
     }
-    console.log("WTF!");
     fetchData();
   }, [])
 
@@ -70,16 +148,25 @@ export default function ProfileScreen({ navigation, route }) {
           <Button
             onPress={() => signOut()} title="Log Out"
           />
-        )
+        ),
+        title: selectedUser.first_name,
       });
     }
   }, [navigation])
   return (
-    <View style={styles.container}>
-      <FlatListHeader />
-      <View style={{width: '98%', backgroundColor: 'red'}}>
-        <Text>Hi</Text>
-      </View>
+    <View style={[styles.container, { alignItems: 'stretch' }]}>
+      <FlatList
+        style={styles.flatlist}
+        ListHeaderComponent={FlatListHeader}
+        data={state.data}
+        renderItem={renderItem}
+        onRefresh={() => onRefresh()}
+        refreshing={state.refreshing}
+        keyExtractor={item => item.id.toString()}
+        onEndReached={() => getData()}
+        onEndReachedThreshold={0.5}
+      />
+
     </View>
   );
 }
@@ -93,11 +180,12 @@ const styles = StyleSheet.create({
   headerContainer: {
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    width: '98%',
+    width: '100%',
     alignSelf: "center",
     backgroundColor: 'white',
     padding: 5,
-    marginBottom: 10,
+    marginBottom: 3,
+    paddingHorizontal: 10,
   },
   fullNameText: {
     fontSize: 35,
@@ -117,5 +205,20 @@ const styles = StyleSheet.create({
     marginBottom: 5,
     borderBottomColor: 'grey',
     borderBottomWidth: 1,
+  },
+  workoutsRow: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  workoutsText: {
+    fontSize: 20,
+    paddingVertical: 10,
+  },
+  workoutsArrow: {
+  },
+  flatlist: {
+    width: '100%',
   },
 });

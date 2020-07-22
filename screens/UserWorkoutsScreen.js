@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useLayoutEffect } from 'react'
 import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
 import Workout from '../components/Workout'
 import { UserContext } from '../components/context'
@@ -9,9 +9,10 @@ import { ButtonGroup } from 'react-native-elements';
 
 
 
-export default function UserWorkoutScreen({ navigation, user_id }) {
+export default function UserWorkoutScreen({ navigation, route }) {
 
-  const { token, user } = React.useContext(UserContext);
+  const { token, user: loggedUser } = React.useContext(UserContext);
+  const { user } = route.params;
 
   const buttons = ['All', 'Track', 'Speed', 'Hill', 'Long', 'Core'];
   const groups = {
@@ -21,6 +22,11 @@ export default function UserWorkoutScreen({ navigation, user_id }) {
     4: 'L',
     5: 'C',
   }
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      title: `${user.first_name}'s Workouts`,
+    })
+  })
 
   const [state, setState] = useState({
     data: null,
@@ -30,7 +36,6 @@ export default function UserWorkoutScreen({ navigation, user_id }) {
   });
 
   const handleDelete = async (workout_id) => {
-    Alert.alert(`Deleting Workout ${workout_id}!`);
     try {
       let response = await fetch(`${BASE_URL}workouts/${workout_id}/`, {
         method: 'DELETE',
@@ -60,7 +65,8 @@ export default function UserWorkoutScreen({ navigation, user_id }) {
         filter = `&type=${groups[state.selectedIndex]}`
       }
       try {
-        let response = await fetch(BASE_URL + user_id `/workouts/?page=${state.next}` + filter, {
+        url = `${BASE_URL}users/${user.id}/workouts/?page=${state.next}${filter}`
+        let response = await fetch(url, {
           method: 'GET',
           headers: {
             'Authorization': 'Token ' + token
@@ -95,7 +101,7 @@ export default function UserWorkoutScreen({ navigation, user_id }) {
       item={item}
       navigation={navigation}
       deleteItem={handleDelete}
-      user={user}
+      user={loggedUser}
     />
   );
 
