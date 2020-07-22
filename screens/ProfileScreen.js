@@ -146,7 +146,8 @@ export default function ProfileScreen({ navigation, route }) {
       navigation.setOptions({
         headerRight: () => (
           <Button
-            onPress={() => signOut()} title="Log Out"
+            onPress={() => signOut()} 
+            title="Log Out"
           />
         ),
         title: selectedUser.first_name,
