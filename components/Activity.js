@@ -25,7 +25,7 @@ export default function Activity({ navigation, item }) {
       });
     }
     time = itemTime.toLocaleTimeString([], {
-      hour: 'numeric', 
+      hour: 'numeric',
       minute: '2-digit',
     });
     return `${day} at ${time}`; // Removed the leading zero
@@ -33,23 +33,26 @@ export default function Activity({ navigation, item }) {
 
   return (
     <View style={styles.container}>
-      <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Text style={styles.titleText}>{workout.title}</Text>
-        <Text style={styles.date}>{getDate()}</Text>
+      <TouchableOpacity
+        onPress={() => navigation.navigate('ActivityDetail', {item_id: item.id})}
+      >
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Text style={styles.titleText}>{workout.title}</Text>
+          <Text style={styles.date}>{getDate()}</Text>
 
-      </View>
+        </View>
 
-      <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'space-between' }}>
-        <Text style={styles.descriptionText}>{workout.description}</Text>
-        <Text style={styles.categoryText}>
-          {mapCategory[workout.category]}
-        </Text>
-      </View>
-      <View style={styles.commentView}>
-        <Text style={styles.usernameText}>{user.username}</Text>
-        <Text>{item.comment}</Text>
-      </View>
-
+        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'space-between' }}>
+          <Text style={styles.descriptionText}>{workout.description}</Text>
+          <Text style={styles.categoryText}>
+            {mapCategory[workout.category]}
+          </Text>
+        </View>
+        <View style={styles.commentView}>
+          <Text style={styles.usernameText}>{user.username}</Text>
+          <Text style={styles.commentText}>{item.comment}</Text>
+        </View>
+      </TouchableOpacity>
     </View>
 
   );
@@ -106,16 +109,23 @@ const styles = StyleSheet.create({
     paddingRight: 5,
   },
   commentView: {
-    width: '97%',
     borderTopColor: 'grey',
     borderTopWidth: 1,
-    alignSelf: 'center',
+    alignSelf: 'stretch',
     flexDirection: 'row',
     paddingVertical: 5,
+    marginHorizontal: 5,
+    justifyContent: 'flex-start'
   },
   usernameText: {
     fontSize: 15,
     fontWeight: 'bold',
     marginRight: 5,
+    flex: 0,
+
+  },
+  commentText: {
+    paddingRight: 5,
+    flex: 1,
   },
 });

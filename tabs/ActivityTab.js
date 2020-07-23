@@ -5,6 +5,7 @@ import ProfileScreen from '../screens/ProfileScreen';
 import ActivityFeedScreen from '../screens/ActivityFeedScreen';
 import ActivityFromWorkout from '../screens/ActivityFromWorkout';
 import UserWorkoutsScreen from '../screens/UserWorkoutsScreen';
+import ActivityDetailScreen from '../screens/ActivityDetailScreen';
 import { UserContext } from '../components/context';
 
 const ActivityStack = createStackNavigator();
@@ -34,6 +35,11 @@ export default function ActivityTab({ navigation }) {
         name="ActivityFromWorkout"
         component={ActivityFromWorkout}
         options={{ title: "New Activity" }}
+      />
+      <ActivityStack.Screen
+        name="ActivityDetail"
+        component={ActivityDetailScreen}
+        options={{ title: "Activity" }}
       />
     </ActivityStack.Navigator>
   );
