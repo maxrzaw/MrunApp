@@ -6,38 +6,66 @@ import {
   Button,
   FlatList,
   TouchableOpacity,
-  StyleSheet
-
+  StyleSheet,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
+  KeyboardAvoidingView
 } from 'react-native';
 import { AuthContext, UserContext } from '../components/context';
 import { BASE_URL } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 
 /*  TODO:
-      Add the activity as a header.
-      Modify the API to return user objects.
-      Add comments in the renderItem.
+      DONE Add the activity as a header.
+      DONE Modify the API to return user objects.
+      DONE Add comments in the renderItem.
       Stuff I am missing.
+      Make adding comments work.
       Make the edit modal. (I think I waant it to be a modal)
 */
 
 
-export default function ActivityDetailScreen({ navigation, item_id }) {
+export default function ActivityDetailScreen({ navigation, route }) {
 
-  const { user: loggedUser, token } = React.useContext(UserContext);
+  const { item } = route.params;
+
+  const { user: loggedUser, token } = useContext(UserContext);
   const [itemState, setItemState] = useState({
-    id: null,
-    user: null,
-    time: null,
-    comment: null,
-    workout: null,
+    id: item.id,
+    user: item.user,
+    time: item.time,
+    comment: item.comment,
+    workout: item.workout,
+    refreshing: true,
   });
 
   const [commentState, setCommentState] = useState({
     data: null,
     next: 1,
-    refreshing: false,
+    refreshing: true,
   });
+
+  const [refreshing, setRefreshing] = useState(true);
+  // This handles the global refreshing
+  useEffect(() => {
+    setRefreshing(commentState.refreshing || itemState.refreshing);
+  }, [commentState.refreshing, itemState.refreshing]);
+
+  const [newCommentState, setNewCommentState] = useState({
+    text: '',
+    valid: false,
+  });
+
+  const onTextChange = (val) => {
+    valid = (val.trim().length !== 0);
+    setNewCommentState({
+      ...setCommentState,
+      text: val,
+      valid: valid,
+    });
+  }
+
 
   // Sets the Right header button to be an Edit button
   useLayoutEffect(() => {
@@ -46,7 +74,7 @@ export default function ActivityDetailScreen({ navigation, item_id }) {
         headerRight: () => (
           <Button
             title="Edit"
-            onPress={() => console.log(`Navigate somewhere to edit Activity ${item.id}`)}
+            onPress={() => null}
           />
         ),
       });
@@ -56,7 +84,7 @@ export default function ActivityDetailScreen({ navigation, item_id }) {
   // Gets the activity object
   const getActivity = async () => {
     try {
-      response = await fetch(`${BASE_URL}activities/${item_id}/`, {
+      response = await fetch(`${BASE_URL}activities/${item.id}/`, {
         method: 'GET',
         headers: {
           'Authorization': 'Token ' + token
@@ -66,6 +94,7 @@ export default function ActivityDetailScreen({ navigation, item_id }) {
       setItemState({
         ...itemState,
         ...data,
+        refreshing: false,
       });
     } catch (error) {
       console.log(error);
@@ -76,7 +105,7 @@ export default function ActivityDetailScreen({ navigation, item_id }) {
   const getComments = async () => {
     if (commentState.next != null) {
       try {
-        url = `${BASE_URL}activities/${item_id}/comments/?page=${commentState.next}`;
+        url = `${BASE_URL}activities/${item.id}/comments/?page=${commentState.next}`;
         response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -124,21 +153,6 @@ export default function ActivityDetailScreen({ navigation, item_id }) {
     return `${day} at ${time}`; // Removed the leading zero
   }
 
-  // render item functiion
-  const renderItem = ({ item }) => (
-    <View style={styles.commentView}>
-      <Text style={styles.usernameText}>
-        {item.user}
-        {/* I need to change this later.
-        I should update the api to return a user object instead of just an id.
-        */}
-      </Text>
-      <Text style={styles.commentText}>
-        {item.text}
-      </Text>
-    </View>
-  );
-
   // refresh function
   const onRefresh = () => {
     setCommentState({
@@ -155,39 +169,152 @@ export default function ActivityDetailScreen({ navigation, item_id }) {
       getActivity();
       getComments();
     }
-  }, [commentState.refreshing])
+  }, [commentState.refreshing]);
 
+  // Initial loading
+  useEffect(() => {
+    getActivity();
+    getComments();
+  }, []);
+
+
+
+  // render item functiion
+  const renderItem = ({ item }) => (
+    <View style={styles.commentView}>
+      <Text>
+        <Text style={styles.usernameText}>
+          {item.user.username + '  '}
+        </Text>
+        <Text style={styles.commentText}>
+          {item.text}
+        </Text>
+      </Text>
+    </View>
+  );
+
+  const FlatListHeader = () => {
+    return (
+      <>
+        <View style={styles.headerContainer}>
+          <Text style={styles.title}>
+            {itemState.workout.title}
+          </Text>
+
+          <Text style={styles.description}>
+            {itemState.workout.description}
+          </Text>
+          <Text style={styles.time}>
+            {getDate()}
+          </Text>
+        </View>
+        <View style={styles.commentView}>
+          <Text>
+            <Text style={styles.usernameText}>
+              {itemState.user.username + '  '}
+            </Text>
+            <Text style={styles.commentText}>
+              {itemState.comment}
+            </Text>
+          </Text>
+        </View>
+      </>
+    );
+  }
 
 
   return (
-    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-      <Text>Activity Detail!</Text>
-    </View>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior="height"
+      keyboardVerticalOffset={65}
+    >
+      <FlatList
+        style={{ flex: 1, alignSelf: 'stretch' }}
+        ListHeaderComponent={FlatListHeader}
+        data={commentState.data}
+        renderItem={renderItem}
+        onRefresh={() => onRefresh()}
+        refreshing={refreshing}
+        keyExtractor={item => item.id.toString()}
+        onEndReached={() => getComments()}
+        onEndReachedThreshold={0.5}
+        extraData={itemState}
+      />
+      <View style={styles.footerContainer}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={(val) => onTextChange(val)}
+          placeholder="Add a comment..."
+          autoCapitalize="sentences"
+          multiline
+        />
+        <Button
+          title="Send"
+          onPress={() => console.log("something")}
+        />
+      </View>
+    </KeyboardAvoidingView>
+
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    justifyContent: 'flex-start',
+    alignItems: 'flex-start',
+    backgroundColor: '#f0f0f0',
+  },
+  headerContainer: {
+    backgroundColor: '#fff',
+    paddingHorizontal: 8,
+    paddingTop: 5,
+    paddingBottom: 10,
+  },
+  title: {
+    fontSize: 25,
+    fontWeight: 'bold',
+  },
+  description: {
+    marginTop: 5,
+    fontSize: 15,
+  },
+  time: {
+    marginTop: 5,
+    fontSize: 12,
+    color: '#606060'
   },
   commentView: {
     borderTopColor: 'grey',
     borderTopWidth: 1,
     alignSelf: 'stretch',
     flexDirection: 'row',
-    paddingVertical: 5,
-    marginHorizontal: 5,
-    justifyContent: 'flex-start'
+    padding: 5,
+    justifyContent: 'flex-start',
+    backgroundColor: '#fff',
+    minHeight: 35,
+    alignItems: 'center'
   },
   usernameText: {
     fontSize: 15,
     fontWeight: 'bold',
     marginRight: 5,
-    flex: 0,
+    paddingRight: 5,
 
   },
   commentText: {
-    paddingRight: 5,
     flex: 1,
+  },
+  footerContainer: {
+    width: '100%',
+    backgroundColor: '#fff',
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  textInput: {
+    flex: 1,
+    marginVertical: 10,
+    marginLeft: 10,
   },
 });

@@ -35,6 +35,7 @@ export default function ActivityFeedScreen({ navigation }) {
     if (state.refreshing) {
       getData();
     }
+    console.log(state.data);
   }, [state.refreshing])
 
   const renderItem = ({ item }) => (
@@ -52,7 +53,6 @@ export default function ActivityFeedScreen({ navigation }) {
       next: 1,
       refreshing: true,
     });
-
   }
 
 
