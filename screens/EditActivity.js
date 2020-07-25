@@ -100,7 +100,7 @@ export default function EditActivity({ navigation, route: { params: { activity }
       Alert.alert("Unable to save. Check your network connection.")
     }
     console.log("Saved returned");
-    
+
   };
 
 
@@ -125,20 +125,20 @@ export default function EditActivity({ navigation, route: { params: { activity }
       <View style={styles.container}>
 
         <View style={styles.textInputView}>
-          <Text style={styles.textLabel}>Title:</Text>
-          <Text style={{ flex: 1, padding: 5, fontSize: 16 }}>{activity.workout.title}</Text>
+          <Text style={styles.textLabelDisabled}>Title:</Text>
+          <Text style={{ flex: 1, padding: 5, fontSize: 16, color: '#a9a9a9' }}>{activity.workout.title}</Text>
         </View>
         <View style={styles.textInputView}>
-          <Text style={styles.textLabel}>Category:</Text>
-          <Text style={[styles.textInput, { fontSize: 16 }]}>
+          <Text style={styles.textLabelDisabled}>Category:</Text>
+          <Text style={[styles.textInput, { fontSize: 16, color: '#a9a9a9' }]}>
             {mapCategory[activity.workout.category]}
           </Text>
         </View>
-        <Text style={styles.textLabel}>Description:</Text>
+        <Text style={styles.textLabelDisabled}>Description:</Text>
         <View style={styles.descriptionView}>
-          <Text style={{ flex: 1, padding: 5 }}>{activity.workout.description}</Text>
+          <Text style={{ flex: 1, padding: 5, color: '#a9a9a9' }}>{activity.workout.description}</Text>
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.textInputView}
           onPress={() => setModalVisible(true)}
         >
@@ -217,6 +217,14 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     alignItems: 'center',
     marginVertical: 5,
+  },
+  textLabelDisabled: {
+    fontWeight: 'normal',
+    fontSize: 20,
+    paddingLeft: 5,
+    alignItems: 'center',
+    marginVertical: 5,
+    color: '#a9a9a9',
   },
   descriptionView: {
     borderBottomColor: '#f0f0f0',
