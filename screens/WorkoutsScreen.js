@@ -48,7 +48,7 @@ export default function WorkoutScreen({ navigation }) {
       }
     } catch (error) {
       console.log(error);
-      Alert.alert("Unable to reach the server")
+      Alert.alert("Unable to reach the server");
     }
   };
 
@@ -116,7 +116,6 @@ export default function WorkoutScreen({ navigation }) {
 
   // This handles refreshing once index is changed
   useEffect(() => {
-    console.log(groups[state.selectedIndex]);
     getData();
   }, [state.selectedIndex])
 
@@ -126,7 +125,6 @@ export default function WorkoutScreen({ navigation }) {
       selectedIndex: index,
       next: 1,
     });
-    // console.log(groups[state.selectedIndex]);
   }
 
 

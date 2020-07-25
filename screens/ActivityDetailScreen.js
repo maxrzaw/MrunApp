@@ -69,12 +69,12 @@ export default function ActivityDetailScreen({ navigation, route }) {
 
   // Sets the Right header button to be an Edit button
   useLayoutEffect(() => {
-    if (loggedUser.id == user.id) {
+    if (loggedUser.id == itemState.user.id) {
       navigation.setOptions({
         headerRight: () => (
           <Button
             title="Edit"
-            onPress={() => null}
+            onPress={() => navigation.navigate('EditActivity', { activity: item })}
           />
         ),
       });
@@ -153,6 +153,63 @@ export default function ActivityDetailScreen({ navigation, route }) {
     return `${day} at ${time}`; // Removed the leading zero
   }
 
+  const newComment = async () => {
+    if (newCommentState.valid) {
+      Keyboard.dismiss();
+      try {
+        let body_data = {
+          "activity": itemState.id,
+          "text": newCommentState.text,
+        };
+        response = await fetch(`${BASE_URL}comments/`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Token ${token}`,
+          },
+          body: JSON.stringify(body_data),
+        });
+        result = await response.json();
+        result.user = loggedUser;
+        setNewCommentState({
+          ...newCommentState,
+          text: '',
+          valid: false,
+        })
+        setCommentState({
+          ...commentState,
+          data: [...commentState.data, result],
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    }
+
+  }
+
+  const deleteComment = async (comment_id) => {
+    try {
+      let response = await fetch(`${BASE_URL}comments/${comment_id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + token
+        },
+      });
+      // Wait for the response data
+      if (response.ok) {
+        setCommentState({
+          ...commentState,
+          data: commentState.data.filter(item => item.id != comment_id),
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Unable to reach the server");
+    }
+
+  };
+
   // refresh function
   const onRefresh = () => {
     setCommentState({
@@ -190,6 +247,15 @@ export default function ActivityDetailScreen({ navigation, route }) {
           {item.text}
         </Text>
       </Text>
+      {(item.user.id == loggedUser.id)
+        ? <Feather
+          name="trash-2"
+          size={15}
+          color="darkred"
+          onPress={() => deleteComment(item.id)}
+        />
+        : null
+      }
     </View>
   );
 
@@ -244,6 +310,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
       <View style={styles.footerContainer}>
         <TextInput
           style={styles.textInput}
+          value={newCommentState.text}
           onChangeText={(val) => onTextChange(val)}
           placeholder="Add a comment..."
           autoCapitalize="sentences"
@@ -251,7 +318,8 @@ export default function ActivityDetailScreen({ navigation, route }) {
         />
         <Button
           title="Send"
-          onPress={() => console.log("something")}
+          disabled={!newCommentState.valid}
+          onPress={() => newComment()}
         />
       </View>
     </KeyboardAvoidingView>
@@ -291,7 +359,7 @@ const styles = StyleSheet.create({
     alignSelf: 'stretch',
     flexDirection: 'row',
     padding: 5,
-    justifyContent: 'flex-start',
+    justifyContent: 'space-between',
     backgroundColor: '#fff',
     minHeight: 35,
     alignItems: 'center'

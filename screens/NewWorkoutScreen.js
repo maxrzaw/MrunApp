@@ -63,7 +63,6 @@ export default function NewWorkoutScreen({ navigation }) {
       description: val,
       descValid: valid,
     });
-    console.log(state);
   }
 
   const save = async () => {
@@ -87,7 +86,6 @@ export default function NewWorkoutScreen({ navigation }) {
       console.log(error);
       Alert.alert("Unable to save. Check your network connection.")
     }
-    console.log("Saved returned");
   };
 
   React.useLayoutEffect(() => {

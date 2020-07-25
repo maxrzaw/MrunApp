@@ -32,7 +32,7 @@ export default function ProfileScreen({ navigation, route }) {
   const getData = async () => {
     if (state.next != null) {
       try {
-        url = `${BASE_URL}users/${user.id}/activities/?page=${state.next}`
+        url = `${BASE_URL}users/${selectedUser.id}/activities/?page=${state.next}`
         let response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -153,7 +153,8 @@ export default function ProfileScreen({ navigation, route }) {
         title: selectedUser.first_name,
       });
     }
-  }, [navigation])
+  }, [navigation]);
+
   return (
     <View style={[styles.container, { alignItems: 'stretch' }]}>
       <FlatList

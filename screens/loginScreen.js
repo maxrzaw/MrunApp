@@ -81,10 +81,8 @@ export default function LoginScreen({ navigation }) {
         });
 
         token = response_data['token'];
-        console.log("Token is: " + token);
 
         // send login data to context
-        console.log("SignIn from LoginScreen");
         signIn(token);
       } else {
         setData({

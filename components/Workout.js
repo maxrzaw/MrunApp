@@ -17,7 +17,8 @@ export default function Workout({ navigation, item, deleteItem }) {
         {canDelete ?
           <Feather
             name="trash-2"
-            size={20} color="darkred"
+            size={20} 
+            color="darkred"
             style={{ marginRight: 5 }}
             onPress={() => deleteItem(item.id)}
           />

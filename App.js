@@ -11,6 +11,7 @@ import { LogBox } from 'react-native';
 import { AuthContext, UserContext } from './components/context'
 import TabScreen from './tabs/TabScreen'
 import NewWorkoutScreen from './screens/NewWorkoutScreen'
+import EditActivity from './screens/EditActivity'
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -95,10 +96,8 @@ const App = () => {
 
   const authContext = React.useMemo(() => ({
     signIn: async (token) => {
-      console.log("SignIn from App.js");
       try {
         await AsyncStorage.setItem('token', token);
-        console.log("Token set in storage");
       } catch (error) {
         console.log(error);
       }
@@ -180,6 +179,11 @@ const App = () => {
                 name="NewWorkout"
                 component={NewWorkoutScreen}
                 options={{ title: 'Add Workout' }}
+              />
+              <RootStack.Screen
+                name="EditActivity"
+                component={EditActivity}
+                options={{title: 'Edit Avtivity'}}
               />
             </RootStack.Navigator>
           </NavigationContainer>
