@@ -2,10 +2,8 @@ import * as React from 'react';
 import { Text, View, Button, TouchableOpacity, } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack'
 import WorkoutsScreen from '../screens/WorkoutsScreen'
-import ProfileScreen from '../screens/ProfileScreen'
 import WorkoutDetailScreen from '../screens/WorkoutDetailScreen'
 import Feather from 'react-native-vector-icons/Feather';
-import ActivityFromWorkout from '../screens/ActivityFromWorkout';
 
 const WorkoutStack = createStackNavigator();
 
