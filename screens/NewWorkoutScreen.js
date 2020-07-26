@@ -12,13 +12,13 @@ import {
   Modal
 } from 'react-native';
 import { BASE_URL, mapCategory } from '../helpers';
-import { UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-community/picker';
 
 
 
 export default function NewWorkoutScreen({ navigation }) {
-  const { token } = useContext(UserContext);
+  const { token } = useContext(AuthContext);
   const [state, setState] = useState({
     title: '',
     description: '',

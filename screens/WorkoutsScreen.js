@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
-import Workout from '../components/Workout'
-import { UserContext } from '../components/context'
-import { BASE_URL } from '../helpers'
+import Workout from '../components/Workout';
+import { AuthContext } from '../contexts/AuthContext';
+import { BASE_URL } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
 
 
@@ -11,7 +11,7 @@ import { ButtonGroup } from 'react-native-elements';
 
 export default function WorkoutScreen({ navigation }) {
 
-  const { token } = React.useContext(UserContext);
+  const { token, user: loggedUser } = React.useContext(AuthContext);
 
   const buttons = ['All', 'Track', 'Speed', 'Hill', 'Long', 'Core'];
   const groups = {
@@ -94,6 +94,7 @@ export default function WorkoutScreen({ navigation }) {
       item={item}
       navigation={navigation}
       deleteItem={handleDelete}
+      loggedUser={loggedUser}
     />
   );
 

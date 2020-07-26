@@ -1,4 +1,4 @@
-import React, { useState, createContext } from 'react';
+import React, { useState, createContext, useEffect } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
 import { BASE_URL } from '../helpers';
@@ -12,29 +12,36 @@ const AuthContextProvider = (props) => {
     token: null,
     user: null,
     isLoggedIn: false,
+    isLoading: true,
   });
 
   // This will only run on initial load
   useEffect(() => {
-    // Check async storage for the token
-    try {
-      const token = await AsyncStorage.getItem('token');
-      if (token !== null) {
-        // Token is not null so we need to check token and get the user
-        getMe(token);
-      } else {
-        // Token is null so we are not logged in
-        setState({
-          ...state,
-          token: null,
-          user: null,
-          isLoggedIn: false,
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    (async () => initialLoad())();
+    
   }, []);
+
+  const initialLoad = async () => {
+        // Check async storage for the token
+        try {
+          const token = await AsyncStorage.getItem('token');
+          if (token !== null) {
+            // Token is not null so we need to check token and get the user
+            getMe(token);
+          } else {
+            // Token is null so we are not logged in
+            setState({
+              ...state,
+              token: null,
+              user: null,
+              isLoggedIn: false,
+              isLoading: false,
+            });
+          }
+        } catch (error) {
+          console.log(error);
+        }
+  }
 
   // Gets the user object and updates it
   const getMe = async (token) => {
@@ -54,6 +61,7 @@ const AuthContextProvider = (props) => {
           user: user,
           token: token,
           isLoggedIn: true,
+          isLoading: false,
         });
       } else {
         // Token is bad
@@ -62,6 +70,7 @@ const AuthContextProvider = (props) => {
           user: null,
           token: null,
           isLoggedIn: false,
+          isLoading: false,
         });
         console.log("Something went wrong logging in");
       }
@@ -97,7 +106,7 @@ const AuthContextProvider = (props) => {
         Alert.alert("Incorrect username or password");
       }
     } catch (error) {
-      Alert.alert("Error logging in");
+      Alert.alert("Unable to reach the server");
       console.log(error);
     }
   }
@@ -112,7 +121,6 @@ const AuthContextProvider = (props) => {
       setState({
         ...state,
         isLoggedIn: false,
-        user: null,
         token: null,
       });
     } catch (error) {

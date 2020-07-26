@@ -5,14 +5,12 @@ import {
   View,
   Button,
   FlatList,
-  TouchableOpacity,
   StyleSheet,
   TextInput,
-  TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView
 } from 'react-native';
-import { AuthContext, UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -30,7 +28,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
 
   const { item } = route.params;
 
-  const { user: loggedUser, token } = useContext(UserContext);
+  const { user: loggedUser, token } = useContext(AuthContext);
   const [itemState, setItemState] = useState({
     id: item.id,
     user: item.user,

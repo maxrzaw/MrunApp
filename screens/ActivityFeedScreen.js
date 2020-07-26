@@ -8,7 +8,7 @@ import {
   FlatList
 } from 'react-native';
 import Activity from '../components/Activity';
-import { AuthContext, UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -17,7 +17,7 @@ export default function ActivityFeedScreen({ navigation, route }) {
 
   
 
-  const { user: loggedUser, token } = React.useContext(UserContext);
+  const { user: loggedUser, token } = React.useContext(AuthContext);
 
   const [state, setState] = useState({
     data: null,

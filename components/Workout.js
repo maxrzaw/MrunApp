@@ -2,13 +2,11 @@ import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { mapCategory } from '../helpers'
 import Feather from 'react-native-vector-icons/Feather';
-import { UserContext } from '../components/context'
 
-export default function Workout({ navigation, item, deleteItem }) {
+export default function Workout({ navigation, item, deleteItem, loggedUser }) {
 
-  const { user } = React.useContext(UserContext);
 
-  const canDelete = (item.owner == user.id);
+  const canDelete = (item.owner == loggedUser.id);
 
   return (
     <View style={styles.container}>

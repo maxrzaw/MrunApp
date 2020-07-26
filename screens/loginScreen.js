@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState } from 'react'
+import { useState, useContext } from 'react'
 import { 
   Text, 
   View, 
@@ -14,7 +14,7 @@ import {
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { BASE_URL } from '../helpers'
-import { AuthContext } from '../components/context'
+import { AuthContext } from '../contexts/AuthContext'
 
 
 export default function LoginScreen({ navigation }) {
@@ -28,7 +28,6 @@ export default function LoginScreen({ navigation }) {
     password: '',
     check_textInputChange: false,
     secureTextEntry: true,
-    showError: false,
   });
 
   // handles username changes
@@ -57,45 +56,11 @@ export default function LoginScreen({ navigation }) {
     })
   };
 
-  // Handles the login
-  const handleLogin = async () => {
-    const body_data = {
-      username: data.username,
-      password: data.password,
-    };
-    try {
-      let response = await fetch(BASE_URL + 'token-auth/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(body_data),
-      });
-
-      // Wait for the response data
-      let response_data = await response.json();
-      if (response.ok) {
-        setData({
-          ...data,
-          showError: false,
-        });
-
-        token = response_data['token'];
-
-        // send login data to context
-        signIn(token);
-      } else {
-        setData({
-          ...data,
-          showError: true,
-        });
-        // Do not need to send anything to context
-      }
-    } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to reach the server")
-    }
-  };
+  // Handles login
+  const handleLogin = () => {
+    // Call sign in from AuthContext
+    signIn(data.username, data.password);
+  }
 
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessable={false}>
@@ -143,11 +108,6 @@ export default function LoginScreen({ navigation }) {
               <Feather name={data.secureTextEntry ? "eye-off" : "eye"} size={20} color="black" />
             </TouchableOpacity>
           </View>
-          {data.showError ?
-            <View style={{ alignItems: 'center', justifyContent: 'center' }}>
-              <Text style={styles.errorText}>Incorrect username or password</Text>
-            </View>
-            : null}
 
           <Button
             onPress={() => handleLogin()} title="Login"
@@ -201,9 +161,5 @@ styles = StyleSheet.create({
     paddingHorizontal: 30,
     paddingVertical: 10,
     backgroundColor: 'blue',
-  },
-  errorText: {
-    color: 'red',
-    fontSize: 20,
   },
 });

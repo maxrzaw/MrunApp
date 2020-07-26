@@ -7,13 +7,13 @@ import ActivityFromWorkout from '../screens/ActivityFromWorkout';
 import UserWorkoutsScreen from '../screens/UserWorkoutsScreen';
 import ActivityDetailScreen from '../screens/ActivityDetailScreen';
 import EditActivity from '../screens/EditActivity';
-import { UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 
 const ActivityStack = createStackNavigator();
 
 
 export default function ActivityTab({ navigation }) {
-  const { user } = React.useContext(UserContext);
+  const { user } = React.useContext(AuthContext);
 
   return (
     <ActivityStack.Navigator>

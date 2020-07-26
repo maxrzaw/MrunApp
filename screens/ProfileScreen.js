@@ -8,16 +8,14 @@ import {
   FlatList,
   TouchableOpacity
 } from 'react-native';
-import { AuthContext, UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 import Activity from '../components/Activity';
 
 
 export default function ProfileScreen({ navigation, route }) {
-  // Get signOut() function from context
-  const { signOut } = React.useContext(AuthContext);
-  const { user: loggedUser, token } = React.useContext(UserContext);
+  const { user: loggedUser, token, signOut } = React.useContext(AuthContext);
   const { user: selectedUser } = route.params;
 
   const [userGroup, setUserGroup] = useState(null);

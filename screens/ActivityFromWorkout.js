@@ -14,12 +14,12 @@ import {
   Pressable
 } from 'react-native';
 import { BASE_URL, mapCategory } from '../helpers'
-import { UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function ActivityFromWorkout({ navigation, route: { params: { item } } }) {
-  const { token } = useContext(UserContext);
+  const { token } = useContext(AuthContext);
   const [state, setState] = useState({
     comment: '',
     time: new Date(),

@@ -13,12 +13,12 @@ import {
   Keyboard
 } from 'react-native';
 import { BASE_URL, mapCategory } from '../helpers'
-import { UserContext } from '../components/context';
+import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
 export default function EditActivity({ navigation, route: { params: { activity } } }) {
-  const { token } = useContext(UserContext);
+  const { token } = useContext(AuthContext);
   const [state, setState] = useState({
     comment: activity.comment,
     time: new Date(activity.time),

@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { mapCategory } from '../helpers'
-import { UserContext } from './context'
 
 export default function Activity({ navigation, item }) {
 
