@@ -11,7 +11,7 @@ import { LogBox } from 'react-native';
 import { AuthContext, UserContext } from './components/context'
 import TabScreen from './tabs/TabScreen'
 import NewWorkoutScreen from './screens/NewWorkoutScreen'
-import EditActivity from './screens/EditActivity'
+import ActivityFromWorkout from './screens/ActivityFromWorkout'
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -181,9 +181,9 @@ const App = () => {
                 options={{ title: 'Add Workout' }}
               />
               <RootStack.Screen
-                name="EditActivity"
-                component={EditActivity}
-                options={{title: 'Edit Avtivity'}}
+                name="ActivityFromWorkout"
+                component={ActivityFromWorkout}
+                options={{ title: "New Activity" }}
               />
             </RootStack.Navigator>
           </NavigationContainer>

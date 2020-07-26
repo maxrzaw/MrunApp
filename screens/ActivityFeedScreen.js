@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -7,12 +7,15 @@ import {
   StyleSheet,
   FlatList
 } from 'react-native';
-import Activity from '../components/Activity'
+import Activity from '../components/Activity';
 import { AuthContext, UserContext } from '../components/context';
-import { BASE_URL } from '../helpers'
+import { BASE_URL } from '../helpers';
+import { useFocusEffect } from '@react-navigation/native';
 
 
-export default function ActivityFeedScreen({ navigation }) {
+export default function ActivityFeedScreen({ navigation, route }) {
+
+  
 
   const { user: loggedUser, token } = React.useContext(UserContext);
 
@@ -37,12 +40,22 @@ export default function ActivityFeedScreen({ navigation }) {
     }
   }, [state.refreshing])
 
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log("UseFocus Ran");
+      console.log(`Refresh is ${route.params?.refresh}`);
+      //navigation.setParams({refresh: false});
+    }, [navigation])
+  );
+
   const renderItem = ({ item }) => (
     <Activity
       item={item}
       navigation={navigation}
     />
   );
+
+
 
 
   const onRefresh = () => {

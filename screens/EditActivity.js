@@ -103,6 +103,26 @@ export default function EditActivity({ navigation, route: { params: { activity }
 
   };
 
+  const deleteActivity = async () => {
+    try {
+      let response = await fetch(`${BASE_URL}activities/${activity.id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+      });
+      if (response.ok) {
+        navigation.navigate("Home", { refresh: true });
+      } else {
+        Alert.alert("Unable to delete");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Unable to delete");
+    }
+  }
+
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
@@ -199,6 +219,28 @@ export default function EditActivity({ navigation, route: { params: { activity }
           </TouchableWithoutFeedback>
 
         </Modal>
+        <TouchableOpacity
+          style={styles.deleteView}
+          onPress={() => Alert.alert(
+            'Are you sure?',
+            'This will permanently delete the activity',
+            [
+              {
+                text: 'Cancel',
+                onPress: () => null
+              },
+              {
+                text: 'Delete',
+                onPress: () => deleteActivity(),
+                style: 'destructive'
+              }
+            ],
+            { cancelable: false }
+          )}
+        >
+          <Text style={styles.deleteText}>Delete</Text>
+
+        </TouchableOpacity>
       </View >
     </TouchableWithoutFeedback>
   );
@@ -281,5 +323,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 50,
     justifyContent: 'center',
+  },
+  deleteView: {
+    margin: 5,
+    backgroundColor: '#fff',
+    borderColor: 'red',
+    borderWidth: 3,
+    alignSelf: 'stretch',
+    alignContent: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 0.125,
+  },
+  deleteText: {
+    color: 'red',
+    fontSize: 18,
   }
 });

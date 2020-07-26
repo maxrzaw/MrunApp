@@ -34,7 +34,7 @@ export default function Activity({ navigation, item }) {
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.navigate('ActivityDetail', { item })}
+        onPress={() => navigation.push('ActivityDetail', { item })}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text style={styles.titleText}>{workout.title}</Text>

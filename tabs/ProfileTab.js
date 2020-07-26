@@ -7,6 +7,7 @@ import ActivityFromWorkout from '../screens/ActivityFromWorkout';
 import UserWorkoutsScreen from '../screens/UserWorkoutsScreen';
 import ActivityDetailScreen from '../screens/ActivityDetailScreen';
 import { UserContext } from '../components/context';
+import EditActivity from '../screens/EditActivity';
 
 const ProfileStack = createStackNavigator();
 
@@ -17,9 +18,9 @@ export default function ProfileTab({ navigation }) {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen
-        name="Profile"
+        name="Home"
         component={ProfileScreen}
-        initialParams={{ user: user }}
+        initialParams={{ user: user, refresh: false }}
       />
       <ProfileStack.Screen
         name="Workouts"
@@ -39,7 +40,12 @@ export default function ProfileTab({ navigation }) {
       <ProfileStack.Screen
         name="ActivityDetail"
         component={ActivityDetailScreen}
-        options={{title: "Activity"}}
+        options={{ title: "Activity" }}
+      />
+      <ProfileStack.Screen
+        name="EditActivity"
+        component={EditActivity}
+        options={{ title: 'Edit Avtivity' }}
       />
     </ProfileStack.Navigator>
   );

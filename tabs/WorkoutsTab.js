@@ -13,7 +13,7 @@ export default function WorkoutTab({ navigation, item }) {
   return (
     <WorkoutStack.Navigator initialRouteName={"WorkoutsHome"}>
       <WorkoutStack.Screen
-        name="WorkoutsHome"
+        name="Home"
         component={WorkoutsScreen}
         options={{
           title: 'Workouts',
@@ -37,11 +37,6 @@ export default function WorkoutTab({ navigation, item }) {
         name="WorkoutDetail"
         component={WorkoutDetailScreen}
         options={{ title: 'Workout' }}
-      />
-      <WorkoutStack.Screen
-        name="ActivityFromWorkout"
-        component={ActivityFromWorkout}
-        options={{title: "New Activity"}}
       />
     </WorkoutStack.Navigator>
 

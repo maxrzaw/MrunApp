@@ -95,7 +95,7 @@ export default function ProfileScreen({ navigation, route }) {
         </View>
         <View style={styles.headerContainer}>
           <TouchableOpacity
-            onPress={() => navigation.navigate('Workouts', { user: selectedUser })}
+            onPress={() => navigation.push('Workouts', { user: selectedUser })}
             style={styles.workoutsRow}
           >
             <Text style={styles.workoutsText}>All Workouts</Text>
