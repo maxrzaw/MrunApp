@@ -19,10 +19,9 @@ import { Picker } from '@react-native-community/picker';
 
 
 
-export default function EditProfile({ navigation, route }) {
-  const { userInGroup, userGroup } = route.params;
+export default function EditProfile({ navigation}) {
   // Context variables
-  const { token, user } = useContext(AuthContext);
+  const { token, user, refresh, group, updateGroup } = useContext(AuthContext);
   // Pieces of state
   const [state, setState] = useState({
     bio: user.bio,
@@ -34,8 +33,8 @@ export default function EditProfile({ navigation, route }) {
     validYear: true,
   });
   const [selectedGroup, setSelectedGroup] = useState({
-    group: userInGroup ? userGroup.id : 0,
-    temp: userInGroup ? userGroup.id : 0,
+    group: group.id,
+    temp: group.id,
   });
   const [groupNames, setGroupNames] = useState(null);
   const [groupDescs, setGroupDescs] = useState(null);
@@ -60,20 +59,20 @@ export default function EditProfile({ navigation, route }) {
 
 
   const onFirstNameChange = (val) => {
-    valid = (val.trim().length > 0);
+    isValid = (val.trim().length > 0);
     setState({
       ...state,
       firstName: val,
-      validFirst: valid,
+      validFirst: isValid,
     });
   };
 
   const onLastNameChange = (val) => {
-    valid = (val.trim().length > 0);
+    isValid = (val.trim().length > 0);
     setState({
       ...state,
       lastName: val,
-      validLast: valid,
+      validLast: isValid,
     });
   };
 
@@ -112,7 +111,7 @@ export default function EditProfile({ navigation, route }) {
         <Button onPress={() => navigation.goBack()} title="Cancel" />
       )
     });
-  }, [navigation, valid]);
+  }, [navigation, valid, state, selectedGroup]);
 
   const getGroups = async () => {
     try {
@@ -157,20 +156,16 @@ export default function EditProfile({ navigation, route }) {
     }
   }
 
-
-
-  //  FIXME: Everything below needs to change
-  //  FIXME: From activity
-  const save = async () => {
+  const saveUser = async () => {
     try {
       // Do stuff
       let body_data = {
-        "first_name": state.comment,
-        "last_name": state.time,
+        "first_name": state.firstName,
+        "last_name": state.lastName,
         "bio": state.bio,
         "year": yearState.year,
       };
-      await fetch(`${BASE_URL}users/me/`, {
+      let response = await fetch(`${BASE_URL}me/`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -178,17 +173,35 @@ export default function EditProfile({ navigation, route }) {
         },
         body: JSON.stringify(body_data),
       });
+      if (response.ok) {
+        return true;
+      } else {
+        Alert.alert("Problem saving");
+        return false;
+      }
     } catch (error) {
       console.log(error);
       Alert.alert("Unable to save. Check your network connection.")
     }
-    navigation.goBack();
   };
+
+  const save = async () => {
+    try {
+      let userSuccess = await saveUser();
+      let groupSuccess = await updateGroup(selectedGroup.group);
+      if (userSuccess && groupSuccess) {
+        await refresh();
+        navigation.goBack();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
   if (loading) {
     return (
-      <View style={{alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff'}}>
+      <View style={{ alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff' }}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -199,13 +212,26 @@ export default function EditProfile({ navigation, route }) {
 
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>First Name:</Text>
-          <Text style={{ flex: 1, padding: 5, fontSize: 16 }}>{state.firstName}</Text>
+          <TextInput
+            style={[styles.textInput, { fontSize: 18 }]}
+            value={state.firstName}
+            autoCapitalize="words"
+            placeholder='First Name...'
+            onChangeText={(val) => onFirstNameChange(val)}
+            maxLength={20}
+          />
+          {/* <Text style={{ flex: 1, padding: 5, fontSize: 16 }}>{state.firstName}</Text> */}
         </View>
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>Last Name:</Text>
-          <Text style={[styles.textInput, { fontSize: 16 }]}>
-            {state.lastName}
-          </Text>
+          <TextInput
+            style={[styles.textInput, { fontSize: 18 }]}
+            value={state.lastName}
+            autoCapitalize="words"
+            placeholder='Last Name...'
+            onChangeText={(val) => onLastNameChange(val)}
+            maxLength={20}
+          />
         </View>
         <TouchableOpacity
           style={styles.textInputView}
@@ -244,7 +270,7 @@ export default function EditProfile({ navigation, route }) {
         >
           <View style={styles.centered}>
             <View style={styles.modalView}>
-              <View style={[styles.LabelView, { marginTop: 15, justifyContent: 'space-between'}]}>
+              <View style={[styles.LabelView, { marginTop: 15, justifyContent: 'space-between' }]}>
                 <Text style={{ fontSize: 20 }}>Training Group</Text>
                 <Text>{groupDescs[selectedGroup.temp]}</Text>
               </View>

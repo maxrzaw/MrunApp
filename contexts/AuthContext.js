@@ -15,32 +15,53 @@ const AuthContextProvider = (props) => {
     isLoading: true,
   });
 
+  const [userGroup, setUserGroup] = useState(0);
+
+
   // This will only run on initial load
   useEffect(() => {
     (async () => initialLoad())();
-    
   }, []);
 
   const initialLoad = async () => {
-        // Check async storage for the token
-        try {
-          const token = await AsyncStorage.getItem('token');
-          if (token !== null) {
-            // Token is not null so we need to check token and get the user
-            getMe(token);
-          } else {
-            // Token is null so we are not logged in
-            setState({
-              ...state,
-              token: null,
-              user: null,
-              isLoggedIn: false,
-              isLoading: false,
-            });
-          }
-        } catch (error) {
-          console.log(error);
-        }
+    // Check async storage for the token
+    try {
+      const token = await AsyncStorage.getItem('token');
+      if (token !== null) {
+        // Token is not null so we need to check token and get the user
+        getMe(token);
+        getGroup(token);
+      } else {
+        // Token is null so we are not logged in
+        setState({
+          ...state,
+          token: null,
+          user: null,
+          isLoggedIn: false,
+          isLoading: false,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  const getGroup = async (token) => {
+    try {
+      response = await fetch(`${BASE_URL}membership/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': 'Token ' + token,
+        },
+      });
+      let response_data = await response.json();
+      if (response.ok) {
+        setUserGroup(response_data['group']);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   // Gets the user object and updates it
@@ -128,8 +149,35 @@ const AuthContextProvider = (props) => {
     }
   }
 
+  const updateGroup = async (groupId) => {
+    try {
+      let response = await fetch(`${BASE_URL}membership/?group=${groupId}`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${state.token}`,
+        },
+      });
+      let response_data = await response.json();
+      if (response.ok) {
+        setUserGroup(response_data['group']);
+        return true;
+      } else {
+        Alert.alert("Problem saving");
+        return false;
+      }
+    } catch (error) {
+
+    }
+  }
+
+  const refresh = () => {
+    getMe(state.token);
+  }
+
+
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signOut }}>
+    <AuthContext.Provider value={{ ...state, signIn, signOut, refresh, group: userGroup, updateGroup }}>
       {props.children}
     </AuthContext.Provider>
   )

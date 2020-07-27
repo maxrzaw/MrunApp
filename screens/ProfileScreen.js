@@ -16,11 +16,13 @@ import Activity from '../components/Activity';
 
 
 export default function ProfileScreen({ navigation, route }) {
-  const { user: loggedUser, token, signOut } = React.useContext(AuthContext);
-  const { user: selectedUser } = route.params;
+  const { user: loggedUser, token, signOut, group } = React.useContext(AuthContext);
+  const { user: routeUser } = route.params;
 
-  const [userGroup, setUserGroup] = useState(null);
-  const [userInGroup, setUserInGroup] = useState(false);
+  // Set selected user to logged user if no user is given
+  const selectedUser = (routeUser === null) ? loggedUser : routeUser;
+
+  const [userGroup, setUserGroup] = useState(group);
   const [state, setState] = useState({
     data: null,
     next: 1,
@@ -107,13 +109,10 @@ export default function ProfileScreen({ navigation, route }) {
   const FlatListHeader = () => {
     return (
       <>
-        <View style={styles.headerContainer}>
+        <View style={styles.headerContainer} key={selectedUser}>
           <View style={styles.headerRow}>
             <Text style={styles.fullNameText}>{`${selectedUser.first_name} ${selectedUser.last_name}`}</Text>
-            {userInGroup ?
               <Text style={styles.groupText}>{userGroup.name}</Text>
-              : null
-            }
           </View>
           <Text style={styles.bioText}>{selectedUser.bio}</Text>
         </View>
@@ -134,13 +133,6 @@ export default function ProfileScreen({ navigation, route }) {
     );
   }
   useEffect(() => {
-    // Get data for flatlist
-    // try {
-    //   getData();
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    // Fetch data for flatlist Header
     async function fetchData() {
       try {
         response = await fetch(`${BASE_URL}membership/?user=${selectedUser.id}`, {
@@ -153,16 +145,17 @@ export default function ProfileScreen({ navigation, route }) {
         let response_data = await response.json();
         if (response.ok) {
           setUserGroup(response_data['group']);
-          setUserInGroup(true);
-        } else {
-          setUserInGroup(false);
         }
       } catch (error) {
         console.log(error);
       }
     }
-    fetchData();
-  }, [])
+    if (routeUser !== null) {
+      fetchData();
+    } else {
+      setUserGroup(group);
+    }
+  }, [group, selectedUser])
 
 
   React.useLayoutEffect(() => {
@@ -170,7 +163,7 @@ export default function ProfileScreen({ navigation, route }) {
       navigation.setOptions({
         headerLeft: () => (
           <Button
-            onPress={() => navigation.navigate('EditProfile', {userInGroup, userGroup})}
+            onPress={() => navigation.navigate('EditProfile')}
             title="Edit Profile"
           />
         ),
@@ -185,7 +178,7 @@ export default function ProfileScreen({ navigation, route }) {
     navigation.setOptions({
       title: selectedUser.first_name,
     });
-  }, [navigation, userGroup, userInGroup]);
+  }, [navigation, selectedUser]);
 
   return (
     <View style={[styles.container, { alignItems: 'stretch' }]}>
@@ -199,6 +192,7 @@ export default function ProfileScreen({ navigation, route }) {
         keyExtractor={item => item.id.toString()}
         onEndReached={() => getData()}
         onEndReachedThreshold={0.5}
+        key={selectedUser}
       />
 
     </View>

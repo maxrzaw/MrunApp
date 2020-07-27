@@ -12,7 +12,10 @@ import { ButtonGroup } from 'react-native-elements';
 export default function UserWorkoutScreen({ navigation, route }) {
 
   const { token, user: loggedUser } = React.useContext(AuthContext);
-  const { user } = route.params;
+  const { user: routeUser } = route.params;
+
+  // Set selected user to logged user if no user is given
+  const user = (routeUser === null) ? loggedUser : routeUser;
 
   const buttons = ['All', 'Track', 'Speed', 'Hill', 'Long', 'Core'];
   const groups = {
