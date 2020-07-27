@@ -168,15 +168,23 @@ export default function ProfileScreen({ navigation, route }) {
   React.useLayoutEffect(() => {
     if (loggedUser.id == selectedUser.id) {
       navigation.setOptions({
+        headerLeft: () => (
+          <Button
+            onPress={() => console.log('edit Profile')}
+            title="Edit Profile"
+          />
+        ),
         headerRight: () => (
           <Button
-            onPress={() => signOut()} 
+            onPress={() => signOut()}
             title="Log Out"
           />
         ),
-        title: selectedUser.first_name,
       });
     }
+    navigation.setOptions({
+      title: selectedUser.first_name,
+    });
   }, [navigation]);
 
   return (
