@@ -10,7 +10,8 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Alert,
-  Keyboard
+  Keyboard,
+  ActivityIndicator
 } from 'react-native';
 import { BASE_URL, mapYear } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
@@ -18,7 +19,8 @@ import { Picker } from '@react-native-community/picker';
 
 
 
-export default function EditProfile({ navigation }) {
+export default function EditProfile({ navigation, route }) {
+  const { userInGroup, userGroup } = route.params;
   // Context variables
   const { token, user } = useContext(AuthContext);
   // Pieces of state
@@ -32,13 +34,16 @@ export default function EditProfile({ navigation }) {
     validYear: true,
   });
   const [selectedGroup, setSelectedGroup] = useState({
-    group: 0,
-    temp: 0,
+    group: userInGroup ? userGroup.id : 0,
+    temp: userInGroup ? userGroup.id : 0,
   });
-  const [groups, setGroups] = useState([]);
+  const [groupNames, setGroupNames] = useState(null);
+  const [groupDescs, setGroupDescs] = useState(null);
+  const [pickerItems, setPickerItems] = useState([]);
   const [yearModalVisible, setYearModalVisible] = useState(false);
   const [groupModalVisible, setGroupModalVisible] = useState(false);
   const [valid, setValid] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [yearState, setYearState] = useState({
     year: user.year,
     temp: user.year,
@@ -120,7 +125,8 @@ export default function EditProfile({ navigation }) {
       });
       let response_data = await response.json();
       if (response.ok) {
-        let myGroups = response_data.map((item => {
+        // Get the picker items
+        let items = response_data.map((item => {
           return (
             <Picker.Item
               label={item.name}
@@ -129,12 +135,25 @@ export default function EditProfile({ navigation }) {
             />
           );
         }));
-        setGroups(myGroups);
+        setPickerItems(items);
+        // Make a lookup table for groups with id as key
+        _groupNames = {};
+        _groupDescs = {};
+        _groupNames[0] = "None selected";
+        _groupDescs[0] = "None selected";
+        response_data.forEach(item => {
+          _groupNames[item.id] = item.name;
+          _groupDescs[item.id] = item.description;
+        });
+        setGroupNames(_groupNames);
+        setGroupDescs(_groupDescs);
+        setLoading(false);
       } else {
         console.log("Something went wrong");
       }
     } catch (error) {
       console.log(error);
+      setLoading(false);
     }
   }
 
@@ -167,18 +186,24 @@ export default function EditProfile({ navigation }) {
   };
 
 
-
+  if (loading) {
+    return (
+      <View style={{alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff'}}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
 
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>First Name:</Text>
-          <Text style={{ flex: 1, padding: 5, fontSize: 16}}>{state.firstName}</Text>
+          <Text style={{ flex: 1, padding: 5, fontSize: 16 }}>{state.firstName}</Text>
         </View>
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>Last Name:</Text>
-          <Text style={[styles.textInput, { fontSize: 16}]}>
+          <Text style={[styles.textInput, { fontSize: 16 }]}>
             {state.lastName}
           </Text>
         </View>
@@ -195,9 +220,9 @@ export default function EditProfile({ navigation }) {
           style={styles.textInputView}
           onPress={() => setGroupModalVisible(true)}
         >
-          <Text style={styles.textLabel}>Group:</Text>
+          <Text style={styles.textLabel}>Training Group:</Text>
           <Text style={[styles.textInput, { fontSize: 16 }]}>
-            {selectedGroup.group}
+            {groupNames[selectedGroup.group]}
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Bio:</Text>
@@ -217,80 +242,81 @@ export default function EditProfile({ navigation }) {
           transparent={true}
           visible={groupModalVisible}
         >
-            <View style={styles.centered}>
-              <View style={styles.modalView}>
-                <View style={styles.LabelView}>
-                  <Text style={{ fontSize: 20 }}>Training Group</Text>
-                </View>
-                <Picker
-                  selectedValue={selectedGroup.temp}
-                  display="default"
-                  onValueChange={(val, index) => setSelectedGroup({
-                    ...selectedGroup, 
-                    temp: val,
-                  })}
-                  style={styles.picker}
+          <View style={styles.centered}>
+            <View style={styles.modalView}>
+              <View style={[styles.LabelView, { marginTop: 15, justifyContent: 'space-between'}]}>
+                <Text style={{ fontSize: 20 }}>Training Group</Text>
+                <Text>{groupDescs[selectedGroup.temp]}</Text>
+              </View>
+              <Picker
+                selectedValue={selectedGroup.temp}
+                display="default"
+                onValueChange={(val, index) => setSelectedGroup({
+                  ...selectedGroup,
+                  temp: val,
+                })}
+                style={styles.picker}
+              >
+                {pickerItems}
+              </Picker>
+              <View style={styles.modalButtonsView}>
+                <TouchableOpacity
+                  onPress={() => setGroupModalVisible(false)}
+                  style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
                 >
-                  {groups}
-                </Picker>
-                <View style={styles.modalButtonsView}>
-                  <TouchableOpacity
-                    onPress={() => setGroupModalVisible(false)}
-                    style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
-                  >
-                    <Text>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => onGroupSave()}
-                    style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
-                  >
-                    <Text>Ok</Text>
-                  </TouchableOpacity>
-                </View>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onGroupSave()}
+                  style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
+                >
+                  <Text>Ok</Text>
+                </TouchableOpacity>
               </View>
             </View>
+          </View>
         </Modal>
         <Modal
           animationType="fade"
           transparent={true}
           visible={yearModalVisible}
         >
-            <View style={styles.centered}>
-              <View style={styles.modalView}>
-                <View style={styles.LabelView}>
-                  <Text style={{ fontSize: 20 }}>Year</Text>
-                </View>
-                <Picker
-                  selectedValue={yearState.temp}
-                  display="default"
-                  onValueChange={(val, index) => setYearState({
-                    ...yearState,
-                    temp: val,
-                  })}
-                  style={styles.picker}
+          <View style={styles.centered}>
+            <View style={styles.modalView}>
+              <View style={styles.LabelView}>
+                <Text style={{ fontSize: 20 }}>Year</Text>
+              </View>
+              <Picker
+                selectedValue={yearState.temp}
+                display="default"
+                onValueChange={(val, index) => setYearState({
+                  ...yearState,
+                  temp: val,
+                })}
+                style={styles.picker}
+              >
+                <Picker.Item label="Freshman" value='FR' />
+                <Picker.Item label="Sophomore" value='SO' />
+                <Picker.Item label="Junior" value='JR' />
+                <Picker.Item label="Senior" value='SR' />
+                <Picker.Item label="Graduate" value='GR' />
+              </Picker>
+              <View style={styles.modalButtonsView}>
+                <TouchableOpacity
+                  onPress={() => setYearModalVisible(false)}
+                  style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
                 >
-                  <Picker.Item label="Freshman" value='FR'/>
-                  <Picker.Item label="Sophomore" value='SO'/>
-                  <Picker.Item label="Junior" value='JR'/>
-                  <Picker.Item label="Senior" value='SR'/>
-                  <Picker.Item label="Graduate" value='GR'/>
-                </Picker>
-                <View style={styles.modalButtonsView}>
-                  <TouchableOpacity
-                    onPress={() => setYearModalVisible(false)}
-                    style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
-                  >
-                    <Text>Cancel</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => onYearSave()}
-                    style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
-                  >
-                    <Text>Ok</Text>
-                  </TouchableOpacity>
-                </View>
+                  <Text>Cancel</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => onYearSave()}
+                  style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
+                >
+                  <Text>Ok</Text>
+                </TouchableOpacity>
               </View>
             </View>
+          </View>
         </Modal>
       </View >
     </TouchableWithoutFeedback>
@@ -354,12 +380,12 @@ const styles = StyleSheet.create({
   picker: {
     backgroundColor: '#fffa',
     width: 320,
-    height: 200,
+    height: 180,
   },
   modalButtonsView: {
     flexDirection: 'row',
     height: 50,
-    // backgroundColor: '#f0f0f0',
+    backgroundColor: '#fff',
     borderBottomEndRadius: 10,
     borderBottomStartRadius: 10,
     borderTopColor: '#a2a2a2',
@@ -375,19 +401,4 @@ const styles = StyleSheet.create({
     height: 50,
     justifyContent: 'center',
   },
-  deleteView: {
-    margin: 5,
-    backgroundColor: '#fff',
-    borderColor: 'red',
-    borderWidth: 3,
-    alignSelf: 'stretch',
-    alignContent: 'center',
-    justifyContent: 'center',
-    alignItems: 'center',
-    flex: 0.125,
-  },
-  deleteText: {
-    color: 'red',
-    fontSize: 18,
-  }
 });

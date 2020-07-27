@@ -170,7 +170,7 @@ export default function ProfileScreen({ navigation, route }) {
       navigation.setOptions({
         headerLeft: () => (
           <Button
-            onPress={() => navigation.navigate('EditProfile')}
+            onPress={() => navigation.navigate('EditProfile', {userInGroup, userGroup})}
             title="Edit Profile"
           />
         ),
@@ -185,7 +185,7 @@ export default function ProfileScreen({ navigation, route }) {
     navigation.setOptions({
       title: selectedUser.first_name,
     });
-  }, [navigation]);
+  }, [navigation, userGroup, userInGroup]);
 
   return (
     <View style={[styles.container, { alignItems: 'stretch' }]}>
