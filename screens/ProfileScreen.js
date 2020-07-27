@@ -170,7 +170,7 @@ export default function ProfileScreen({ navigation, route }) {
       navigation.setOptions({
         headerLeft: () => (
           <Button
-            onPress={() => console.log('edit Profile')}
+            onPress={() => navigation.navigate('EditProfile')}
             title="Edit Profile"
           />
         ),

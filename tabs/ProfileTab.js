@@ -8,6 +8,7 @@ import UserWorkoutsScreen from '../screens/UserWorkoutsScreen';
 import ActivityDetailScreen from '../screens/ActivityDetailScreen';
 import { AuthContext } from '../contexts/AuthContext';
 import EditActivity from '../screens/EditActivity';
+import EditProfile from '../screens/EditProfileScreen';
 
 const ProfileStack = createStackNavigator();
 
@@ -41,6 +42,11 @@ export default function ProfileTab({ navigation }) {
         name="EditActivity"
         component={EditActivity}
         options={{ title: 'Edit Avtivity' }}
+      />
+      <ProfileStack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{title: 'Edit Profile'}}
       />
     </ProfileStack.Navigator>
   );

@@ -24,4 +24,11 @@ export const mapCategory = {
     'C': 'Core',
 }
 
+export const mapYear = {
+    'FR': 'Freshman',
+    'SO': 'Sophomore',
+    'JR': 'Junior',
+    'SR': 'Senior',
+    'GR': 'Graduate',
+}
 

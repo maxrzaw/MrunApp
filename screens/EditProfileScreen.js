@@ -12,9 +12,10 @@ import {
   Alert,
   Keyboard
 } from 'react-native';
-import { BASE_URL, mapCategory } from '../helpers'
+import { BASE_URL, mapYear } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
-import DateTimePicker from '@react-native-community/datetimepicker';
+import { Picker } from '@react-native-community/picker';
+
 
 
 export default function EditProfile({ navigation }) {
@@ -30,21 +31,28 @@ export default function EditProfile({ navigation }) {
     validLast: true,
     validYear: true,
   });
+  const [selectedGroup, setSelectedGroup] = useState({
+    group: 0,
+    temp: 0,
+  });
+  const [groups, setGroups] = useState([]);
+  const [yearModalVisible, setYearModalVisible] = useState(false);
+  const [groupModalVisible, setGroupModalVisible] = useState(false);
+  const [valid, setValid] = useState(true);
+  const [yearState, setYearState] = useState({
+    year: user.year,
+    temp: user.year,
+  });
+
+  useEffect(() => {
+    getGroups();
+  }, []);
 
   useEffect(() => {
     isValid = (state.validFirst && state.validLast && state.validYear);
     setValid(isValid);
   }, [state]);
 
-  const [valid, setValid] = useState(true);
-
-  const [yearState, setYearState] = useState({
-    year: user.year,
-    valid: true,
-    temp: user.year,
-  });
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   const onFirstNameChange = (val) => {
     valid = (val.trim().length > 0);
@@ -74,9 +82,17 @@ export default function EditProfile({ navigation }) {
   const onYearSave = () => {
     setYearState({
       ...yearState,
-      year: state.tempYear,
+      year: yearState.temp,
     });
-    setModalVisible(false);
+    setYearModalVisible(false);
+  }
+
+  const onGroupSave = () => {
+    setSelectedGroup({
+      ...selectedGroup,
+      group: selectedGroup.temp,
+    });
+    setGroupModalVisible(false);
   }
 
   React.useLayoutEffect(() => {
@@ -92,6 +108,35 @@ export default function EditProfile({ navigation }) {
       )
     });
   }, [navigation, valid]);
+
+  const getGroups = async () => {
+    try {
+      let response = await fetch(`${BASE_URL}groups/`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+      });
+      let response_data = await response.json();
+      if (response.ok) {
+        let myGroups = response_data.map((item => {
+          return (
+            <Picker.Item
+              label={item.name}
+              value={item.id}
+              key={item.id}
+            />
+          );
+        }));
+        setGroups(myGroups);
+      } else {
+        console.log("Something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
 
 
@@ -119,9 +164,8 @@ export default function EditProfile({ navigation }) {
       Alert.alert("Unable to save. Check your network connection.")
     }
     navigation.goBack();
-    console.log("Saved returned");
-
   };
+
 
 
   return (
@@ -129,26 +173,31 @@ export default function EditProfile({ navigation }) {
       <View style={styles.container}>
 
         <View style={styles.textInputView}>
-          <Text style={styles.textLabelDisabled}>Title:</Text>
-          <Text style={{ flex: 1, padding: 5, fontSize: 16, color: '#a9a9a9' }}>{activity.workout.title}</Text>
+          <Text style={styles.textLabel}>First Name:</Text>
+          <Text style={{ flex: 1, padding: 5, fontSize: 16}}>{state.firstName}</Text>
         </View>
         <View style={styles.textInputView}>
-          <Text style={styles.textLabelDisabled}>Category:</Text>
-          <Text style={[styles.textInput, { fontSize: 16, color: '#a9a9a9' }]}>
-            {mapCategory[activity.workout.category]}
+          <Text style={styles.textLabel}>Last Name:</Text>
+          <Text style={[styles.textInput, { fontSize: 16}]}>
+            {state.lastName}
           </Text>
-        </View>
-        <Text style={styles.textLabelDisabled}>Description:</Text>
-        <View style={styles.descriptionView}>
-          <Text style={{ flex: 1, padding: 5, color: '#a9a9a9' }}>{activity.workout.description}</Text>
         </View>
         <TouchableOpacity
           style={styles.textInputView}
-          onPress={() => setModalVisible(true)}
+          onPress={() => setYearModalVisible(true)}
         >
-          <Text style={styles.textLabel}>Time:</Text>
+          <Text style={styles.textLabel}>Year:</Text>
           <Text style={[styles.textInput, { fontSize: 16 }]}>
-            {state.displayDate}
+            {mapYear[yearState.year]}
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={styles.textInputView}
+          onPress={() => setGroupModalVisible(true)}
+        >
+          <Text style={styles.textLabel}>Group:</Text>
+          <Text style={[styles.textInput, { fontSize: 16 }]}>
+            {selectedGroup.group}
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Bio:</Text>
@@ -166,33 +215,33 @@ export default function EditProfile({ navigation }) {
         <Modal
           animationType="fade"
           transparent={true}
-          visible={modalVisible}
+          visible={groupModalVisible}
         >
-          <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
             <View style={styles.centered}>
               <View style={styles.modalView}>
                 <View style={styles.LabelView}>
-                  <Text style={{ fontSize: 20 }}>Workout Time</Text>
+                  <Text style={{ fontSize: 20 }}>Training Group</Text>
                 </View>
-                <DateTimePicker
-                  testID="dateTimePicker"
-                  mode="datetime"
-                  value={state.tempTime}
-                  is24Hour={true}
+                <Picker
+                  selectedValue={selectedGroup.temp}
                   display="default"
-                  onChange={(event, val) => onDateChange(val)}
+                  onValueChange={(val, index) => setSelectedGroup({
+                    ...selectedGroup, 
+                    temp: val,
+                  })}
                   style={styles.picker}
-                  maximumDate={new Date()}
-                />
+                >
+                  {groups}
+                </Picker>
                 <View style={styles.modalButtonsView}>
                   <TouchableOpacity
-                    onPress={() => setModalVisible(false)}
+                    onPress={() => setGroupModalVisible(false)}
                     style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
                   >
                     <Text>Cancel</Text>
                   </TouchableOpacity>
                   <TouchableOpacity
-                    onPress={() => onTimeSave()}
+                    onPress={() => onGroupSave()}
                     style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
                   >
                     <Text>Ok</Text>
@@ -200,7 +249,48 @@ export default function EditProfile({ navigation }) {
                 </View>
               </View>
             </View>
-          </TouchableWithoutFeedback>
+        </Modal>
+        <Modal
+          animationType="fade"
+          transparent={true}
+          visible={yearModalVisible}
+        >
+            <View style={styles.centered}>
+              <View style={styles.modalView}>
+                <View style={styles.LabelView}>
+                  <Text style={{ fontSize: 20 }}>Year</Text>
+                </View>
+                <Picker
+                  selectedValue={yearState.temp}
+                  display="default"
+                  onValueChange={(val, index) => setYearState({
+                    ...yearState,
+                    temp: val,
+                  })}
+                  style={styles.picker}
+                >
+                  <Picker.Item label="Freshman" value='FR'/>
+                  <Picker.Item label="Sophomore" value='SO'/>
+                  <Picker.Item label="Junior" value='JR'/>
+                  <Picker.Item label="Senior" value='SR'/>
+                  <Picker.Item label="Graduate" value='GR'/>
+                </Picker>
+                <View style={styles.modalButtonsView}>
+                  <TouchableOpacity
+                    onPress={() => setYearModalVisible(false)}
+                    style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
+                  >
+                    <Text>Cancel</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => onYearSave()}
+                    style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
+                  >
+                    <Text>Ok</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </View>
         </Modal>
       </View >
     </TouchableWithoutFeedback>

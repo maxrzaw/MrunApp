@@ -99,7 +99,6 @@ export default function EditActivity({ navigation, route: { params: { activity, 
       console.log(error);
       Alert.alert("Unable to save. Check your network connection.")
     }
-    console.log("Saved returned");
 
   };
 
