@@ -23,7 +23,7 @@ export default function ProfileScreen({ navigation, route }) {
   const [state, setState] = useState({
     data: null,
     next: 1,
-    refreshing: false,
+    refreshing: true,
   });
 
 
@@ -109,11 +109,11 @@ export default function ProfileScreen({ navigation, route }) {
   }
   useEffect(() => {
     // Get data for flatlist
-    try {
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
+    // try {
+    //   getData();
+    // } catch (error) {
+    //   console.log(error);
+    // }
     // Fetch data for flatlist Header
     async function fetchData() {
       try {

@@ -10,7 +10,6 @@ import {
 import Activity from '../components/Activity';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
-import { useFocusEffect } from '@react-navigation/native';
 
 
 export default function ActivityFeedScreen({ navigation, route }) {
@@ -22,16 +21,8 @@ export default function ActivityFeedScreen({ navigation, route }) {
   const [state, setState] = useState({
     data: null,
     next: 1,
-    refreshing: false,
+    refreshing: true,
   });
-
-  useEffect(() => {
-    try {
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   // This handles refreshing once state is updated
   useEffect(() => {
@@ -40,13 +31,6 @@ export default function ActivityFeedScreen({ navigation, route }) {
     }
   }, [state.refreshing])
 
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log("UseFocus Ran");
-      console.log(`Refresh is ${route.params?.refresh}`);
-      //navigation.setParams({refresh: false});
-    }, [navigation])
-  );
 
   const renderItem = ({ item }) => (
     <Activity

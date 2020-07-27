@@ -26,7 +26,7 @@ export default function WorkoutScreen({ navigation }) {
     data: null,
     next: 1,
     refreshing: false,
-    selectedIndex: 1,
+    selectedIndex: 0,
   });
 
   const handleDelete = async (workout_id) => {
@@ -81,13 +81,6 @@ export default function WorkoutScreen({ navigation }) {
     }
   }
 
-  useEffect(() => {
-    try {
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
 
   const renderItem = ({ item }) => (
     <Workout

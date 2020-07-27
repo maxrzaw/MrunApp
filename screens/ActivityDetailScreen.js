@@ -219,18 +219,13 @@ export default function ActivityDetailScreen({ navigation, route }) {
   };
 
   // This handles refreshing once state is updated
+  // and when the app first loads
   useEffect(() => {
     if (commentState.refreshing) {
       getActivity();
       getComments();
     }
   }, [commentState.refreshing]);
-
-  // Initial loading
-  useEffect(() => {
-    getActivity();
-    getComments();
-  }, []);
 
 
 

@@ -32,7 +32,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
     data: null,
     next: 1,
     refreshing: false,
-    selectedIndex: 1,
+    selectedIndex: 0,
   });
 
   const handleDelete = async (workout_id) => {
@@ -88,14 +88,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
     }
   }
 
-  useEffect(() => {
-    try {
-      getData();
-    } catch (error) {
-      console.log(error);
-    }
-  }, []);
-
   const renderItem = ({ item }) => (
     <Workout
       item={item}
@@ -117,6 +109,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
   // This handles refreshing once state is updated
   useEffect(() => {
     if (state.refreshing) {
+      console.log(`Refreshing, getting page ${state.next}`);
       getData();
     }
   }, [state.refreshing])
@@ -124,7 +117,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
 
   // This handles refreshing once index is changed
   useEffect(() => {
-    console.log(groups[state.selectedIndex]);
+    console.log(`Index change, getting page ${state.next} on index ${groups[state.selectedIndex]}`);
     getData();
   }, [state.selectedIndex])
 
