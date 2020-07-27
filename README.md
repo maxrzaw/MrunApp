@@ -26,6 +26,8 @@ npm i react-native-elements --save
 
 npm install @react-native-community/picker --save
 
+npm install @react-native-community/datetimepicker --save
+
 npx pod-install ios
 
 npx react-native run-ios --simulator="iPhone 8"  (I like iPhone 8 over the default)
