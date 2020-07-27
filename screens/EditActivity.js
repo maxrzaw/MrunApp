@@ -17,7 +17,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 
-export default function EditActivity({ navigation, route: { params: { activity } } }) {
+export default function EditActivity({ navigation, route: { params: { activity, deleteItem } } }) {
   const { token } = useContext(AuthContext);
   const [state, setState] = useState({
     comment: activity.comment,
@@ -103,23 +103,11 @@ export default function EditActivity({ navigation, route: { params: { activity }
 
   };
 
-  const deleteActivity = async () => {
+  const handleDelete = async () => {
     try {
-      let response = await fetch(`${BASE_URL}activities/${activity.id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-      });
-      if (response.ok) {
-        navigation.navigate("Home", { refresh: true });
-      } else {
-        Alert.alert("Unable to delete");
-      }
+      await deleteItem(activity.id);
     } catch (error) {
       console.log(error);
-      Alert.alert("Unable to delete");
     }
   }
 
@@ -231,7 +219,7 @@ export default function EditActivity({ navigation, route: { params: { activity }
               },
               {
                 text: 'Delete',
-                onPress: () => deleteActivity(),
+                onPress: () => handleDelete(),
                 style: 'destructive'
               }
             ],

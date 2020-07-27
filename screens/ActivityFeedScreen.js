@@ -5,7 +5,8 @@ import {
   View,
   Button,
   StyleSheet,
-  FlatList
+  FlatList,
+  Alert
 } from 'react-native';
 import Activity from '../components/Activity';
 import { AuthContext } from '../contexts/AuthContext';
@@ -14,7 +15,7 @@ import { BASE_URL } from '../helpers';
 
 export default function ActivityFeedScreen({ navigation, route }) {
 
-  
+
 
   const { user: loggedUser, token } = React.useContext(AuthContext);
 
@@ -32,9 +33,35 @@ export default function ActivityFeedScreen({ navigation, route }) {
   }, [state.refreshing])
 
 
+  const deleteItem = async (id) => {
+    try {
+      let response = await fetch(`${BASE_URL}activities/${id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+      });
+      if (response.ok) {
+        setState({
+          ...state,
+          data: state.data.filter(activity => activity.id !== id),
+        });
+        navigation.popToTop();
+      } else {
+        Alert.alert("Unable to delete");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Unable to reach server");
+    }
+  }
+
+
   const renderItem = ({ item }) => (
     <Activity
       item={item}
+      deleteItem={deleteItem}
       navigation={navigation}
     />
   );

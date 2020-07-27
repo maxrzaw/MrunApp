@@ -6,7 +6,8 @@ import {
   Button,
   StyleSheet,
   FlatList,
-  TouchableOpacity
+  TouchableOpacity,
+  Alert
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
@@ -53,11 +54,36 @@ export default function ProfileScreen({ navigation, route }) {
     }
   }
 
+  const deleteItem = async (id) => {
+    try {
+      let response = await fetch(`${BASE_URL}activities/${id}/`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+      });
+      if (response.ok) {
+        setState({
+          ...state,
+          data: state.data.filter(activity => activity.id !== id),
+        });
+        navigation.popToTop();
+      } else {
+        Alert.alert("Unable to delete");
+      }
+    } catch (error) {
+      console.log(error);
+      Alert.alert("Unable to reach server");
+    }
+  }
+
 
   const renderItem = ({ item }) => (
     <Activity
       item={item}
       navigation={navigation}
+      deleteItem={deleteItem}
     />
   );
 

@@ -26,7 +26,7 @@ import Feather from 'react-native-vector-icons/Feather';
 
 export default function ActivityDetailScreen({ navigation, route }) {
 
-  const { item } = route.params;
+  const { item, deleteItem } = route.params;
 
   const { user: loggedUser, token } = useContext(AuthContext);
   const [itemState, setItemState] = useState({
@@ -72,7 +72,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
         headerRight: () => (
           <Button
             title="Edit"
-            onPress={() => navigation.navigate('EditActivity', { activity: item })}
+            onPress={() => navigation.navigate('EditActivity', { activity: item, deleteItem })}
           />
         ),
       });

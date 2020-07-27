@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { mapCategory } from '../helpers'
 
-export default function Activity({ navigation, item }) {
+export default function Activity({ navigation, item, deleteItem }) {
 
   const { workout, user } = item;
 
@@ -27,13 +27,13 @@ export default function Activity({ navigation, item }) {
       hour: 'numeric',
       minute: '2-digit',
     });
-    return `${day} at ${time}`; // Removed the leading zero
+    return `${day} at ${time}`;
   }
 
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => navigation.push('ActivityDetail', { item })}
+        onPress={() => navigation.push('ActivityDetail', { item, deleteItem })}
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text style={styles.titleText}>{workout.title}</Text>
