@@ -1,11 +1,19 @@
 import * as React from 'react';
 import { Text, View } from 'react-native';
+import SuggestionScreen from '../screens/SuggestionScreen'
+
 import { createStackNavigator } from '@react-navigation/stack'
 
-export default function TodayTab() {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <Text>Suggested Workout Screen!</Text>
-      </View>
-    );
-  }
+const TodayStack = createStackNavigator();
+
+export default function TodayTab({ navigation }) {
+  return (
+    <TodayStack.Navigator>
+      <TodayStack.Screen
+        name="Home"
+        component={SuggestionScreen}
+        options={{title: 'Workout Suggestions'}}
+      />
+    </TodayStack.Navigator>
+  );
+}

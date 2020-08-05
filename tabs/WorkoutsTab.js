@@ -7,9 +7,9 @@ import Feather from 'react-native-vector-icons/Feather';
 
 const WorkoutStack = createStackNavigator();
 
-export default function WorkoutTab({ navigation, item }) {
+export default function WorkoutTab({ navigation }) {
   return (
-    <WorkoutStack.Navigator initialRouteName={"WorkoutsHome"}>
+    <WorkoutStack.Navigator initialRouteName={"Home"}>
       <WorkoutStack.Screen
         name="Home"
         component={WorkoutsScreen}

@@ -164,6 +164,7 @@ const AuthContextProvider = (props) => {
         return true;
       } else {
         Alert.alert("Problem saving");
+        console.log(response_data);
         return false;
       }
     } catch (error) {

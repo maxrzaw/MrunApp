@@ -1,14 +1,19 @@
-import React from 'react'
+import React, { useContext } from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import ActivityTab from './ActivityTab'
-import ProfileTab from './ProfileTab'
-import TodayTab from './TodayTab'
-import WorkoutsTab from './WorkoutsTab'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { AuthContext } from '../contexts/AuthContext';
+import ActivityTab from './ActivityTab';
+import ProfileTab from './ProfileTab';
+import TodayTab from './TodayTab';
+import WorkoutsTab from './WorkoutsTab';
+import CoachTab from './CoachTab';
 
 const Tab = createBottomTabNavigator();
 
+
 export default function TabScreen({ route }) {
+  const { user } = useContext(AuthContext);
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -19,12 +24,21 @@ export default function TabScreen({ route }) {
             iconName = focused
               ? 'home'
               : 'home-outline';
-          } else if (route.name === 'TodayTab') {
-            iconName = 'calendar-today';
+          } else if (route.name === 'PlanTab') {
+            iconName = focused
+              ? 'star-box'
+              : 'star-box-outline';
           } else if (route.name === 'ProfileTab') {
             iconName = focused ? 'account' : 'account-outline';
           } else if (route.name === 'WorkoutsTab') {
             iconName = 'run';
+          } else if (route.name === 'CoachTab') {
+            // iconName = focused
+            // ? 'clipboard'
+            // : 'clipboard-outline';
+            iconName = focused
+              ? 'whistle'
+              : 'whistle-outline';
           }
 
           // You can return any component that you like here!
@@ -47,15 +61,23 @@ export default function TabScreen({ route }) {
         options={{ title: 'Workouts' }}
       />
       <Tab.Screen
-        name="TodayTab"
+        name="PlanTab"
         component={TodayTab}
-        options={{ title: 'Today' }}
+        options={{ title: 'Plan' }}
       />
       <Tab.Screen
         name="ProfileTab"
         component={ProfileTab}
         options={{ title: 'Profile' }}
       />
+      {user.is_staff ?
+        <Tab.Screen
+          name="CoachTab"
+          component={CoachTab}
+          options={{ title: 'Coaches' }}
+        />
+        : null
+      }
     </Tab.Navigator>
   )
 }

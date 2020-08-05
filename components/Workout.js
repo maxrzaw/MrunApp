@@ -3,10 +3,15 @@ import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { mapCategory } from '../helpers'
 import Feather from 'react-native-vector-icons/Feather';
 
-export default function Workout({ navigation, item, deleteItem, loggedUser }) {
+export default function Workout({ navigation, item, loggedUser, deleteItem, disableDelete }) {
+
+  Workout.defaultProps = {
+    disableDelete: false,
+    deleteItem: (id) => console.log(`Deleted Item ${id}`),
+  }
 
 
-  const canDelete = (item.owner == loggedUser.id);
+  const canDelete = (item.owner == loggedUser.id) && !disableDelete;
 
   return (
     <View style={styles.container}>

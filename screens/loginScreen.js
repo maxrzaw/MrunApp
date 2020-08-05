@@ -5,22 +5,20 @@ import {
   View, 
   Button, 
   TextInput, 
-  StyleSheet, 
-  Alert, 
+  StyleSheet,
   TouchableOpacity, 
   TouchableWithoutFeedback, 
   Keyboard 
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
-import { BASE_URL } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext'
 
 
 export default function LoginScreen({ navigation }) {
 
   // Get signIn() function from context
-  const { signIn } = React.useContext(AuthContext);
+  const { signIn } = useContext(AuthContext);
 
   // Set initial state
   const [data, setData] = useState({
