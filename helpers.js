@@ -1,9 +1,8 @@
 // Some helper functions an constants
 import { StyleSheet } from 'react-native'
 
-// export const BASE_URL = "http://localhost:8000/api/v1/"
-export const BASE_URL = "http://10.0.0.234:80/api/v1/"
-// export const BASE_URL = "http://68.36.65.3:80/api/v1/"
+// export const BASE_URL = "http://localhost:80/api/v1/"
+export const BASE_URL = "https://api.maxzawisa.com/api/v1/"
 
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
