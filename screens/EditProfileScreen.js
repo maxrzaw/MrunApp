@@ -220,7 +220,6 @@ export default function EditProfile({ navigation}) {
             onChangeText={(val) => onFirstNameChange(val)}
             maxLength={20}
           />
-          {/* <Text style={{ flex: 1, padding: 5, fontSize: 16 }}>{state.firstName}</Text> */}
         </View>
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>Last Name:</Text>
