@@ -6,9 +6,8 @@ import {
   Button, 
   TextInput, 
   StyleSheet,
-  TouchableOpacity, 
-  TouchableWithoutFeedback, 
-  Keyboard 
+  Keyboard,
+  Pressable
 } from 'react-native';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
@@ -61,7 +60,7 @@ export default function LoginScreen({ navigation }) {
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessable={false}>
+    <Pressable onPress={Keyboard.dismiss} style={{flex: 1}}>
       <View style={styles.container}>
         <View style={styles.bottom}>
           <Text style={styles.bottomText}>Username</Text>
@@ -102,9 +101,9 @@ export default function LoginScreen({ navigation }) {
               onSubmitEditing={() => handleLogin()} 
               returnKeyType='go'
             />
-            <TouchableOpacity onPress={() => updateSecureTextEntry()}>
+            <Pressable onPress={() => updateSecureTextEntry()}>
               <Feather name={data.secureTextEntry ? "eye-off" : "eye"} size={20} color="black" />
-            </TouchableOpacity>
+            </Pressable>
           </View>
 
           <Button
@@ -116,12 +115,12 @@ export default function LoginScreen({ navigation }) {
           />
         </View>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 }
 
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
