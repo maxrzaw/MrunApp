@@ -16,6 +16,7 @@ import {
 import { BASE_URL, mapCategory } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { throttle } from 'underscore';
 
 
 export default function ActivityFromWorkout({ navigation, route: { params: { item } } }) {
@@ -101,15 +102,16 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
       console.log(error);
       Alert.alert("Unable to save. Check your network connection.")
     }
-    
   };
+
+  const onSave = throttle(save, 250, {trailing: false});
 
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button
-          onPress={() => save()} title="Save"
+          onPress={() => onSave()} title="Save"
           disabled={!(state.validComment)}
         />
       ),

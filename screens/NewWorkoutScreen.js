@@ -14,6 +14,7 @@ import {
 import { BASE_URL, mapCategory } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-community/picker';
+import { throttle } from 'underscore';
 
 
 
@@ -88,11 +89,14 @@ export default function NewWorkoutScreen({ navigation }) {
     }
   };
 
+
+  const onSave = throttle(save, 250, {trailing: false});
+
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button 
-          onPress={() => save()} title="Save"
+          onPress={() => onSave()} title="Save"
           disabled={!(state.titleValid && state.descValid)}
         />
       ),
