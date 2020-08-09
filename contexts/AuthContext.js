@@ -84,6 +84,7 @@ const AuthContextProvider = (props) => {
           isLoggedIn: true,
           isLoading: false,
         });
+        await getGroup(token);
       } else {
         // Token is bad
         setState({
@@ -168,6 +169,7 @@ const AuthContextProvider = (props) => {
         return false;
       }
     } catch (error) {
+      console.log(error);
 
     }
   }
@@ -176,9 +178,43 @@ const AuthContextProvider = (props) => {
     getMe(state.token);
   }
 
+  const register = async (username, email, first, last, pass1, pass2, bio, year) => {
+    console.log('Register ran');
+    try {
+      const body_data = {
+        "username": username,
+        "email": email,
+        "first_name": first,
+        "last_name": last,
+        "password1": pass1,
+        "password2": pass2,
+        "bio": bio,
+        "year": year,
+      }
+      console.log(body_data);
+      let response = await fetch(`${BASE_URL}register/`, {
+        method: 'POST',        
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(body_data)
+      });
+      let response_data = await response.json();
+      console.log(response_data);
+      if (response.ok) {
+        await getMe(response_data['token']);
+      } else {
+        Alert.alert(JSON.stringify(response_data).replace(/["\[\],]/g, ''));
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+
 
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signOut, refresh, group: userGroup, updateGroup }}>
+    <AuthContext.Provider value={{ ...state, signIn, signOut, refresh, group: userGroup, updateGroup, register }}>
       {props.children}
     </AuthContext.Provider>
   )
