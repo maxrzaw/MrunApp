@@ -5,6 +5,7 @@ import Workout from '../components/Workout';
 import DateHeader from '../components/DateHeader';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
+import GroupModal from '../components/GroupModal';
 
 
 
@@ -31,7 +32,13 @@ export default function SuggestionScreen({ navigation }) {
   }
 
   const [selectedGroup, setSelectedGroup] = useState(group.id);
-  const [tempGroup, setTempGroup] = useState(group.id);
+  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [groupModalVisible, setGroupModalVisible] = useState(false);
+
+  const onGroupChange = (groupId) => {
+    setSelectedGroup(groupId);
+    getSuggestion(date = selectedDate, _group = groupId);
+  }
 
   const [state, setState] = useState({
     workout: null,
@@ -39,8 +46,8 @@ export default function SuggestionScreen({ navigation }) {
     disableButtons: false,
   });
 
-  tempDate = new Date();
-  const getSuggestion = async (date = tempDate, _group = selectedGroup) => {
+  //tempDate = new Date();
+  const getSuggestion = async (date = selectedDate, _group = selectedGroup) => {
     let dateShort = date.toISOString().split('T')[0];
 
     try {
@@ -81,7 +88,8 @@ export default function SuggestionScreen({ navigation }) {
       ...state,
       disableButtons: true,
     });
-    getSuggestion(date = value);
+    setSelectedDate(value);
+    getSuggestion(date = value, _group = selectedGroup);
   }
 
   // Initial load of data
@@ -102,7 +110,18 @@ export default function SuggestionScreen({ navigation }) {
 
   return (
     <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'stretch' }}>
-      <Pressable>
+      <GroupModal
+        onChange={onGroupChange}
+        visible={groupModalVisible}
+        setVisible={setGroupModalVisible}
+        initialGroup={group.id}
+      />
+      <DateHeader
+        initialDate={new Date()}
+        onDateChange={onDateChange}
+        disableButtons={state.disableButtons}
+      />
+      <Pressable onPress={() => setGroupModalVisible(true)}>
         {({ pressed }) => (
           <View style={[styles.groupHeader, pressed ? styles.headerPressedColor : styles.headerColor]}>
             <Text>Showing suggestions for {group.name}</Text>
@@ -111,11 +130,7 @@ export default function SuggestionScreen({ navigation }) {
         )}
       </Pressable>
 
-      <DateHeader
-        initialDate={new Date()}
-        onDateChange={onDateChange}
-        disableButtons={state.disableButtons}
-      />
+
       {
         state.notFound
           ?
@@ -146,7 +161,7 @@ styles = StyleSheet.create({
   },
   headerColor: {
     backgroundColor: '#0174BB',
-  }, 
+  },
   headerPressedColor: {
     backgroundColor: '#0067AE',
   },
