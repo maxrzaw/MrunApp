@@ -127,7 +127,7 @@ export default function WorkoutScreen({ navigation }) {
       <ButtonGroup
         selectedIndex={state.selectedIndex}
         buttons={buttons}
-        containerStyle={styles.BtnGroup}
+        containerStyle={styles.btnGroup}
         onPress={(val) => updateIndex(val)}
       />
       <FlatList
@@ -144,7 +144,7 @@ export default function WorkoutScreen({ navigation }) {
 }
 
 styles = StyleSheet.create({
-  BtnGroup: {
+  btnGroup: {
     height: 35,
     marginHorizontal: 0,
     marginTop: 0,

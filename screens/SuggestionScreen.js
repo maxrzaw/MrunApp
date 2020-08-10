@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Alert } from 'react-native';
+import { Text, View, StyleSheet, Alert, Pressable, Modal } from 'react-native';
 import Workout from '../components/Workout';
 import DateHeader from '../components/DateHeader';
 import { AuthContext } from '../contexts/AuthContext';
@@ -20,7 +20,6 @@ export default function SuggestionScreen({ navigation }) {
   }
 
   const { token, group, user } = React.useContext(AuthContext);
-  const { is_staff } = user;
 
 
   const groups = {
@@ -31,6 +30,9 @@ export default function SuggestionScreen({ navigation }) {
     4: 'Scrubs',
   }
 
+  const [selectedGroup, setSelectedGroup] = useState(group.id);
+  const [tempGroup, setTempGroup] = useState(group.id);
+
   const [state, setState] = useState({
     workout: null,
     notFound: true,
@@ -38,7 +40,7 @@ export default function SuggestionScreen({ navigation }) {
   });
 
   tempDate = new Date();
-  const getSuggestion = async (date = tempDate, _group = group.id) => {
+  const getSuggestion = async (date = tempDate, _group = selectedGroup) => {
     let dateShort = date.toISOString().split('T')[0];
 
     try {
@@ -90,14 +92,25 @@ export default function SuggestionScreen({ navigation }) {
 
   if (!group.id || group.id == 0) {
     return (
-      <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>Join a group from Profile to see suggestions</Text>
-    </View>
+      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+        <Text>Join a group from Profile to see suggestions</Text>
+      </View>
     )
   }
 
+
+
   return (
     <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'stretch' }}>
+      <Pressable>
+        {({ pressed }) => (
+          <View style={[styles.groupHeader, pressed ? styles.headerPressedColor : styles.headerColor]}>
+            <Text>Showing suggestions for {group.name}</Text>
+            <Text>View a different group</Text>
+          </View>
+        )}
+      </Pressable>
+
       <DateHeader
         initialDate={new Date()}
         onDateChange={onDateChange}
@@ -106,10 +119,10 @@ export default function SuggestionScreen({ navigation }) {
       {
         state.notFound
           ?
-          <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text>No Suggested Workouts on selected Day</Text>
           </View>
-          
+
           :
           <Workout
             item={state.workout}
@@ -119,23 +132,22 @@ export default function SuggestionScreen({ navigation }) {
           />
       }
 
-      {/* <Workout
-        item={item}
-        disableDelete={true}
-        loggedUser={user}
-        navigation={navigation}
-      />
-      <Workout
-        item={item}
-        disableDelete={true}
-        loggedUser={user}
-        navigation={navigation}
-      /> */}
-
     </View>
   );
 }
 
 styles = StyleSheet.create({
-
+  groupHeader: {
+    flex: 0,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 5,
+  },
+  headerColor: {
+    backgroundColor: '#0174BB',
+  }, 
+  headerPressedColor: {
+    backgroundColor: '#0067AE',
+  },
 });

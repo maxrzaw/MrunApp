@@ -11,19 +11,30 @@ import {
 import Activity from '../components/Activity';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
+import { ButtonGroup } from 'react-native-elements';
+import { throttle } from 'underscore';
 
 
 export default function ActivityFeedScreen({ navigation, route }) {
 
 
 
-  const { user: loggedUser, token } = React.useContext(AuthContext);
+  const { user: loggedUser, token, group } = React.useContext(AuthContext);
+  var name = group ? group.name : 'My Group';
+
+  const buttons = ['All', name];
 
   const [state, setState] = useState({
     data: null,
     next: 1,
     refreshing: true,
   });
+
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  useEffect(() => {
+    onRefresh();
+  }, [selectedIndex]);
 
   // This handles refreshing once state is updated
   useEffect(() => {
@@ -76,14 +87,15 @@ export default function ActivityFeedScreen({ navigation, route }) {
       next: 1,
       refreshing: true,
     });
-  }
+  };
 
 
 
   const getData = async () => {
     if (state.next != null) {
       try {
-        url = `${BASE_URL}activities/?page=${state.next}`
+        let filter = selectedIndex ? '&filter=group' : '';
+        url = `${BASE_URL}activities/?page=${state.next}${filter}`
         let response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -107,6 +119,12 @@ export default function ActivityFeedScreen({ navigation, route }) {
   }
   return (
     <View style={[styles.container, { alignItems: 'stretch' }]}>
+      <ButtonGroup
+        selectedIndex={selectedIndex}
+        buttons={buttons}
+        containerStyle={styles.btnGroup}
+        onPress={(val) => setSelectedIndex(val)}
+      />
       <FlatList
         style={styles.flatlist}
         data={state.data}
@@ -130,5 +148,11 @@ const styles = StyleSheet.create({
   },
   flatlist: {
     width: '100%',
+  },
+  btnGroup: {
+    height: 35,
+    marginHorizontal: 0,
+    marginTop: 0,
+    marginBottom: 0,
   },
 });
