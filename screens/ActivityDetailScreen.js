@@ -15,15 +15,6 @@ import { BASE_URL, handleNetworkError } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 
-/*  TODO:
-      DONE Add the activity as a header.
-      DONE Modify the API to return user objects.
-      DONE Add comments in the renderItem.
-      Stuff I am missing.
-      Make adding comments work.
-      Make the edit modal. (I think I waant it to be a modal)
-*/
-
 
 export default function ActivityDetailScreen({ navigation, route }) {
 
@@ -40,7 +31,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
   });
 
   const axiosBase = axios.create({
-    baseURL: `${BASE_URL}/activities`,
+    baseURL: BASE_URL,
     timout: 5000,
     headers: {
       'Content-Type': 'application/json',
@@ -95,7 +86,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
   const getActivity = async () => {
     try {
       console.log();
-      response = await axiosBase.get(`/${item.id}/`);
+      response = await axiosBase.get(`/activities/${item.id}/`);
       data = await response.data;
       setItemState({
         ...itemState,
@@ -112,7 +103,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
     const getComments = async () => {
       if (commentState.next != null) {
         try {
-          response = await axiosBase.get(`/${item.id}/comments/?page=${commentState.next}`);
+          response = await axiosBase.get(`/activities/${item.id}/comments/?page=${commentState.next}`);
           let result = await response.data;
           setCommentState({
             ...commentState,
@@ -159,18 +150,11 @@ export default function ActivityDetailScreen({ navigation, route }) {
       Keyboard.dismiss();
       try {
         let body_data = {
-          "activity": itemState.id,
-          "text": newCommentState.text,
+          activity: itemState.id,
+          text: newCommentState.text,
         };
-        response = await fetch(`${BASE_URL}comments/`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Token ${token}`,
-          },
-          body: JSON.stringify(body_data),
-        });
-        result = await response.json();
+        response = await axiosBase.post(`/comments/`, body_data);
+        result = await response.data;
         result.user = loggedUser;
         setNewCommentState({
           ...newCommentState,
@@ -182,33 +166,26 @@ export default function ActivityDetailScreen({ navigation, route }) {
           data: [...commentState.data, result],
         });
       } catch (error) {
-        console.log(error);
+        console.log(error.request);
+        handleNetworkError(error);
       }
     }
-
   }
+
 
   const deleteComment = async (comment_id) => {
     try {
-      let response = await fetch(`${BASE_URL}comments/${comment_id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token ' + token
-        },
-      });
+      let response = await axiosBase.delete(`/comments/${comment_id}/`);
       // Wait for the response data
-      if (response.ok) {
+      if (response.status == 204) {
         setCommentState({
           ...commentState,
           data: commentState.data.filter(item => item.id != comment_id),
         });
       }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to reach the server");
+      handleNetworkError(error);
     }
-
   };
 
   // refresh function
