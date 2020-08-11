@@ -38,6 +38,25 @@ export default function ActivityDetailScreen({ navigation, route }) {
     refreshing: true,
   });
 
+  const axiosComments = axios.create({
+    url: `${BASE_URL}comments/`,
+    timout: 5000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    }
+  });
+
+  const axiosActivities = axios.create({
+    url: `${BASE_URL}activities/`,
+    timout: 5000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    }
+  });
+
+
   const [commentState, setCommentState] = useState({
     data: null,
     next: 1,
