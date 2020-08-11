@@ -151,7 +151,7 @@ export default function SuggestionScreen({ navigation }) {
   );
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   groupHeader: {
     flex: 0,
     flexDirection: 'column',

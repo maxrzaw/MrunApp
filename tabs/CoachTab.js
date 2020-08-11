@@ -38,7 +38,7 @@ export default function TodayTab({ navigation }) {
   );
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',

@@ -155,7 +155,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
   );
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   BtnGroup: {
     height: 35,
     marginHorizontal: 0,

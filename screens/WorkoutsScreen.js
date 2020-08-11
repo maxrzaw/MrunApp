@@ -143,7 +143,7 @@ export default function WorkoutScreen({ navigation }) {
   );
 }
 
-styles = StyleSheet.create({
+const styles = StyleSheet.create({
   btnGroup: {
     height: 35,
     marginHorizontal: 0,
