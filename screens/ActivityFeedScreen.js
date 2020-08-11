@@ -12,14 +12,20 @@ import Activity from '../components/Activity';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
-import { throttle } from 'underscore';
+import axios from 'axios';
 
 
 export default function ActivityFeedScreen({ navigation, route }) {
 
-
-
   const { user: loggedUser, token, group } = React.useContext(AuthContext);
+  const axiosBase = axios.create({
+    baseURL: `${BASE_URL}activities`,
+    timeout: 5000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    }
+  });
   var name = group ? group.name : 'My Group';
 
   const buttons = ['All', name];
@@ -46,28 +52,23 @@ export default function ActivityFeedScreen({ navigation, route }) {
 
   const deleteItem = async (id) => {
     try {
-      let response = await fetch(`${BASE_URL}activities/${id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-      });
-      if (response.ok) {
+      let response = await axiosBase.delete(`/${id}/`);
+      if (response.status == 204) {
         setState({
           ...state,
           data: state.data.filter(activity => activity.id !== id),
         });
         navigation.popToTop();
-      } else {
-        Alert.alert("Unable to delete");
       }
+
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to reach server");
+      if (error.code == 'ECONNABORTED') {
+        Alert.alert("Check your internet connection");
+      } else {
+        Alert.alert("Error deleting");
+      }
     }
   }
-
 
   const renderItem = ({ item }) => (
     <Activity
@@ -76,9 +77,6 @@ export default function ActivityFeedScreen({ navigation, route }) {
       navigation={navigation}
     />
   );
-
-
-
 
   const onRefresh = () => {
     setState({
@@ -89,20 +87,40 @@ export default function ActivityFeedScreen({ navigation, route }) {
     });
   };
 
+  // const getData = async () => {
+  //   if (state.next != null) {
+  //     try {
+  //       let filter = selectedIndex ? '&filter=group' : '';
+  //       url = `${BASE_URL}activities/?page=${state.next}${filter}`
+  //       let response = await fetch(url, {
+  //         method: 'GET',
+  //         headers: {
+  //           'Authorization': 'Token ' + token
+  //         },
+  //       });
+  //       let result = await response.json();
+  //       setState({
+  //         ...state,
+  //         data:
+  //           state.next == 1
+  //             ? result["activities"]
+  //             : [...state.data, ...result["activities"]],
+  //         next: result["next"],
+  //         refreshing: false,
+  //       });
+  //     } catch (error) {
+  //       console.log(error)
+  //     }
+  //   }
+  // }
 
 
   const getData = async () => {
     if (state.next != null) {
       try {
         let filter = selectedIndex ? '&filter=group' : '';
-        url = `${BASE_URL}activities/?page=${state.next}${filter}`
-        let response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Token ' + token
-          },
-        });
-        let result = await response.json();
+        let response = await axiosBase.get(`/?page=${state.next}${filter}`);
+        let result = await response.data;
         setState({
           ...state,
           data:
@@ -113,7 +131,20 @@ export default function ActivityFeedScreen({ navigation, route }) {
           refreshing: false,
         });
       } catch (error) {
-        console.log(error)
+        if (error.code == 'ECONNABORTED') {
+          Alert.alert("Check your internet connection");
+          setState({
+            ...state,
+            refreshing: false,
+          });
+        } else {
+          Alert.alert("Error Refreshing", "", [{
+            text: "OK?", onPress: () => setState({
+              ...state,
+              refreshing: false,
+            })
+          }]);
+        }
       }
     }
   }

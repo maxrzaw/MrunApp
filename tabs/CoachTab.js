@@ -1,39 +1,63 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, Button } from 'react-native';
-import GroupModal from '../components/GroupModal';
-// import CoachScreen from '../screens/CoachScreen'
+import { Text, View, StyleSheet, Button, Alert } from 'react-native';
+import { BASE_URL } from '../helpers';
+import { AuthContext } from '../contexts/AuthContext';
+// import CoachScreen from '../screens/CoachScreen';
+import axios from 'axios';
 
-import { createStackNavigator } from '@react-navigation/stack'
+import { createStackNavigator } from '@react-navigation/stack';
 
 // const TodayStack = createStackNavigator();
 
 
-export default function TodayTab({ navigation }) {
+export default function CoachTab({ navigation }) {
 
-  const [visible, setVisible] = React.useState(false);
+  const { token } = React.useContext(AuthContext);
 
-  const onGroupChange = (val) => {
-    //setVisible(false);
+  const axiosBase = axios.create({
+    baseURL: 'http://localhost/api/v1/',
+    timeout: 3000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    }
+  });
+
+  const send = async () => {
+    try {
+      const response = await axiosBase.get('activities/');
+      // const response = await axios({
+      //   method: 'GET',
+      //   // url: 'http://localhost/api/v1/activities/',
+      //   url: `http://example.com:81`,
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     'Authorization': `Token ${token}`,
+      //   },
+      //   timeout: 5000,
+      // });
+      console.log(response.status);
+    } catch (error) {
+      if (error.code == 'ECONNABORTED') {
+        Alert.alert("Check your internet connection");
+      }
+      console.log(error);
+    }
   }
+
+
+
 
   return (
     <>
       <View style={styles.container}>
         <Text>Coach Screen</Text>
       </View>
-      <GroupModal
-        onChange={onGroupChange}
-        visible={visible}
-        setVisible={setVisible}
-      />
       <Button
-        title="Show Modal"
-        onPress={() => setVisible(true)}
+        title="Send Request"
+        onPress={() => send()}
       />
-      <Button
-        title="Hide Modal"
-        onPress={() => setVisible(false)}
-      />
+
     </>
   );
 }
