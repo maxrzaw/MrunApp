@@ -18,8 +18,8 @@ import axios from 'axios';
 export default function ActivityFeedScreen({ navigation, route }) {
 
   const { user: loggedUser, token, group } = React.useContext(AuthContext);
-  const axiosBase = axios.create({
-    baseURL: `${BASE_URL}activities`,
+  const axiosActivitiesBase = axios.create({
+    baseURL: `${BASE_URL}/activities`,
     timeout: 5000,
     headers: {
       'Content-Type': 'application/json',
@@ -52,7 +52,7 @@ export default function ActivityFeedScreen({ navigation, route }) {
 
   const deleteItem = async (id) => {
     try {
-      let response = await axiosBase.delete(`/${id}/`);
+      let response = await axiosActivitiesBase.delete(`/${id}/`);
       if (response.status == 204) {
         setState({
           ...state,
@@ -87,39 +87,12 @@ export default function ActivityFeedScreen({ navigation, route }) {
     });
   };
 
-  // const getData = async () => {
-  //   if (state.next != null) {
-  //     try {
-  //       let filter = selectedIndex ? '&filter=group' : '';
-  //       url = `${BASE_URL}activities/?page=${state.next}${filter}`
-  //       let response = await fetch(url, {
-  //         method: 'GET',
-  //         headers: {
-  //           'Authorization': 'Token ' + token
-  //         },
-  //       });
-  //       let result = await response.json();
-  //       setState({
-  //         ...state,
-  //         data:
-  //           state.next == 1
-  //             ? result["activities"]
-  //             : [...state.data, ...result["activities"]],
-  //         next: result["next"],
-  //         refreshing: false,
-  //       });
-  //     } catch (error) {
-  //       console.log(error)
-  //     }
-  //   }
-  // }
-
 
   const getData = async () => {
     if (state.next != null) {
       try {
         let filter = selectedIndex ? '&filter=group' : '';
-        let response = await axiosBase.get(`/?page=${state.next}${filter}`);
+        let response = await axiosActivitiesBase.get(`/?page=${state.next}${filter}`);
         let result = await response.data;
         setState({
           ...state,

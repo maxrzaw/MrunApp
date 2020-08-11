@@ -11,8 +11,9 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
+import axios from 'axios';
 
 /*  TODO:
       DONE Add the activity as a header.
@@ -38,8 +39,8 @@ export default function ActivityDetailScreen({ navigation, route }) {
     refreshing: true,
   });
 
-  const axiosComments = axios.create({
-    url: `${BASE_URL}comments/`,
+  const axiosBase = axios.create({
+    baseURL: `${BASE_URL}/activities`,
     timout: 5000,
     headers: {
       'Content-Type': 'application/json',
@@ -47,14 +48,6 @@ export default function ActivityDetailScreen({ navigation, route }) {
     }
   });
 
-  const axiosActivities = axios.create({
-    url: `${BASE_URL}activities/`,
-    timout: 5000,
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Token ${token}`,
-    }
-  });
 
 
   const [commentState, setCommentState] = useState({
@@ -98,52 +91,43 @@ export default function ActivityDetailScreen({ navigation, route }) {
     }
   }, [navigation]);
 
-  // Gets the activity object
+  // Gets the ativity object
   const getActivity = async () => {
     try {
-      response = await fetch(`${BASE_URL}activities/${item.id}/`, {
-        method: 'GET',
-        headers: {
-          'Authorization': 'Token ' + token
-        },
-      });
-      data = await response.json();
+      console.log();
+      response = await axiosBase.get(`/${item.id}/`);
+      data = await response.data;
       setItemState({
         ...itemState,
         ...data,
         refreshing: false,
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.request);
+      handleNetworkError(error);
     }
   };
 
-  // Gets the comments
-  const getComments = async () => {
-    if (commentState.next != null) {
-      try {
-        url = `${BASE_URL}activities/${item.id}/comments/?page=${commentState.next}`;
-        response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Token ' + token
-          },
-        });
-        let result = await response.json();
-        setCommentState({
-          ...commentState,
-          data:
-            commentState.next == 1
-              ? result['comments']
-              : [...commentState.data, ...result['comments']],
-          next: result['next'],
-          refreshing: false,
-        });
-      } catch (error) {
-        console.log(error);
+    // Gets the comments
+    const getComments = async () => {
+      if (commentState.next != null) {
+        try {
+          response = await axiosBase.get(`/${item.id}/comments/?page=${commentState.next}`);
+          let result = await response.data;
+          setCommentState({
+            ...commentState,
+            data:
+              commentState.next == 1
+                ? result['comments']
+                : [...commentState.data, ...result['comments']],
+            next: result['next'],
+            refreshing: false,
+          });
+        } catch (error) {
+          handleNetworkError(error);
+        }
       }
-    }
-  };
+    };
 
 
   const getDate = () => {

@@ -1,7 +1,7 @@
 // Some helper functions an constants
-import { StyleSheet } from 'react-native'
+import { StyleSheet, Alert } from 'react-native'
 
-export const BASE_URL = "http://localhost:80/api/v1/"
+export const BASE_URL = "http://localhost/api/v1"
 // export const BASE_URL = "https://api.maxzawisa.com/api/v1/"
 
 export function sleep(ms) {
@@ -31,3 +31,11 @@ export const mapYear = {
     'GR': 'Graduate',
 }
 
+export const handleNetworkError = (error) => {
+    if (error.code == 'ECONNABORTED') {
+        Alert.alert("Check your internet connection");
+    } else {
+        console.log(error);
+    }
+
+}

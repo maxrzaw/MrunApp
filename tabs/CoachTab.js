@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, Button, Alert } from 'react-native';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 // import CoachScreen from '../screens/CoachScreen';
 import axios from 'axios';
@@ -25,23 +25,20 @@ export default function CoachTab({ navigation }) {
 
   const send = async () => {
     try {
-      const response = await axiosBase.get('activities/');
-      // const response = await axios({
-      //   method: 'GET',
-      //   // url: 'http://localhost/api/v1/activities/',
-      //   url: `http://example.com:81`,
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //     'Authorization': `Token ${token}`,
-      //   },
-      //   timeout: 5000,
-      // });
+      // const response = await axiosBase.get('activities/');
+      const response = await axios({
+        method: 'GET',
+        url: 'http://localhost/api/v1/activities/',
+        // url: `http://example.com:81`,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${token}`,
+        },
+        timeout: 5000,
+      });
       console.log(response.status);
     } catch (error) {
-      if (error.code == 'ECONNABORTED') {
-        Alert.alert("Check your internet connection");
-      }
-      console.log(error);
+      handleNetworkError(error);
     }
   }
 
