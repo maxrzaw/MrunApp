@@ -1,8 +1,8 @@
 // Some helper functions an constants
 import { StyleSheet, Alert } from 'react-native'
 
-export const BASE_URL = "http://localhost/api/v1"
-// export const BASE_URL = "https://api.maxzawisa.com/api/v1/"
+// export const BASE_URL = "http://localhost/api/v1"
+export const BASE_URL = "https://api.maxzawisa.com/api/v1"
 
 export function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
