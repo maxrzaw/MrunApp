@@ -3,16 +3,23 @@ import { useState, useEffect, useLayoutEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
 import Workout from '../components/Workout';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
-
-
-
+import axios from 'axios';
 
 export default function UserWorkoutScreen({ navigation, route }) {
 
   const { token, user: loggedUser } = React.useContext(AuthContext);
   const { user: routeUser } = route.params;
+
+  const axiosBase = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ' + token
+    },
+    timeout: 5000,
+  });
 
   // Set selected user to logged user if no user is given
   const user = (routeUser === null) ? loggedUser : routeUser;
@@ -40,24 +47,16 @@ export default function UserWorkoutScreen({ navigation, route }) {
 
   const handleDelete = async (workout_id) => {
     try {
-      let response = await fetch(`${BASE_URL}workouts/${workout_id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token ' + token
-        },
-      });
-
-      // Wait for the response data
-      if (response.ok) {
+      let response = await axiosBase.delete(`/workouts/${workout_id}/`);
+      // Wait for the response
+      if (response.status == 204) {
         setState({
           ...state,
           data: state.data.filter(item => item.id != workout_id),
         });
       }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to reach the server")
+      handleNetworkError(error);
     }
   };
 
@@ -68,14 +67,9 @@ export default function UserWorkoutScreen({ navigation, route }) {
         filter = `&type=${groups[state.selectedIndex]}`
       }
       try {
-        url = `${BASE_URL}users/${user.id}/workouts/?page=${state.next}${filter}`
-        let response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Token ' + token
-          },
-        });
-        let result = await response.json();
+        url = `/users/${user.id}/workouts/?page=${state.next}${filter}`
+        let response = await axiosBase.get(url);
+        let result = await response.data;
         setState({
           ...state,
           data:
@@ -86,7 +80,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
           refreshing: false,
         });
       } catch (error) {
-        console.log(error)
+        handleNetworkError(error);
       }
     }
   }
@@ -132,7 +126,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
     });
     // console.log(groups[state.selectedIndex]);
   }
-
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch' }}>

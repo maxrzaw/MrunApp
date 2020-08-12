@@ -4,32 +4,13 @@ import { Text, View, StyleSheet, Alert, Pressable, Modal } from 'react-native';
 import Workout from '../components/Workout';
 import DateHeader from '../components/DateHeader';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import GroupModal from '../components/GroupModal';
-
-
-
+import axios from 'axios';
 
 export default function SuggestionScreen({ navigation }) {
 
-  const item = {
-    id: 15,
-    title: "8x40m",
-    description: "8 by 40m with 4 min rest. These are for speed and I reccomend wearing spikes if possible.",
-    category: "S",
-    owner: 8,
-  }
-
   const { token, group, user } = React.useContext(AuthContext);
-
-
-  const groups = {
-    0: 'None',
-    1: 'Short Sprints',
-    2: 'Long Sprints',
-    3: 'Distance',
-    4: 'Scrubs',
-  }
 
   const [selectedGroup, setSelectedGroup] = useState(group.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -52,34 +33,31 @@ export default function SuggestionScreen({ navigation }) {
 
     try {
 
-      let response = await fetch(`${BASE_URL}suggestions/?group=${_group}&date=${dateShort}`, {
+      let response = await axios(`${BASE_URL}/suggestions/?group=${_group}&date=${dateShort}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
         },
+        timeout: 5000,
       });
-      let response_data = await response.json();
-      if (response.ok) {
-        // There is a suggestion for selected day
-        setState({
-          ...state,
-          workout: response_data,
-          notFound: false,
-          disableButtons: false,
-        });
-      } else {
-        // No suggestion for selected day
-        setState({
-          ...state,
-          workout: null,
-          notFound: true,
-          disableButtons: false,
-        });
-      }
-
+      let response_data = await response.data;
+      // There is a suggestion for selected day
+      setState({
+        ...state,
+        workout: response_data,
+        notFound: false,
+        disableButtons: false,
+      });
     } catch (error) {
-      console.log(error);
+      handleNetworkError(error);
+      // No suggestion for selected day
+      setState({
+        ...state,
+        workout: null,
+        notFound: true,
+        disableButtons: false,
+      });
     }
   }
 
@@ -106,8 +84,6 @@ export default function SuggestionScreen({ navigation }) {
     )
   }
 
-
-
   return (
     <View style={{ flex: 1, justifyContent: 'flex-start', alignItems: 'stretch' }}>
       <GroupModal
@@ -129,8 +105,6 @@ export default function SuggestionScreen({ navigation }) {
           </View>
         )}
       </Pressable>
-
-
       {
         state.notFound
           ?
@@ -146,7 +120,6 @@ export default function SuggestionScreen({ navigation }) {
             navigation={navigation}
           />
       }
-
     </View>
   );
 }

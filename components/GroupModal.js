@@ -34,7 +34,7 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
 
   const getGroups = async () => {
     try {
-      let response = await fetch(`${BASE_URL}groups/`, {
+      let response = await fetch(`${BASE_URL}/groups/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
