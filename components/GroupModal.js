@@ -1,5 +1,4 @@
 import React, { useState, useEffect, useContext } from 'react'
-
 import {
   Text,
   View,
@@ -11,8 +10,9 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import { Picker } from '@react-native-community/picker';
+import axios from 'axios';
 
 export default function GroupModal({ onChange, visible, initialGroup, setVisible }) {
 
@@ -34,45 +34,40 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
 
   const getGroups = async () => {
     try {
-      let response = await fetch(`${BASE_URL}/groups/`, {
+      let response = await axios(`${BASE_URL}/groups/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
         },
+        timeout: 5000,
       });
-      let response_data = await response.json();
-      if (response.ok) {
-        // Get the picker items
-        let items = response_data.map((item => {
-          return (
-            <Picker.Item
-              label={item.name}
-              value={item.id}
-              key={item.id}
-            />
-          );
-        }));
-        setPickerItems(items);
-        // Make a lookup table for groups with id as key
-        _groupNames = {};
-        _groupDescs = {};
-        _groupNames[0] = "None selected";
-        _groupDescs[0] = "None selected";
-        response_data.forEach(item => {
-          _groupDescs[item.id] = item.description;
-        });
-        setGroupDescs(_groupDescs);
-        setLoading(false);
-      } else {
-        console.log("Something went wrong");
-      }
+      let response_data = await response.data;
+
+      // Get the picker items
+      let items = response_data.map((item => {
+        return (
+          <Picker.Item
+            label={item.name}
+            value={item.id}
+            key={item.id}
+          />
+        );
+      }));
+      setPickerItems(items);
+      // Make a lookup table for groups with id as key
+      _groupNames = {};
+      _groupDescs = {};
+      response_data.forEach(item => {
+        _groupDescs[item.id] = item.description;
+      });
+      setGroupDescs(_groupDescs);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      handleNetworkError(error);
       setLoading(false);
     }
   }
-
 
   // UseEffect for the onChange
   useEffect(() => {
@@ -82,8 +77,6 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
       onChange(group);
     }
   }, [group]);
-
-
 
   const closeModal = (save = false) => {
     if (save) {
@@ -111,42 +104,39 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
         transparent={true}
         visible={visible}
       >
-        <Pressable 
+        <Pressable
           onPress={() => closeModal()}
           style={styles.centered}
         >
-          {/* <View style={styles.centered}> */}
-            <Pressable style={styles.modalView}>
+          <Pressable style={styles.modalView}>
             <View style={[styles.labelView, { marginTop: 15, justifyContent: 'space-between' }]}>
-                <Text style={{ fontSize: 20 }}>Training Group</Text>
-                <Text>{groupDescs[modalGroup]}</Text>
-              </View>
-              <Picker
-                selectedValue={modalGroup}
-                display="default"
-                onValueChange={(val, index) => setModalGroup(val)}
-                style={styles.picker}
+              <Text style={{ fontSize: 20 }}>Training Group</Text>
+              <Text>{groupDescs[modalGroup]}</Text>
+            </View>
+            <Picker
+              selectedValue={modalGroup}
+              display="default"
+              onValueChange={(val, index) => setModalGroup(val)}
+              style={styles.picker}
+            >
+              {pickerItems}
+            </Picker>
+            <View style={styles.modalButtonsView}>
+              <TouchableOpacity
+                onPress={() => closeModal()}
+                style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
               >
-                {pickerItems}
-              </Picker>
-              <View style={styles.modalButtonsView}>
-                <TouchableOpacity
-                  onPress={() => closeModal()}
-                  style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
-                >
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => closeModal(true)}
-                  style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
-                >
-                  <Text>Ok</Text>
-                </TouchableOpacity>
-              </View>
-            </Pressable>
-          {/* </View> */}
+                <Text>Cancel</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => closeModal(true)}
+                style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
+              >
+                <Text>Ok</Text>
+              </TouchableOpacity>
+            </View>
+          </Pressable>
         </Pressable>
-
       </Modal>
     </View>
   );
