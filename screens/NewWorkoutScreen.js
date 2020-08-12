@@ -75,6 +75,7 @@ export default function NewWorkoutScreen({ navigation }) {
       };
       let response = await axios(`${BASE_URL}/workouts/`, {
         method: 'POST',
+        timeout: 5000,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
