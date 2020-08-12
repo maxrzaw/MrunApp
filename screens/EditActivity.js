@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect } from 'react';
 import {
   Text,
   View,
@@ -12,9 +12,10 @@ import {
   Alert,
   Keyboard
 } from 'react-native';
-import { BASE_URL, mapCategory } from '../helpers'
+import { BASE_URL, mapCategory, handleNetworkError } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import axios from 'axios';
 
 
 export default function EditActivity({ navigation, route: { params: { activity, deleteItem } } }) {
@@ -61,7 +62,7 @@ export default function EditActivity({ navigation, route: { params: { activity, 
       ...state,
       displayDate: date,
     })
-  }, [state.time])
+  }, [state.time]);
 
 
   const getDate = () => {
@@ -86,20 +87,21 @@ export default function EditActivity({ navigation, route: { params: { activity, 
         "comment": state.comment,
         "time": state.time,
       };
-      await fetch(`${BASE_URL}activities/${activity.id}/`, {
+      let response = await axios({
+        url: `${BASE_URL}/activities/${activity.id}/`,
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
         },
-        body: JSON.stringify(body_data),
+        data: JSON.stringify(body_data),
       });
-      navigation.goBack();
+      if (response.status == 202) {
+        navigation.goBack();
+      }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to save. Check your network connection.")
+      handleNetworkError(error);
     }
-
   };
 
   const handleDelete = async () => {
