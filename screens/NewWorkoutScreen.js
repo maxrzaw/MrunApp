@@ -1,22 +1,21 @@
 import * as React from 'react';
 import { useContext, useState } from 'react';
-import { 
-  Text, 
-  View, 
-  Button, 
-  Alert, 
-  TextInput, 
-  TouchableWithoutFeedback, 
-  Keyboard, 
+import {
+  Text,
+  View,
+  Button,
+  Alert,
+  TextInput,
+  TouchableWithoutFeedback,
+  Keyboard,
   StyleSheet,
   Modal
 } from 'react-native';
-import { BASE_URL, mapCategory } from '../helpers';
+import { BASE_URL, mapCategory, handleNetworkError } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-community/picker';
 import { throttle } from 'underscore';
-
-
+import axios from 'axios';
 
 export default function NewWorkoutScreen({ navigation }) {
   const { token } = useContext(AuthContext);
@@ -74,28 +73,28 @@ export default function NewWorkoutScreen({ navigation }) {
         "description": state.description,
         "category": state.category,
       };
-      await fetch(`${BASE_URL}workouts/`, {
+      let response = await axios(`${BASE_URL}/workouts/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
         },
-        body: JSON.stringify(body_data),
+        data: JSON.stringify(body_data),
       });
-      navigation.goBack();
+      if (response.status == 201) {
+        navigation.goBack();
+      }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to save. Check your network connection.")
+      handleNetworkError(error);
     }
   };
 
-
-  const onSave = throttle(save, 250, {trailing: false});
+  const onSave = throttle(save, 250, { trailing: false });
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <Button 
+        <Button
           onPress={() => onSave()} title="Save"
           disabled={!(state.titleValid && state.descValid)}
         />
@@ -105,9 +104,6 @@ export default function NewWorkoutScreen({ navigation }) {
       )
     });
   }, [navigation, state]);
-
-
-
 
   return (
     <TouchableWithoutFeedback onPress={() => dismiss()} accessable={false}>
