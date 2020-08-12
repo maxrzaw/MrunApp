@@ -13,9 +13,10 @@ import {
   Keyboard,
   ActivityIndicator
 } from 'react-native';
-import { BASE_URL, mapYear } from '../helpers'
+import { BASE_URL, mapYear, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-community/picker';
+import axios from 'axios';
 
 
 
@@ -46,6 +47,15 @@ export default function EditProfile({ navigation}) {
   const [yearState, setYearState] = useState({
     year: user.year,
     temp: user.year,
+  });
+
+  const axiosBase = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    },
+    timeout: 5000,
   });
 
   useEffect(() => {
@@ -115,7 +125,7 @@ export default function EditProfile({ navigation}) {
 
   const getGroups = async () => {
     try {
-      let response = await fetch(`${BASE_URL}groups/`, {
+      let response = await fetch(`${BASE_URL}/groups/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -156,34 +166,57 @@ export default function EditProfile({ navigation}) {
     }
   }
 
+  // const saveUser = async () => {
+  //   try {
+  //     // Do stuff
+  //     let body_data = {
+  //       "first_name": state.firstName,
+  //       "last_name": state.lastName,
+  //       "bio": state.bio,
+  //       "year": yearState.year,
+  //     };
+  //     let response = await fetch(`${BASE_URL}/me/`, {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Token ${token}`,
+  //       },
+  //       body: JSON.stringify(body_data),
+  //     });
+  //     if (response.ok) {
+  //       return true;
+  //     } else {
+  //       Alert.alert("Problem saving");
+  //       return false;
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //     Alert.alert("Unable to save. Check your network connection.")
+  //   }
+  // };
+
   const saveUser = async () => {
     try {
       // Do stuff
       let body_data = {
-        "first_name": state.firstName,
-        "last_name": state.lastName,
-        "bio": state.bio,
-        "year": yearState.year,
+        first_name: state.firstName,
+        last_name: state.lastName,
+        bio: state.bio,
+        year: yearState.year,
       };
-      let response = await fetch(`${BASE_URL}me/`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-        body: JSON.stringify(body_data),
-      });
-      if (response.ok) {
+      let response = await axiosBase.patch(`/me/`, body_data);
+      if (response.status == 202) {
         return true;
       } else {
         Alert.alert("Problem saving");
         return false;
       }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to save. Check your network connection.")
+      handleNetworkError(error);
+      return false;
     }
   };
+
 
   const save = async () => {
     try {

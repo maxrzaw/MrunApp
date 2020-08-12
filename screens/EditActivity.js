@@ -90,6 +90,7 @@ export default function EditActivity({ navigation, route: { params: { activity, 
       let response = await axios({
         url: `${BASE_URL}/activities/${activity.id}/`,
         method: 'PATCH',
+        timeout: 5000,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,

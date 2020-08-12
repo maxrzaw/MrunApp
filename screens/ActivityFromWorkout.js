@@ -93,6 +93,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
       let response = await axios({
         url: `${BASE_URL}/activities/`,
         method: 'POST',
+        timeout: 5000,
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,

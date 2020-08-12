@@ -33,7 +33,7 @@ export default function ProfileScreen({ navigation, route }) {
   const getData = async () => {
     if (state.next != null) {
       try {
-        url = `${BASE_URL}users/${selectedUser.id}/activities/?page=${state.next}`
+        url = `${BASE_URL}/users/${selectedUser.id}/activities/?page=${state.next}`
         let response = await fetch(url, {
           method: 'GET',
           headers: {
@@ -58,7 +58,7 @@ export default function ProfileScreen({ navigation, route }) {
 
   const deleteItem = async (id) => {
     try {
-      let response = await fetch(`${BASE_URL}activities/${id}/`, {
+      let response = await fetch(`${BASE_URL}/activities/${id}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ export default function ProfileScreen({ navigation, route }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        response = await fetch(`${BASE_URL}membership/?user=${selectedUser.id}`, {
+        response = await fetch(`${BASE_URL}/membership/?user=${selectedUser.id}`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',

@@ -48,7 +48,7 @@ const AuthContextProvider = (props) => {
 
   const getGroup = async (token) => {
     try {
-      response = await fetch(`${BASE_URL}membership/`, {
+      response = await fetch(`${BASE_URL}/membership/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ const AuthContextProvider = (props) => {
   const getMe = async (token) => {
     try {
       await AsyncStorage.setItem('token', token);
-      let response = await fetch(`${BASE_URL}me/`, {
+      let response = await fetch(`${BASE_URL}/me/`, {
         method: 'GET',
         headers: {
           'Authorization': 'Token ' + token
@@ -106,7 +106,7 @@ const AuthContextProvider = (props) => {
     // Try logging in
     try {
       const body_data = { username, password };
-      let response = await fetch(`${BASE_URL}token-auth/`, {
+      let response = await fetch(`${BASE_URL}/token-auth/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -152,7 +152,7 @@ const AuthContextProvider = (props) => {
 
   const updateGroup = async (groupId) => {
     try {
-      let response = await fetch(`${BASE_URL}membership/?group=${groupId}`, {
+      let response = await fetch(`${BASE_URL}/membership/?group=${groupId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -192,7 +192,7 @@ const AuthContextProvider = (props) => {
         "year": year,
       }
       console.log(body_data);
-      let response = await fetch(`${BASE_URL}register/`, {
+      let response = await fetch(`${BASE_URL}/register/`, {
         method: 'POST',        
         headers: {
           'Content-Type': 'application/json',
