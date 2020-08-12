@@ -31,7 +31,7 @@ export default function WorkoutScreen({ navigation }) {
 
   const handleDelete = async (workout_id) => {
     try {
-      let response = await fetch(`${BASE_URL}workouts/${workout_id}/`, {
+      let response = await fetch(`${BASE_URL}/workouts/${workout_id}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -59,7 +59,7 @@ export default function WorkoutScreen({ navigation }) {
         filter = `&type=${groups[state.selectedIndex]}`
       }
       try {
-        let response = await fetch(BASE_URL + `workouts/?page=${state.next}` + filter, {
+        let response = await fetch(BASE_URL + `/workouts/?page=${state.next}` + filter, {
           method: 'GET',
           headers: {
             'Authorization': 'Token ' + token

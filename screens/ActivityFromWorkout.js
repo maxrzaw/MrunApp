@@ -13,10 +13,11 @@ import {
   Keyboard,
   Pressable
 } from 'react-native';
-import { BASE_URL, mapCategory } from '../helpers'
+import { BASE_URL, mapCategory, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { throttle } from 'underscore';
+import axios from 'axios';
 
 
 export default function ActivityFromWorkout({ navigation, route: { params: { item } } }) {
@@ -89,22 +90,24 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
         "comment": state.comment,
         "time": state.time,
       };
-      await fetch(`${BASE_URL}activities/`, {
+      let response = await axios({
+        url: `${BASE_URL}/activities/`,
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${token}`,
         },
-        body: JSON.stringify(body_data),
+        data: JSON.stringify(body_data),
       });
-      navigation.goBack();
+      if (response.status == 201) {
+        navigation.goBack();
+      }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to save. Check your network connection.")
+      handleNetworkError(error);
     }
   };
 
-  const onSave = throttle(save, 250, {trailing: false});
+  const onSave = throttle(save, 250, { trailing: false });
 
 
   React.useLayoutEffect(() => {
@@ -141,7 +144,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
         <View style={styles.descriptionView}>
           <Text style={{ flex: 1, padding: 5 }}>{item.description}</Text>
         </View>
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.textInputView}
           onPress={() => setModalVisible(true)}
         >
