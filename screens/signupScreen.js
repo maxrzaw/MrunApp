@@ -5,22 +5,6 @@ import { Picker } from '@react-native-community/picker';
 import { mapYear } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 
-/*
-Things I need:
-Required:
- - email
- - username
- - password1
- - password2
- - year
-Optional:
- - first_name (probably want to make this required since I show it)
- - last_name
- - bio
-*/
-
-
-
 export default function SignUpScreen({ navigation }) {
 
   const { register } = useContext(AuthContext);
@@ -144,13 +128,6 @@ export default function SignUpScreen({ navigation }) {
     }
   }
 
-
-
-
-
-
-
-
   return (
     <Pressable onPress={Keyboard.dismiss} style={{ flex: 1 }}>
       <View style={styles.container}>
@@ -246,6 +223,7 @@ export default function SignUpScreen({ navigation }) {
               secureTextEntry={true}
             />
           </View>
+
           <View style={[styles.itemView, { flex: 7, maxHeight: 65 }]}>
             <Text style={styles.labelText}>Bio:</Text>
             <TextInput
@@ -260,11 +238,13 @@ export default function SignUpScreen({ navigation }) {
               multiline
             />
           </View>
+
           <Pressable style={styles.itemView} onPress={() => setYearModalVisible(true)}>
             <Text style={styles.labelText}>Year:</Text>
             <Text style={styles.textInput}>{mapYear[yearState.year]}</Text>
           </Pressable>
         </View>
+
         <View style={styles.bottomContainer}>
           <Pressable onPress={() => onSignUp()}>
             {({ pressed }) => (
@@ -272,11 +252,9 @@ export default function SignUpScreen({ navigation }) {
                 <Text style={pressed ? styles.buttonTextPressed : styles.buttonText}>Sign Up</Text>
               </View>
             )}
-
           </Pressable>
-
-
         </View>
+        
         <Modal
           animationType="fade"
           transparent={true}
