@@ -20,7 +20,7 @@ import axios from 'axios';
 
 
 
-export default function EditProfile({ navigation}) {
+export default function EditProfile({ navigation }) {
   // Context variables
   const { token, user, refresh, group, updateGroup } = useContext(AuthContext);
   // Pieces of state
@@ -125,75 +125,34 @@ export default function EditProfile({ navigation}) {
 
   const getGroups = async () => {
     try {
-      let response = await fetch(`${BASE_URL}/groups/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
+      let response = await axiosBase(`/groups/`);
+      let response_data = await response.data;
+      // Get the picker items
+      let items = response_data.map((item => {
+        return (
+          <Picker.Item
+            label={item.name}
+            value={item.id}
+            key={item.id}
+          />
+        );
+      }));
+      setPickerItems(items);
+      // Make a lookup table for groups with id as key
+      _groupNames = {};
+      _groupDescs = {};
+      response_data.forEach(item => {
+        _groupNames[item.id] = item.name;
+        _groupDescs[item.id] = item.description;
       });
-      let response_data = await response.json();
-      if (response.ok) {
-        // Get the picker items
-        let items = response_data.map((item => {
-          return (
-            <Picker.Item
-              label={item.name}
-              value={item.id}
-              key={item.id}
-            />
-          );
-        }));
-        setPickerItems(items);
-        // Make a lookup table for groups with id as key
-        _groupNames = {};
-        _groupDescs = {};
-        _groupNames[0] = "None selected";
-        _groupDescs[0] = "None selected";
-        response_data.forEach(item => {
-          _groupNames[item.id] = item.name;
-          _groupDescs[item.id] = item.description;
-        });
-        setGroupNames(_groupNames);
-        setGroupDescs(_groupDescs);
-        setLoading(false);
-      } else {
-        console.log("Something went wrong");
-      }
+      setGroupNames(_groupNames);
+      setGroupDescs(_groupDescs);
+      setLoading(false);
     } catch (error) {
-      console.log(error);
+      handleNetworkError(error)
       setLoading(false);
     }
   }
-
-  // const saveUser = async () => {
-  //   try {
-  //     // Do stuff
-  //     let body_data = {
-  //       "first_name": state.firstName,
-  //       "last_name": state.lastName,
-  //       "bio": state.bio,
-  //       "year": yearState.year,
-  //     };
-  //     let response = await fetch(`${BASE_URL}/me/`, {
-  //       method: 'PATCH',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         'Authorization': `Token ${token}`,
-  //       },
-  //       body: JSON.stringify(body_data),
-  //     });
-  //     if (response.ok) {
-  //       return true;
-  //     } else {
-  //       Alert.alert("Problem saving");
-  //       return false;
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //     Alert.alert("Unable to save. Check your network connection.")
-  //   }
-  // };
 
   const saveUser = async () => {
     try {
