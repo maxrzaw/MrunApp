@@ -37,6 +37,13 @@ static void InitializeFlipper(UIApplication *application) {
                                             initialProperties:nil];
 
   rootView.backgroundColor = [[UIColor alloc] initWithRed:1.0f green:1.0f blue:1.0f alpha:1];
+  
+  // Stuff to try and fix status bar
+  if (@available(iOS 13.0, *)) {
+    application.statusBarStyle = UIStatusBarStyleDarkContent;
+    rootView.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+  }
+  // end my stuff
 
   self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
   UIViewController *rootViewController = [UIViewController new];

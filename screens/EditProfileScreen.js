@@ -370,6 +370,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 5,
     alignItems: 'center',
+    color: 'black',
   },
   textInputView: {
     borderBottomColor: '#e6e6e6',

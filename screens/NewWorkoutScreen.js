@@ -180,6 +180,7 @@ const styles = StyleSheet.create({
     paddingLeft: 5,
     alignItems: 'center',
     marginVertical: 10,
+    color: 'black',
   },
   descriptionView: {
     borderBottomColor: '#f0f0f0',
@@ -190,6 +191,7 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 5,
     alignItems: 'center',
+    color: 'black',
   },
   textInputView: {
     borderBottomColor: '#e6e6e6',
