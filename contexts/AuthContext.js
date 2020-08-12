@@ -1,7 +1,8 @@
 import React, { useState, createContext, useEffect } from 'react';
 import { Alert } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
+import axios from 'axios';
 
 export const AuthContext = createContext();
 
@@ -14,6 +15,7 @@ const AuthContextProvider = (props) => {
     isLoggedIn: false,
     isLoading: true,
   });
+
 
   const [userGroup, setUserGroup] = useState(0);
 
@@ -48,19 +50,18 @@ const AuthContextProvider = (props) => {
 
   const getGroup = async (token) => {
     try {
-      response = await fetch(`${BASE_URL}/membership/`, {
+      response = await axios(`${BASE_URL}/membership/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': 'Token ' + token,
         },
+        timeout: 5000,
       });
-      let response_data = await response.json();
-      if (response.ok) {
-        setUserGroup(response_data['group']);
-      }
+      let response_data = await response.data;
+      setUserGroup(response_data['group']);
     } catch (error) {
-      console.log(error);
+      handleNetworkError(error);
     }
   }
 
@@ -68,36 +69,33 @@ const AuthContextProvider = (props) => {
   const getMe = async (token) => {
     try {
       await AsyncStorage.setItem('token', token);
-      let response = await fetch(`${BASE_URL}/me/`, {
+      let response = await axios(`${BASE_URL}/me/`, {
         method: 'GET',
         headers: {
           'Authorization': 'Token ' + token
         },
+        timeout: 5000,
       });
-      let user = await response.json();
-      if (response.ok) {
-        // Update state with user object
-        setState({
-          ...state,
-          user: user,
-          token: token,
-          isLoggedIn: true,
-          isLoading: false,
-        });
-        await getGroup(token);
-      } else {
-        // Token is bad
-        setState({
-          ...state,
-          user: null,
-          token: null,
-          isLoggedIn: false,
-          isLoading: false,
-        });
-        console.log("Something went wrong logging in");
-      }
+      let user = await response.data;
+      // Update state with user object
+      setState({
+        ...state,
+        user: user,
+        token: token,
+        isLoggedIn: true,
+        isLoading: false,
+      });
+      await getGroup(token);
     } catch (error) {
-      console.log(error)
+      handleNetworkError(error);
+      // Token is bad
+      setState({
+        ...state,
+        user: null,
+        token: null,
+        isLoggedIn: false,
+        isLoading: false,
+      });
     }
   }
 
@@ -106,30 +104,26 @@ const AuthContextProvider = (props) => {
     // Try logging in
     try {
       const body_data = { username, password };
-      let response = await fetch(`${BASE_URL}/token-auth/`, {
+      let response = await axios(`${BASE_URL}/token-auth/`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(body_data),
+        data: JSON.stringify(body_data),
       });
       // Wait for the response and convert it do dictionary
-      let response_data = await response.json();
+      let response_data = await response.data;
       // If response code is ok then get the use object and update state
-      if (response.ok) {
-        await getMe(response_data['token']);
-      } else {
-        setState({
-          ...state,
-          token: null,
-          user: null,
-          isLoggedIn: false,
-        });
-        Alert.alert("Incorrect username or password");
-      }
+      await getMe(response_data['token']);
     } catch (error) {
-      Alert.alert("Unable to reach the server");
-      console.log(error);
+      handleNetworkError(error);
+      setState({
+        ...state,
+        token: null,
+        user: null,
+        isLoggedIn: false,
+      });
+      Alert.alert("Incorrect username or password");
     }
   }
 
@@ -152,25 +146,21 @@ const AuthContextProvider = (props) => {
 
   const updateGroup = async (groupId) => {
     try {
-      let response = await fetch(`${BASE_URL}/membership/?group=${groupId}`, {
+      let response = await axios(`${BASE_URL}/membership/?group=${groupId}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${state.token}`,
         },
+        timout: 5000,
       });
-      let response_data = await response.json();
-      if (response.ok) {
-        setUserGroup(response_data['group']);
-        return true;
-      } else {
-        Alert.alert("Problem saving");
-        console.log(response_data);
-        return false;
-      }
+      let response_data = await response.data;
+      setUserGroup(response_data['group']);
+      return true;
     } catch (error) {
-      console.log(error);
-
+      handleNetworkError(error);
+      Alert.alert("Problem saving");
+      return false;
     }
   }
 
@@ -192,24 +182,22 @@ const AuthContextProvider = (props) => {
         "year": year,
       }
       console.log(body_data);
-      let response = await fetch(`${BASE_URL}/register/`, {
-        method: 'POST',        
+      let response = await axios(`${BASE_URL}/register/`, {
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(body_data)
+        timeout: 5000,
+        data: JSON.stringify(body_data)
       });
-      let response_data = await response.json();
-      console.log(response_data);
-      if (response.ok) {
-        await getMe(response_data['token']);
-      } else {
-        Alert.alert(JSON.stringify(response_data).replace(/["\[\],]/g, ''));
-      }
+      let response_data = await response.data;
+      await getMe(response_data['token']);
     } catch (error) {
-      console.log(error);
+      if (error.response) {
+        Alert.alert(JSON.stringify(error.response.data).replace(/["\[\],]/g, ''));
+      }
+      handleNetworkError(error);
     }
-
   }
 
 
