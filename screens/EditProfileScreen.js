@@ -150,7 +150,6 @@ export default function EditProfile({ navigation }) {
       setLoading(false);
     } catch (error) {
       handleNetworkError(error)
-      setLoading(false);
     }
   }
 

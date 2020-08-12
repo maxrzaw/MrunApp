@@ -81,6 +81,10 @@ export default function UserWorkoutScreen({ navigation, route }) {
         });
       } catch (error) {
         handleNetworkError(error);
+        setState({
+          ...state,
+          refreshing: false,
+        });
       }
     }
   }

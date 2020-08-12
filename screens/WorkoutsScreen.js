@@ -72,6 +72,10 @@ export default function WorkoutScreen({ navigation }) {
         });
       } catch (error) {
         handleNetworkError(error);
+        setState({
+          ...state,
+          refreshing: false,
+        });
       }
     }
   }

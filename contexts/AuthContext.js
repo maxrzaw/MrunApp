@@ -89,13 +89,18 @@ const AuthContextProvider = (props) => {
     } catch (error) {
       handleNetworkError(error);
       // Token is bad
-      setState({
-        ...state,
-        user: null,
-        token: null,
-        isLoggedIn: false,
-        isLoading: false,
-      });
+      if (error.response) {
+        setState({
+          ...state,
+          user: null,
+          token: null,
+          isLoggedIn: false,
+          isLoading: false,
+        });
+      } else if (error.request) {
+        // something wrong with connection
+        console.log("error.request");
+      }
     }
   }
 

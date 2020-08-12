@@ -96,6 +96,10 @@ export default function ActivityDetailScreen({ navigation, route }) {
     } catch (error) {
       console.log(error.request);
       handleNetworkError(error);
+      setItemState({
+        ...itemState,
+        refreshing: false,
+      });
     }
   };
 
@@ -116,6 +120,10 @@ export default function ActivityDetailScreen({ navigation, route }) {
           });
         } catch (error) {
           handleNetworkError(error);
+          setCommentState({
+            ...commentState,
+            refreshing: false,
+          });
         }
       }
     };

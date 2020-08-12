@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Activity from '../components/Activity';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
 
@@ -104,20 +104,11 @@ export default function ActivityFeedScreen({ navigation, route }) {
           refreshing: false,
         });
       } catch (error) {
-        if (error.code == 'ECONNABORTED') {
-          Alert.alert("Check your internet connection");
-          setState({
-            ...state,
-            refreshing: false,
-          });
-        } else {
-          Alert.alert("Error Refreshing", "", [{
-            text: "OK?", onPress: () => setState({
-              ...state,
-              refreshing: false,
-            })
-          }]);
-        }
+        handleNetworkError(error);
+        setState({
+          ...state,
+          refreshing: false,
+        });
       }
     }
   }

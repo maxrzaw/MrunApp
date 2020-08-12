@@ -7,7 +7,6 @@ import {
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
-  ActivityIndicator
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL, handleNetworkError } from '../helpers';
@@ -65,7 +64,6 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
       setLoading(false);
     } catch (error) {
       handleNetworkError(error);
-      setLoading(false);
     }
   }
 
@@ -92,9 +90,8 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
 
   if (loading) {
     return (
-      <View style={{ alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff' }}>
-        <ActivityIndicator size="large" />
-      </View>
+      <>
+      </>
     );
   }
   return (
