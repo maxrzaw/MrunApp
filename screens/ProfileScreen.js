@@ -10,9 +10,10 @@ import {
   Alert
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 import Activity from '../components/Activity';
+import axios from 'axios';
 
 
 export default function ProfileScreen({ navigation, route }) {
@@ -29,18 +30,21 @@ export default function ProfileScreen({ navigation, route }) {
     refreshing: true,
   });
 
+  const axiosBase = axios.create({
+    baseURL: BASE_URL,
+    timeout: 5000,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Token ${token}`,
+    },
+  });
 
   const getData = async () => {
     if (state.next != null) {
       try {
-        url = `${BASE_URL}/users/${selectedUser.id}/activities/?page=${state.next}`
-        let response = await fetch(url, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Token ' + token
-          },
-        });
-        let result = await response.json();
+        url = `/users/${selectedUser.id}/activities/?page=${state.next}`;
+        let response = await axiosBase.get(url);
+        let result = await response.data;
         setState({
           ...state,
           data:
@@ -51,21 +55,15 @@ export default function ProfileScreen({ navigation, route }) {
           refreshing: false,
         });
       } catch (error) {
-        console.log(error)
+        handleNetworkError(error);
       }
     }
   }
 
   const deleteItem = async (id) => {
     try {
-      let response = await fetch(`${BASE_URL}/activities/${id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-      });
-      if (response.ok) {
+      let response = await axiosBase.delete(`/activities/${id}/`);
+      if (response.status == 204) {
         setState({
           ...state,
           data: state.data.filter(activity => activity.id !== id),
@@ -75,8 +73,7 @@ export default function ProfileScreen({ navigation, route }) {
         Alert.alert("Unable to delete");
       }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to reach server");
+      handleNetworkError(error);
     }
   }
 
@@ -112,7 +109,7 @@ export default function ProfileScreen({ navigation, route }) {
         <View style={styles.headerContainer} key={selectedUser}>
           <View style={styles.headerRow}>
             <Text style={styles.fullNameText}>{`${selectedUser.first_name} ${selectedUser.last_name}`}</Text>
-              <Text style={styles.groupText}>{userGroup.name}</Text>
+            <Text style={styles.groupText}>{userGroup.name}</Text>
           </View>
           <Text style={styles.bioText}>{selectedUser.bio}</Text>
         </View>
@@ -135,19 +132,12 @@ export default function ProfileScreen({ navigation, route }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        response = await fetch(`${BASE_URL}/membership/?user=${selectedUser.id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Token ' + token,
-          },
-        });
-        let response_data = await response.json();
-        if (response.ok) {
-          setUserGroup(response_data['group']);
-        }
+        console.log('Code ran');
+        response = await axiosBase.get(`/membership/?user=${selectedUser.id}`);
+        let response_data = await response.data;
+        setUserGroup(response_data['group']);
       } catch (error) {
-        console.log(error);
+        handleNetworkError(error);
       }
     }
     if (routeUser !== null) {
