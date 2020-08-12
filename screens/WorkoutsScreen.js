@@ -3,11 +3,9 @@ import { useState, useEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
 import Workout from '../components/Workout';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL } from '../helpers';
+import { BASE_URL, handleNetworkError } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
-
-
-
+import axios from 'axios';
 
 export default function WorkoutScreen({ navigation }) {
 
@@ -29,26 +27,28 @@ export default function WorkoutScreen({ navigation }) {
     selectedIndex: 0,
   });
 
+  const axiosWorkoutsBase = axios.create({
+    baseURL: `${BASE_URL}/workouts`,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Token ' + token
+    },
+    timeout: 5000,
+  });
+
   const handleDelete = async (workout_id) => {
     try {
-      let response = await fetch(`${BASE_URL}/workouts/${workout_id}/`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Token ' + token
-        },
-      });
+      let response = await axiosWorkoutsBase.delete(`/${workout_id}/`);
 
       // Wait for the response data
-      if (response.ok) {
+      if (response.status == 204) {
         setState({
           ...state,
           data: state.data.filter(item => item.id != workout_id),
         });
       }
     } catch (error) {
-      console.log(error);
-      Alert.alert("Unable to reach the server");
+      handleNetworkError(error);
     }
   };
 
@@ -59,13 +59,8 @@ export default function WorkoutScreen({ navigation }) {
         filter = `&type=${groups[state.selectedIndex]}`
       }
       try {
-        let response = await fetch(BASE_URL + `/workouts/?page=${state.next}` + filter, {
-          method: 'GET',
-          headers: {
-            'Authorization': 'Token ' + token
-          },
-        });
-        let result = await response.json();
+        let response = await axiosWorkoutsBase.get(`/?page=${state.next}${filter}`);
+        let result = await response.data;
         setState({
           ...state,
           data:
@@ -76,11 +71,10 @@ export default function WorkoutScreen({ navigation }) {
           refreshing: false,
         });
       } catch (error) {
-        console.log(error)
+        handleNetworkError(error);
       }
     }
   }
-
 
   const renderItem = ({ item }) => (
     <Workout
@@ -120,7 +114,6 @@ export default function WorkoutScreen({ navigation }) {
       next: 1,
     });
   }
-
 
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch' }}>
