@@ -11,14 +11,12 @@ import {
   TouchableOpacity,
   Alert,
   Keyboard,
-  ActivityIndicator
 } from 'react-native';
 import { BASE_URL, mapYear, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-community/picker';
 import GroupModal from '../components/GroupModal';
 import axios from 'axios';
-
 
 
 export default function EditProfile({ navigation }) {
@@ -35,17 +33,7 @@ export default function EditProfile({ navigation }) {
     validYear: true,
   });
 
-
-  // const [selectedGroup, setSelectedGroup] = useState({
-  //   group: group.id,
-  //   temp: group.id,
-  // });
   const [selectedGroup, setSelectedGroup] = useState(group.id);
-
-
-  const [groupNames, setGroupNames] = useState(null);
-  const [groupDescs, setGroupDescs] = useState(null);
-  const [pickerItems, setPickerItems] = useState([]);
   const [yearModalVisible, setYearModalVisible] = useState(false);
   const [groupModalVisible, setGroupModalVisible] = useState(false);
   const [valid, setValid] = useState(true);
@@ -63,15 +51,10 @@ export default function EditProfile({ navigation }) {
     timeout: 5000,
   });
 
-  // useEffect(() => {
-  //   getGroups();
-  // }, []);
-
   useEffect(() => {
     isValid = (state.validFirst && state.validLast && state.validYear);
     setValid(isValid);
   }, [state]);
-
 
   const onFirstNameChange = (val) => {
     isValid = (val.trim().length > 0);
@@ -145,7 +128,6 @@ export default function EditProfile({ navigation }) {
       return false;
     }
   };
-
 
   const save = async () => {
     try {

@@ -16,12 +16,9 @@ const AuthContextProvider = (props) => {
     isLoading: true,
   });
 
-
   const [userGroup, setUserGroup] = useState(1);
-
   const [groupList, setGroupList] = useState(null);
   const [groupDict, setGroupDict] = useState(null);
-
 
   // This will only run on initial load
   useEffect(() => {
@@ -237,7 +234,6 @@ const AuthContextProvider = (props) => {
       handleNetworkError(error);
     }
   }
-
 
   return (
     <AuthContext.Provider value={{ ...state, signIn, signOut, refresh, group: userGroup, updateGroup, register, groupDict, groupList }}>

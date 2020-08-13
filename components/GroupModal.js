@@ -9,9 +9,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL, handleNetworkError } from '../helpers';
 import { Picker } from '@react-native-community/picker';
-import axios from 'axios';
 
 export default function GroupModal({ onChange, visible, initialGroup, setVisible }) {
 
@@ -19,7 +17,7 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
     visible: false,
     initialGroup: id,
   }
-  const { group: { id }, token, groupList, groupDict } = useContext(AuthContext);
+  const { group: { id }, groupList, groupDict } = useContext(AuthContext);
   const [initialLoad, setInitialLoad] = useState(true);
   const [group, setGroup] = useState(initialGroup);
   const [modalGroup, setModalGroup] = useState(initialGroup);
@@ -34,8 +32,6 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
   }, [groupList, groupDict]);
 
   const getGroups = () => {
-    console.log('calling getGroups from modal');
-    console.log(groupList);
     let items = groupList.map((item => {
       return (
         <Picker.Item
