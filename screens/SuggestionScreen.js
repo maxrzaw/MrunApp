@@ -12,6 +12,14 @@ export default function SuggestionScreen({ navigation }) {
 
   const { token, group, user, groupDict } = React.useContext(AuthContext);
 
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Suggestion Screen');
+    }
+  }, []);
+
   const [selectedGroup, setSelectedGroup] = useState(group.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [groupModalVisible, setGroupModalVisible] = useState(false);
@@ -28,7 +36,6 @@ export default function SuggestionScreen({ navigation }) {
   });
 
   const getSuggestion = async (date = selectedDate, _group = selectedGroup) => {
-    
     try {
       let dateShort = date.toISOString().split('T')[0];
       let response = await axios(`${BASE_URL}/suggestions/?group=${_group}&date=${dateShort}`, {
@@ -38,6 +45,7 @@ export default function SuggestionScreen({ navigation }) {
           'Authorization': `Token ${token}`,
         },
         timeout: 5000,
+        cancelToken: source.token,
       });
       let response_data = await response.data;
       // There is a suggestion for selected day

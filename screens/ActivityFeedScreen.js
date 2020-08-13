@@ -17,14 +17,24 @@ import axios from 'axios';
 
 export default function ActivityFeedScreen({ navigation, route }) {
 
-  const { user: loggedUser, token, group } = React.useContext(AuthContext);
+  const { token, group } = React.useContext(AuthContext);
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Activity Feed Screen');
+    }
+  }, []);
+
   const axiosActivitiesBase = axios.create({
     baseURL: `${BASE_URL}/activities`,
     timeout: 5000,
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
-    }
+    },
+    cancelToken: source.token,
   });
   var name = group.name ? group.name : 'My Group';
 

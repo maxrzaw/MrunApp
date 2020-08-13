@@ -11,6 +11,14 @@ export default function WorkoutScreen({ navigation }) {
 
   const { token, user: loggedUser } = React.useContext(AuthContext);
 
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Workouts Screen');
+    }
+  }, []);
+
   const buttons = ['All', 'Track', 'Speed', 'Hill', 'Long', 'Core'];
   const groups = {
     1: 'T',
@@ -34,12 +42,12 @@ export default function WorkoutScreen({ navigation }) {
       'Authorization': 'Token ' + token
     },
     timeout: 5000,
+    cancelToken: source.token,
   });
 
   const handleDelete = async (workout_id) => {
     try {
       let response = await axiosWorkoutsBase.delete(`/${workout_id}/`);
-
       // Wait for the response data
       if (response.status == 204) {
         setState({
@@ -96,7 +104,6 @@ export default function WorkoutScreen({ navigation }) {
       next: 1,
       refreshing: true,
     });
-
   }
   // This handles refreshing once state is updated
   useEffect(() => {
@@ -104,7 +111,6 @@ export default function WorkoutScreen({ navigation }) {
       getData();
     }
   }, [state.refreshing])
-
 
   // This handles refreshing once index is changed
   useEffect(() => {

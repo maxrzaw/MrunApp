@@ -19,6 +19,15 @@ import axios from 'axios';
 
 export default function NewWorkoutScreen({ navigation }) {
   const { token } = useContext(AuthContext);
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from New Workout Screen');
+    }
+  }, []);
+
   const [state, setState] = useState({
     title: '',
     description: '',
@@ -28,7 +37,6 @@ export default function NewWorkoutScreen({ navigation }) {
     titleValid: false,
     descValid: false,
   });
-
 
   const dismiss = () => {
     Keyboard.dismiss();
@@ -81,6 +89,7 @@ export default function NewWorkoutScreen({ navigation }) {
           'Authorization': `Token ${token}`,
         },
         data: JSON.stringify(body_data),
+        cancelToken: source.token,
       });
       if (response.status == 201) {
         navigation.goBack();

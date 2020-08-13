@@ -20,6 +20,16 @@ import axios from 'axios';
 
 export default function EditActivity({ navigation, route: { params: { activity, deleteItem } } }) {
   const { token } = useContext(AuthContext);
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Edit Activity Screen');
+    }
+  }, []);
+
+  const [modalVisible, setModalVisible] = useState(false);
   const [state, setState] = useState({
     comment: activity.comment,
     time: new Date(activity.time),
@@ -28,9 +38,6 @@ export default function EditActivity({ navigation, route: { params: { activity, 
     showPicker: true,
     displayDate: '',
   });
-
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   const onCommentChange = (val) => {
     valid = (val.trim().length > 0);
@@ -96,6 +103,7 @@ export default function EditActivity({ navigation, route: { params: { activity, 
           'Authorization': `Token ${token}`,
         },
         data: JSON.stringify(body_data),
+        cancelToken: source.token,
       });
       if (response.status == 202) {
         navigation.goBack();

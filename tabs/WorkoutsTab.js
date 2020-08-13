@@ -26,7 +26,6 @@ export default function WorkoutTab({ navigation }) {
                   size={25}
                 />
               </View>
-
             </TouchableOpacity>
           )
         }}
@@ -37,6 +36,5 @@ export default function WorkoutTab({ navigation }) {
         options={{ title: 'Workout Details' }}
       />
     </WorkoutStack.Navigator>
-
   );
 }

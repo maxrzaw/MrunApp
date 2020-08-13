@@ -1,8 +1,7 @@
-import React, { useLayoutEffect, useContext } from 'react';
+import React, { useContext } from 'react';
 import {
   Text,
   View,
-  Button,
   StyleSheet,
   Pressable,
   Alert
@@ -53,12 +52,12 @@ export default function WorkoutDetailScreen({ navigation, route }) {
     <View style={styles.container}>
       <View style={styles.workoutView}>
         <Text style={styles.titleText}>{item.title}</Text>
+        <Text style={styles.categoryText}>{mapCategory[item.category]}</Text>
         <View style={styles.descriptionView}>
           <Text style={styles.descriptionText}>{item.description}</Text>
         </View>
 
         {/* Title, Description, Category, owner_id */}
-        {/* Run workout button, delete if owner */}
       </View>
       <View style={styles.buttonView}>
         <Pressable
@@ -106,6 +105,12 @@ const styles = StyleSheet.create({
     fontWeight: 'normal',
     textAlign: 'left',
 
+  },
+  categoryText: {
+    marginLeft: 5,
+    fontWeight: 'bold',
+    fontSize: 12,
+    color: '#000',
   },
   workoutView: {
     flex: 1,

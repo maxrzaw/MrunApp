@@ -10,9 +10,7 @@ import WorkoutDetailScreen from '../screens/WorkoutDetailScreen';
 
 const ProfileStack = createStackNavigator();
 
-
 export default function ProfileTab({ navigation }) {
-
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen
@@ -50,7 +48,6 @@ export default function ProfileTab({ navigation }) {
         component={WorkoutDetailScreen}
         options={{ title: 'Workout Details' }}
       />
-
     </ProfileStack.Navigator>
   );
 }

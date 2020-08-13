@@ -17,6 +17,14 @@ import axios from 'axios';
 
 
 export default function ActivityDetailScreen({ navigation, route }) {
+  
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Activity Detail Screen');
+    }
+  }, []);
 
   const { item, deleteItem } = route.params;
 
@@ -36,7 +44,8 @@ export default function ActivityDetailScreen({ navigation, route }) {
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
-    }
+    },
+    cancelToken: source.token,
   });
 
 

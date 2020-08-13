@@ -10,7 +10,6 @@ import CoachTab from './CoachTab';
 
 const Tab = createBottomTabNavigator();
 
-
 export default function TabScreen({ route }) {
   const { user } = useContext(AuthContext);
 
@@ -40,7 +39,6 @@ export default function TabScreen({ route }) {
               ? 'whistle'
               : 'whistle-outline';
           }
-
           // You can return any component that you like here!
           return <MaterialCommunityIcons name={iconName} size={size} color={color} />;
         },

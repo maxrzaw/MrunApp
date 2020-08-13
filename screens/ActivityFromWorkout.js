@@ -22,6 +22,16 @@ import axios from 'axios';
 
 export default function ActivityFromWorkout({ navigation, route: { params: { item } } }) {
   const { token } = useContext(AuthContext);
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Activity From Workout Screen');
+    }
+  }, []);
+  
+  const [modalVisible, setModalVisible] = useState(false);
   const [state, setState] = useState({
     comment: '',
     time: new Date(),
@@ -30,9 +40,6 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
     showPicker: true,
     displayDate: '',
   });
-
-
-  const [modalVisible, setModalVisible] = useState(false);
 
   const onCommentChange = (val) => {
     valid = (val.trim().length > 0);
@@ -99,6 +106,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
           'Authorization': `Token ${token}`,
         },
         data: JSON.stringify(body_data),
+        cancelToken: source.token,
       });
       if (response.status == 201) {
         navigation.goBack();

@@ -12,6 +12,14 @@ export default function UserWorkoutScreen({ navigation, route }) {
   const { token, user: loggedUser } = React.useContext(AuthContext);
   const { user: routeUser } = route.params;
 
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from User Workout Screen');
+    }
+  }, []);
+
   const axiosBase = axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -19,6 +27,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
       'Authorization': 'Token ' + token
     },
     timeout: 5000,
+    cancelToken: source.token,
   });
 
   // Set selected user to logged user if no user is given
@@ -105,7 +114,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
       next: 1,
       refreshing: true,
     });
-
   }
   // This handles refreshing once state is updated
   useEffect(() => {
@@ -114,7 +122,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
       getData();
     }
   }, [state.refreshing])
-
 
   // This handles refreshing once index is changed
   useEffect(() => {

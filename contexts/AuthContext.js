@@ -7,6 +7,8 @@ import axios from 'axios';
 export const AuthContext = createContext();
 
 const AuthContextProvider = (props) => {
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
 
   // Our pieces of state for this context
   const [state, setState] = useState({
@@ -23,12 +25,13 @@ const AuthContextProvider = (props) => {
   // This will only run on initial load
   useEffect(() => {
     (async () => initialLoad())();
+    return () => {
+      source.cancel('Clean up from AuthContext');
+    }
   }, []);
 
   useEffect(() => {
-    console.log('useEffect() Ran');
     if (state.token) {
-      console.log('Called getGroups()');
       getGroups();
     }
   }, [state.token]);
@@ -65,6 +68,7 @@ const AuthContextProvider = (props) => {
           'Authorization': 'Token ' + token,
         },
         timeout: 5000,
+        cancelToken: source.token,
       });
       let response_data = await response.data;
       setUserGroup(response_data['group']);
@@ -83,6 +87,7 @@ const AuthContextProvider = (props) => {
           'Authorization': 'Token ' + token
         },
         timeout: 5000,
+        cancelToken: source.token,
       });
       let user = await response.data;
       // Update state with user object
@@ -123,6 +128,7 @@ const AuthContextProvider = (props) => {
           'Content-Type': 'application/json'
         },
         data: JSON.stringify(body_data),
+        cancelToken: source.token,
       });
       // Wait for the response and convert it do dictionary
       let response_data = await response.data;
@@ -166,6 +172,7 @@ const AuthContextProvider = (props) => {
           'Authorization': `Token ${state.token}`,
         },
         timout: 5000,
+        cancelToken: source.token,
       });
       let response_data = await response.data;
       setUserGroup(response_data['group']);
@@ -201,7 +208,8 @@ const AuthContextProvider = (props) => {
           'Content-Type': 'application/json',
         },
         timeout: 5000,
-        data: JSON.stringify(body_data)
+        data: JSON.stringify(body_data),
+        cancelToken: source.token,
       });
       let response_data = await response.data;
       await getMe(response_data['token']);
@@ -222,7 +230,8 @@ const AuthContextProvider = (props) => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Token ${state.token}`,
-        }
+        },
+        cancelToken: source.token,
       });
       let data = {};
       response.data.forEach(item => {

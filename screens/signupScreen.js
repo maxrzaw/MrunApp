@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { useState, useContext, useEffect } from 'react';
-import { Text, View, Button, TextInput, Pressable, StyleSheet, Keyboard, Modal, TouchableOpacity, Alert } from 'react-native';
+import { useState, useContext } from 'react';
+import { Text, View, TextInput, Pressable, StyleSheet, Keyboard, Modal, TouchableOpacity, Alert } from 'react-native';
 import { Picker } from '@react-native-community/picker';
 import { mapYear } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';

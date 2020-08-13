@@ -3,7 +3,6 @@ import { Text, View, StyleSheet, Button, Alert } from 'react-native';
 import { BASE_URL, handleNetworkError } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 // import CoachScreen from '../screens/CoachScreen';
-import axios from 'axios';
 
 import { createStackNavigator } from '@react-navigation/stack';
 

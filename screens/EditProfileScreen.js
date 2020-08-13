@@ -22,7 +22,24 @@ import axios from 'axios';
 export default function EditProfile({ navigation }) {
   // Context variables
   const { token, user, refresh, group, updateGroup, groupDict } = useContext(AuthContext);
+
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Edit Profile Screen');
+    }
+  }, []);
+
   // Pieces of state
+  const [selectedGroup, setSelectedGroup] = useState(group.id);
+  const [yearModalVisible, setYearModalVisible] = useState(false);
+  const [groupModalVisible, setGroupModalVisible] = useState(false);
+  const [valid, setValid] = useState(true);
+  const [yearState, setYearState] = useState({
+    year: user.year,
+    temp: user.year,
+  });
   const [state, setState] = useState({
     bio: user.bio,
     year: user.year,
@@ -33,15 +50,6 @@ export default function EditProfile({ navigation }) {
     validYear: true,
   });
 
-  const [selectedGroup, setSelectedGroup] = useState(group.id);
-  const [yearModalVisible, setYearModalVisible] = useState(false);
-  const [groupModalVisible, setGroupModalVisible] = useState(false);
-  const [valid, setValid] = useState(true);
-  const [yearState, setYearState] = useState({
-    year: user.year,
-    temp: user.year,
-  });
-
   const axiosBase = axios.create({
     baseURL: BASE_URL,
     headers: {
@@ -49,6 +57,7 @@ export default function EditProfile({ navigation }) {
       'Authorization': `Token ${token}`,
     },
     timeout: 5000,
+    cancelToken: source.token,
   });
 
   useEffect(() => {

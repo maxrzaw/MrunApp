@@ -23,6 +23,14 @@ export default function ProfileScreen({ navigation, route }) {
   // Set selected user to logged user if no user is given
   const selectedUser = (routeUser === null) ? loggedUser : routeUser;
 
+  const CancelToken = axios.CancelToken;
+  const source = CancelToken.source();
+  useEffect(() => {
+    return () => {
+      source.cancel('Clean up from Profile Screen');
+    }
+  }, []);
+
   const [userGroup, setUserGroup] = useState(group);
   const [state, setState] = useState({
     data: null,
@@ -37,6 +45,7 @@ export default function ProfileScreen({ navigation, route }) {
       'Content-Type': 'application/json',
       'Authorization': `Token ${token}`,
     },
+    cancelToken: source.token,
   });
 
   const getData = async () => {
