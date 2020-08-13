@@ -278,6 +278,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
     >
       <FlatList
         style={{ flex: 1, alignSelf: 'stretch' }}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={FlatListHeader}
         data={commentState.data}
         renderItem={renderItem}

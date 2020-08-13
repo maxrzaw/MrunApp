@@ -178,6 +178,7 @@ export default function ProfileScreen({ navigation, route }) {
     <View style={[styles.container, { alignItems: 'stretch' }]}>
       <FlatList
         style={styles.flatlist}
+        showsVerticalScrollIndicator={false}
         ListHeaderComponent={FlatListHeader}
         data={state.data}
         renderItem={renderItem}

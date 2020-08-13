@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Text, View } from 'react-native';
-import SuggestionScreen from '../screens/SuggestionScreen'
+import SuggestionScreen from '../screens/SuggestionScreen';
+import WorkoutDetailScreen from '../screens/WorkoutDetailScreen';
 
 import { createStackNavigator } from '@react-navigation/stack'
 
@@ -12,7 +12,13 @@ export default function TodayTab({ navigation }) {
       <TodayStack.Screen
         name="Home"
         component={SuggestionScreen}
-        options={{title: 'Workout Suggestions'}}
+        options={{ title: 'Workout Suggestions' }}
+      />
+      <TodayStack.Screen
+        name="WorkoutDetail"
+        component={WorkoutDetailScreen}
+        options={{ title: 'Workout Details' }}
+        initialParams={{disableDelete: true}}
       />
     </TodayStack.Navigator>
   );

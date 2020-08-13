@@ -19,52 +19,33 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
     visible: false,
     initialGroup: id,
   }
-  const { group: { id }, token } = useContext(AuthContext);
+  const { group: { id }, token, groupList, groupDict } = useContext(AuthContext);
   const [initialLoad, setInitialLoad] = useState(true);
   const [group, setGroup] = useState(initialGroup);
   const [modalGroup, setModalGroup] = useState(initialGroup);
-  const [groupDescs, setGroupDescs] = useState(null);
   const [pickerItems, setPickerItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    getGroups();
-  }, []);
-
-  const getGroups = async () => {
-    try {
-      let response = await axios(`${BASE_URL}/groups/`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-        timeout: 5000,
-      });
-      let response_data = await response.data;
-
-      // Get the picker items
-      let items = response_data.map((item => {
-        return (
-          <Picker.Item
-            label={item.name}
-            value={item.id}
-            key={item.id}
-          />
-        );
-      }));
-      setPickerItems(items);
-      // Make a lookup table for groups with id as key
-      _groupNames = {};
-      _groupDescs = {};
-      response_data.forEach(item => {
-        _groupDescs[item.id] = item.description;
-      });
-      setGroupDescs(_groupDescs);
+    if (groupList && groupDict) {
+      getGroups();
       setLoading(false);
-    } catch (error) {
-      handleNetworkError(error);
     }
+  }, [groupList, groupDict]);
+
+  const getGroups = () => {
+    console.log('calling getGroups from modal');
+    console.log(groupList);
+    let items = groupList.map((item => {
+      return (
+        <Picker.Item
+          label={item.name}
+          value={item.id}
+          key={item.id}
+        />
+      );
+    }));
+    setPickerItems(items);
   }
 
   // UseEffect for the onChange
@@ -108,7 +89,7 @@ export default function GroupModal({ onChange, visible, initialGroup, setVisible
           <Pressable style={styles.modalView}>
             <View style={[styles.labelView, { marginTop: 15, justifyContent: 'space-between' }]}>
               <Text style={{ fontSize: 20 }}>Training Group</Text>
-              <Text>{groupDescs[modalGroup]}</Text>
+              <Text>{groupDict[modalGroup].description}</Text>
             </View>
             <Picker
               selectedValue={modalGroup}

@@ -35,13 +35,13 @@ export default function Activity({ navigation, item, deleteItem }) {
       <TouchableOpacity
         onPress={() => navigation.push('ActivityDetail', { item, deleteItem })}
       >
-        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
           <Text style={styles.titleText}>{workout.title}</Text>
           <Text style={styles.date}>{getDate()}</Text>
 
         </View>
 
-        <View style={{ flexDirection: 'row', alignItems: "center", justifyContent: 'space-between' }}>
+        <View style={{ flexDirection: 'row', alignItems: "flex-start", justifyContent: 'space-between' }}>
           <Text style={styles.descriptionText}>{workout.description}</Text>
           <Text style={styles.categoryText}>
             {mapCategory[workout.category]}
@@ -78,9 +78,11 @@ const styles = StyleSheet.create({
     paddingVertical: 5,
   },
   descriptionText: {
+    flex: 1,
     textAlign: 'left',
     paddingHorizontal: 5,
-    width: '80%', // TODO: I don't like this
+    //width: '80%', // TODO: I don't like this
+    //backgroundColor: 'red',
   },
   footer: {
     flexDirection: 'row',
@@ -99,10 +101,11 @@ const styles = StyleSheet.create({
     textAlign: 'center'
   },
   categoryText: {
-    padding: 6,
-    margin: 5,
+    flex: 0,
     color: '#000',
     fontWeight: 'bold',
+    marginHorizontal: 5,
+    //backgroundColor: 'red'
   },
   date: {
     paddingRight: 5,
@@ -114,6 +117,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     paddingVertical: 5,
     marginHorizontal: 5,
+    marginTop: 5,
     justifyContent: 'flex-start'
   },
   usernameText: {
@@ -125,6 +129,7 @@ const styles = StyleSheet.create({
   },
   commentText: {
     paddingRight: 5,
+    marginRight: 5,
     flex: 1,
   },
 });

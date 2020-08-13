@@ -26,7 +26,7 @@ export default function ActivityFeedScreen({ navigation, route }) {
       'Authorization': `Token ${token}`,
     }
   });
-  var name = group ? group.name : 'My Group';
+  var name = group.name ? group.name : 'My Group';
 
   const buttons = ['All', name];
 
@@ -122,6 +122,7 @@ export default function ActivityFeedScreen({ navigation, route }) {
       />
       <FlatList
         style={styles.flatlist}
+        showsVerticalScrollIndicator={false}
         data={state.data}
         renderItem={renderItem}
         onRefresh={() => onRefresh()}

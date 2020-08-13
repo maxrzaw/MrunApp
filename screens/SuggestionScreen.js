@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Text, View, StyleSheet, Alert, Pressable, Modal } from 'react-native';
+import { Text, View, StyleSheet, Alert, Pressable } from 'react-native';
 import Workout from '../components/Workout';
 import DateHeader from '../components/DateHeader';
 import { AuthContext } from '../contexts/AuthContext';
@@ -10,7 +10,7 @@ import axios from 'axios';
 
 export default function SuggestionScreen({ navigation }) {
 
-  const { token, group, user } = React.useContext(AuthContext);
+  const { token, group, user, groupDict } = React.useContext(AuthContext);
 
   const [selectedGroup, setSelectedGroup] = useState(group.id);
   const [selectedDate, setSelectedDate] = useState(new Date());
@@ -27,12 +27,10 @@ export default function SuggestionScreen({ navigation }) {
     disableButtons: false,
   });
 
-  //tempDate = new Date();
   const getSuggestion = async (date = selectedDate, _group = selectedGroup) => {
-    let dateShort = date.toISOString().split('T')[0];
-
+    
     try {
-
+      let dateShort = date.toISOString().split('T')[0];
       let response = await axios(`${BASE_URL}/suggestions/?group=${_group}&date=${dateShort}`, {
         method: 'GET',
         headers: {
@@ -73,10 +71,19 @@ export default function SuggestionScreen({ navigation }) {
   // Initial load of data
   useEffect(() => {
     getSuggestion();
+    if (!group.id || group.id == 1) {
+      Alert.alert("You should join a group", "Do this by visiting Profile > Edit Profile > Training Group");
+    }
   }, []);
 
+  useEffect(() => {
+    if (group.id != selectedGroup) {
+      getSuggestion(date = selectedDate, _group = group.id);
+      setSelectedGroup(group.id);
+    }
+  }, [group]);
 
-  if (!group.id || group.id == 0) {
+  if (!group.id || group.id == 1) {
     return (
       <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
         <Text>Join a group from Profile to see suggestions</Text>
@@ -100,7 +107,7 @@ export default function SuggestionScreen({ navigation }) {
       <Pressable onPress={() => setGroupModalVisible(true)}>
         {({ pressed }) => (
           <View style={[styles.groupHeader, pressed ? styles.headerPressedColor : styles.headerColor]}>
-            <Text>Showing suggestions for {group.name}</Text>
+            <Text>Showing suggestions for {groupDict[selectedGroup].name}</Text>
             <Text>View a different group</Text>
           </View>
         )}
@@ -111,7 +118,6 @@ export default function SuggestionScreen({ navigation }) {
           <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
             <Text>No Suggested Workouts on selected Day</Text>
           </View>
-
           :
           <Workout
             item={state.workout}

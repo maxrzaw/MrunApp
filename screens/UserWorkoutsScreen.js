@@ -141,6 +141,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
       />
       <FlatList
         data={state.data}
+        showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         onRefresh={() => onRefresh()}
         refreshing={state.refreshing}

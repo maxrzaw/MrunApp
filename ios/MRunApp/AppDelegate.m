@@ -41,7 +41,7 @@ static void InitializeFlipper(UIApplication *application) {
   // Stuff to try and fix status bar
   if (@available(iOS 13.0, *)) {
     application.statusBarStyle = UIStatusBarStyleDarkContent;
-    rootView.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;
+    rootView.overrideUserInterfaceStyle = UIUserInterfaceStyleLight;J
   }
   // end my stuff
 

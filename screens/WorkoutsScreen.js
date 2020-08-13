@@ -129,6 +129,7 @@ export default function WorkoutScreen({ navigation }) {
       />
       <FlatList
         data={state.data}
+        showsVerticalScrollIndicator={false}
         renderItem={renderItem}
         onRefresh={() => onRefresh()}
         refreshing={state.refreshing}

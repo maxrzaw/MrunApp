@@ -17,13 +17,24 @@ const AuthContextProvider = (props) => {
   });
 
 
-  const [userGroup, setUserGroup] = useState(0);
+  const [userGroup, setUserGroup] = useState(1);
+
+  const [groupList, setGroupList] = useState(null);
+  const [groupDict, setGroupDict] = useState(null);
 
 
   // This will only run on initial load
   useEffect(() => {
     (async () => initialLoad())();
   }, []);
+
+  useEffect(() => {
+    console.log('useEffect() Ran');
+    if (state.token) {
+      console.log('Called getGroups()');
+      getGroups();
+    }
+  }, [state.token]);
 
   const initialLoad = async () => {
     // Check async storage for the token
@@ -205,9 +216,31 @@ const AuthContextProvider = (props) => {
     }
   }
 
+  const getGroups = async () => {
+    try {
+      let response = await axios({
+        method: 'GET',
+        url: `${BASE_URL}/groups/`,
+        timeout: 5000,
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Token ${state.token}`,
+        }
+      });
+      let data = {};
+      response.data.forEach(item => {
+        data[item.id] = { 'name': item.name, 'description': item.description };
+      });
+      setGroupDict(data);
+      setGroupList(response.data);
+    } catch (error) {
+      handleNetworkError(error);
+    }
+  }
+
 
   return (
-    <AuthContext.Provider value={{ ...state, signIn, signOut, refresh, group: userGroup, updateGroup, register }}>
+    <AuthContext.Provider value={{ ...state, signIn, signOut, refresh, group: userGroup, updateGroup, register, groupDict, groupList }}>
       {props.children}
     </AuthContext.Provider>
   )

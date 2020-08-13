@@ -13,8 +13,30 @@ export default function Workout({ navigation, item, loggedUser, deleteItem, disa
 
   const canDelete = (item.owner == loggedUser.id) && !disableDelete;
 
+  const onDelete = () => {
+    Alert.alert(
+      'Are you sure?',
+      'This will permanently delete the workout',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => null
+        },
+        {
+          text: 'Delete',
+          onPress: () => deleteItem(item.id),
+          style: 'destructive'
+        }
+      ],
+      { cancelable: false }
+    );
+  }
+
   return (
     <View style={styles.container}>
+      <TouchableOpacity
+        onPress={() => navigation.push('WorkoutDetail', {deleteItem, item})}
+      >
       <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
         <Text style={styles.titleText}>{item.title}</Text>
         {canDelete ?
@@ -23,7 +45,7 @@ export default function Workout({ navigation, item, loggedUser, deleteItem, disa
             size={20} 
             color="darkred"
             style={{ marginRight: 5 }}
-            onPress={() => deleteItem(item.id)}
+            onPress={() => onDelete()}
           />
           : null
         }
@@ -44,7 +66,7 @@ export default function Workout({ navigation, item, loggedUser, deleteItem, disa
           {mapCategory[item.category]}
         </Text>
       </View>
-
+      </TouchableOpacity>
     </View>
 
   );
@@ -60,7 +82,6 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 5,
     borderRadius: 10,
-
   },
   titleText: {
     fontSize: 20,

@@ -16,13 +16,14 @@ import {
 import { BASE_URL, mapYear, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
 import { Picker } from '@react-native-community/picker';
+import GroupModal from '../components/GroupModal';
 import axios from 'axios';
 
 
 
 export default function EditProfile({ navigation }) {
   // Context variables
-  const { token, user, refresh, group, updateGroup } = useContext(AuthContext);
+  const { token, user, refresh, group, updateGroup, groupDict } = useContext(AuthContext);
   // Pieces of state
   const [state, setState] = useState({
     bio: user.bio,
@@ -33,10 +34,15 @@ export default function EditProfile({ navigation }) {
     validLast: true,
     validYear: true,
   });
-  const [selectedGroup, setSelectedGroup] = useState({
-    group: group.id,
-    temp: group.id,
-  });
+
+
+  // const [selectedGroup, setSelectedGroup] = useState({
+  //   group: group.id,
+  //   temp: group.id,
+  // });
+  const [selectedGroup, setSelectedGroup] = useState(group.id);
+
+
   const [groupNames, setGroupNames] = useState(null);
   const [groupDescs, setGroupDescs] = useState(null);
   const [pickerItems, setPickerItems] = useState([]);
@@ -58,9 +64,9 @@ export default function EditProfile({ navigation }) {
     timeout: 5000,
   });
 
-  useEffect(() => {
-    getGroups();
-  }, []);
+  // useEffect(() => {
+  //   getGroups();
+  // }, []);
 
   useEffect(() => {
     isValid = (state.validFirst && state.validLast && state.validYear);
@@ -101,12 +107,16 @@ export default function EditProfile({ navigation }) {
     setYearModalVisible(false);
   }
 
-  const onGroupSave = () => {
-    setSelectedGroup({
-      ...selectedGroup,
-      group: selectedGroup.temp,
-    });
-    setGroupModalVisible(false);
+  // const onGroupSave = () => {
+  //   setSelectedGroup({
+  //     ...selectedGroup,
+  //     group: selectedGroup.temp,
+  //   });
+  //   setGroupModalVisible(false);
+  // }
+
+  const onGroupSave = (groupId) => {
+    setSelectedGroup(groupId);
   }
 
   React.useLayoutEffect(() => {
@@ -179,7 +189,9 @@ export default function EditProfile({ navigation }) {
   const save = async () => {
     try {
       let userSuccess = await saveUser();
-      let groupSuccess = await updateGroup(selectedGroup.group);
+      // let groupSuccess = await updateGroup(selectedGroup.group);
+      let groupSuccess = await updateGroup(selectedGroup);
+
       if (userSuccess && groupSuccess) {
         await refresh();
         navigation.goBack();
@@ -190,13 +202,13 @@ export default function EditProfile({ navigation }) {
   }
 
 
-  if (loading) {
-    return (
-      <View style={{ alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
+  // if (loading) {
+  //   return (
+  //     <View style={{ alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff' }}>
+  //       <ActivityIndicator size="large" />
+  //     </View>
+  //   );
+  // }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -238,7 +250,9 @@ export default function EditProfile({ navigation }) {
         >
           <Text style={styles.textLabel}>Training Group:</Text>
           <Text style={[styles.textInput, { fontSize: 16 }]}>
-            {groupNames[selectedGroup.group]}
+            {//groupNames[selectedGroup.group]
+            groupDict[selectedGroup].name
+            }
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Bio:</Text>
@@ -253,7 +267,7 @@ export default function EditProfile({ navigation }) {
             onChangeText={(val) => onBioChange(val)}
           />
         </View>
-        <Modal
+        {/* <Modal
           animationType="fade"
           transparent={true}
           visible={groupModalVisible}
@@ -291,7 +305,13 @@ export default function EditProfile({ navigation }) {
               </View>
             </View>
           </View>
-        </Modal>
+        </Modal> */}
+        <GroupModal
+          onChange={onGroupSave}
+          visible={groupModalVisible}
+          setVisible={setGroupModalVisible}
+          initialGroup={group.id}
+        />
         <Modal
           animationType="fade"
           transparent={true}
