@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Text, View, Button } from 'react-native';
 import { createStackNavigator } from '@react-navigation/stack';
 import ProfileScreen from '../screens/ProfileScreen';
 import ActivityFeedScreen from '../screens/ActivityFeedScreen';
@@ -7,6 +6,8 @@ import ActivityFromWorkout from '../screens/ActivityFromWorkout';
 import UserWorkoutsScreen from '../screens/UserWorkoutsScreen';
 import ActivityDetailScreen from '../screens/ActivityDetailScreen';
 import EditActivity from '../screens/EditActivity';
+import EditProfile from '../screens/EditProfileScreen';
+import WorkoutDetailScreen from '../screens/WorkoutDetailScreen';
 import { AuthContext } from '../contexts/AuthContext';
 
 const ActivityStack = createStackNavigator();
@@ -26,7 +27,7 @@ export default function ActivityTab({ navigation }) {
       <ActivityStack.Screen
         name="Profile"
         component={ProfileScreen}
-        initialParams={{ user: user }}
+        initialParams={{ user: null }}
       />
       <ActivityStack.Screen
         name="Workouts"
@@ -42,6 +43,21 @@ export default function ActivityTab({ navigation }) {
         name="EditActivity"
         component={EditActivity}
         options={{ title: 'Edit Avtivity' }}
+      />
+      <ActivityStack.Screen
+        name="EditProfile"
+        component={EditProfile}
+        options={{ title: 'Edit Profile' }}
+      />
+      <ActivityStack.Screen
+        name="WorkoutDetail"
+        component={WorkoutDetailScreen}
+        options={{ title: 'Workout Details' }}
+      />
+      <ActivityStack.Screen
+        name="ActivityFromWorkout"
+        component={ActivityFromWorkout}
+        options={{ title: "New Activity" }}
       />
     </ActivityStack.Navigator>
   );

@@ -14,7 +14,7 @@ export default function ProfileTab({ navigation }) {
   return (
     <ProfileStack.Navigator>
       <ProfileStack.Screen
-        name="Home"
+        name="Profile"
         component={ProfileScreen}
         initialParams={{ user: null }}
       />
