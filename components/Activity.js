@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Text, View, StyleSheet, TouchableOpacity } from 'react-native';
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Pressable,
+} from 'react-native';
 import { mapCategory } from '../helpers'
 
 export default function Activity({ navigation, item, deleteItem }) {
@@ -48,7 +54,16 @@ export default function Activity({ navigation, item, deleteItem }) {
           </Text>
         </View>
         <View style={styles.commentView}>
-          <Text style={styles.usernameText}>{user.username}</Text>
+          <Pressable
+            onPress={() => navigation.push('Profile', { user })}
+          >
+            {({ pressed }) => (
+              <Text style={pressed ? styles.usernameTextPressed : styles.usernameText}>
+                {user.username}
+              </Text>
+            )}
+          </Pressable>
+
           <Text style={styles.commentText}>{item.comment}</Text>
         </View>
       </TouchableOpacity>
@@ -125,7 +140,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 5,
     flex: 0,
-
+    color: '#000',
+  },
+  usernameTextPressed: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginRight: 5,
+    flex: 0,
+    color: '#777',
   },
   commentText: {
     paddingRight: 5,
