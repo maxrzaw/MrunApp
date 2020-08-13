@@ -49,7 +49,6 @@ export default function EditProfile({ navigation }) {
   const [yearModalVisible, setYearModalVisible] = useState(false);
   const [groupModalVisible, setGroupModalVisible] = useState(false);
   const [valid, setValid] = useState(true);
-  const [loading, setLoading] = useState(true);
   const [yearState, setYearState] = useState({
     year: user.year,
     temp: user.year,
@@ -107,14 +106,6 @@ export default function EditProfile({ navigation }) {
     setYearModalVisible(false);
   }
 
-  // const onGroupSave = () => {
-  //   setSelectedGroup({
-  //     ...selectedGroup,
-  //     group: selectedGroup.temp,
-  //   });
-  //   setGroupModalVisible(false);
-  // }
-
   const onGroupSave = (groupId) => {
     setSelectedGroup(groupId);
   }
@@ -132,36 +123,6 @@ export default function EditProfile({ navigation }) {
       )
     });
   }, [navigation, valid, state, selectedGroup]);
-
-  const getGroups = async () => {
-    try {
-      let response = await axiosBase(`/groups/`);
-      let response_data = await response.data;
-      // Get the picker items
-      let items = response_data.map((item => {
-        return (
-          <Picker.Item
-            label={item.name}
-            value={item.id}
-            key={item.id}
-          />
-        );
-      }));
-      setPickerItems(items);
-      // Make a lookup table for groups with id as key
-      _groupNames = {};
-      _groupDescs = {};
-      response_data.forEach(item => {
-        _groupNames[item.id] = item.name;
-        _groupDescs[item.id] = item.description;
-      });
-      setGroupNames(_groupNames);
-      setGroupDescs(_groupDescs);
-      setLoading(false);
-    } catch (error) {
-      handleNetworkError(error)
-    }
-  }
 
   const saveUser = async () => {
     try {
@@ -189,7 +150,6 @@ export default function EditProfile({ navigation }) {
   const save = async () => {
     try {
       let userSuccess = await saveUser();
-      // let groupSuccess = await updateGroup(selectedGroup.group);
       let groupSuccess = await updateGroup(selectedGroup);
 
       if (userSuccess && groupSuccess) {
@@ -201,14 +161,6 @@ export default function EditProfile({ navigation }) {
     }
   }
 
-
-  // if (loading) {
-  //   return (
-  //     <View style={{ alignItems: 'center', justifyContent: "center", flex: 1, backgroundColor: '#fff' }}>
-  //       <ActivityIndicator size="large" />
-  //     </View>
-  //   );
-  // }
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -250,9 +202,7 @@ export default function EditProfile({ navigation }) {
         >
           <Text style={styles.textLabel}>Training Group:</Text>
           <Text style={[styles.textInput, { fontSize: 16 }]}>
-            {//groupNames[selectedGroup.group]
-            groupDict[selectedGroup].name
-            }
+            {groupDict[selectedGroup].name}
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Bio:</Text>
@@ -267,45 +217,6 @@ export default function EditProfile({ navigation }) {
             onChangeText={(val) => onBioChange(val)}
           />
         </View>
-        {/* <Modal
-          animationType="fade"
-          transparent={true}
-          visible={groupModalVisible}
-        >
-          <View style={styles.centered}>
-            <View style={styles.modalView}>
-              <View style={[styles.LabelView, { marginTop: 15, justifyContent: 'space-between' }]}>
-                <Text style={{ fontSize: 20 }}>Training Group</Text>
-                <Text>{groupDescs[selectedGroup.temp]}</Text>
-              </View>
-              <Picker
-                selectedValue={selectedGroup.temp}
-                display="default"
-                onValueChange={(val, index) => setSelectedGroup({
-                  ...selectedGroup,
-                  temp: val,
-                })}
-                style={styles.picker}
-              >
-                {pickerItems}
-              </Picker>
-              <View style={styles.modalButtonsView}>
-                <TouchableOpacity
-                  onPress={() => setGroupModalVisible(false)}
-                  style={[styles.modalButtonView, { borderRightColor: '#a2a2a2', borderRightWidth: 0.5, }]}
-                >
-                  <Text>Cancel</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={() => onGroupSave()}
-                  style={[styles.modalButtonView, { borderLeftColor: '#a2a2a2', borderLeftWidth: 0.5, }]}
-                >
-                  <Text>Ok</Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </View>
-        </Modal> */}
         <GroupModal
           onChange={onGroupSave}
           visible={groupModalVisible}
