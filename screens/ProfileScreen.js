@@ -18,7 +18,7 @@ import axios from 'axios';
 
 export default function ProfileScreen({ navigation, route }) {
   const { user: loggedUser, token, signOut, group } = React.useContext(AuthContext);
-  const { user: routeUser } = route.params;
+  const { user: routeUser, hideCustomNav } = route.params;
 
   // Set selected user to logged user if no user is given
   const selectedUser = (routeUser === null) ? loggedUser : routeUser;
@@ -162,7 +162,7 @@ export default function ProfileScreen({ navigation, route }) {
 
 
   React.useLayoutEffect(() => {
-    if (loggedUser.id == selectedUser.id) {
+    if (loggedUser.id == selectedUser.id && !hideCustomNav) {
       navigation.setOptions({
         headerLeft: () => (
           <Button

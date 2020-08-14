@@ -54,7 +54,7 @@ export default function Workout({ navigation, item, loggedUser, deleteItem, disa
       <Text style={styles.descriptionText}>{item.description}</Text>
       <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
         <TouchableOpacity
-          onPress={() => navigation.navigate("ActivityFromWorkout", { item: item })}
+          onPress={() => navigation.navigate("ActivityFromWorkout", { item })}
         >
           <View style={styles.runWorkoutView}>
             <Text style={styles.maizeText}>

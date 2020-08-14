@@ -16,7 +16,7 @@ export default function ProfileTab({ navigation }) {
       <ProfileStack.Screen
         name="Profile"
         component={ProfileScreen}
-        initialParams={{ user: null }}
+        initialParams={{ user: null, hideCustomNav: false }}
       />
       <ProfileStack.Screen
         name="Workouts"

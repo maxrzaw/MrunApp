@@ -8,7 +8,8 @@ import {
   StyleSheet,
   TextInput,
   Keyboard,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Pressable,
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL, handleNetworkError } from '../helpers';
@@ -17,7 +18,7 @@ import axios from 'axios';
 
 
 export default function ActivityDetailScreen({ navigation, route }) {
-  
+
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
   useEffect(() => {
@@ -112,30 +113,30 @@ export default function ActivityDetailScreen({ navigation, route }) {
     }
   };
 
-    // Gets the comments
-    const getComments = async () => {
-      if (commentState.next != null) {
-        try {
-          response = await axiosBase.get(`/activities/${item.id}/comments/?page=${commentState.next}`);
-          let result = await response.data;
-          setCommentState({
-            ...commentState,
-            data:
-              commentState.next == 1
-                ? result['comments']
-                : [...commentState.data, ...result['comments']],
-            next: result['next'],
-            refreshing: false,
-          });
-        } catch (error) {
-          handleNetworkError(error);
-          setCommentState({
-            ...commentState,
-            refreshing: false,
-          });
-        }
+  // Gets the comments
+  const getComments = async () => {
+    if (commentState.next != null) {
+      try {
+        response = await axiosBase.get(`/activities/${item.id}/comments/?page=${commentState.next}`);
+        let result = await response.data;
+        setCommentState({
+          ...commentState,
+          data:
+            commentState.next == 1
+              ? result['comments']
+              : [...commentState.data, ...result['comments']],
+          next: result['next'],
+          refreshing: false,
+        });
+      } catch (error) {
+        handleNetworkError(error);
+        setCommentState({
+          ...commentState,
+          refreshing: false,
+        });
       }
-    };
+    }
+  };
 
 
   const getDate = () => {
@@ -223,15 +224,15 @@ export default function ActivityDetailScreen({ navigation, route }) {
       getComments();
     }
   }, [commentState.refreshing]);
-
-
-
   // render item functiion
   const renderItem = ({ item }) => (
     <View style={styles.commentView}>
       <Text>
-        <Text style={styles.usernameText}>
-          {item.user.username + '  '}
+        <Text 
+          style={styles.usernameText}
+          onPress={() => navigation.push('Profile', { user: item.user, hideCustomNav: true })}
+        >
+          {item.user.username + ' '}
         </Text>
         <Text style={styles.commentText}>
           {item.text}
@@ -266,8 +267,11 @@ export default function ActivityDetailScreen({ navigation, route }) {
         </View>
         <View style={styles.commentView}>
           <Text>
-            <Text style={styles.usernameText}>
-              {itemState.user.username + '  '}
+            <Text
+              style={styles.usernameText}
+              onPress={() => navigation.push('Profile', { user: item.user, hideCustomNav: true })}
+            >
+              {itemState.user.username + ' '}
             </Text>
             <Text style={styles.commentText}>
               {itemState.comment}
@@ -360,7 +364,14 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginRight: 5,
     paddingRight: 5,
-
+    color: '#000',
+  },
+  usernameTextPressed: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    marginRight: 5,
+    paddingRight: 5,
+    color: '#777',
   },
   commentText: {
     flex: 1,

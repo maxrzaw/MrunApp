@@ -61,7 +61,7 @@ export default function WorkoutDetailScreen({ navigation, route }) {
       </View>
       <View style={styles.buttonView}>
         <Pressable
-          onPress={() => onDelete()}
+          onPress={() => navigation.navigate("ActivityFromWorkout", { item })}
         >
           <Text style={[styles.runWorkoutText, styles.button]}>Run Workout</Text>
         </Pressable>

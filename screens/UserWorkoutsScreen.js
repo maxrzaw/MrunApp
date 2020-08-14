@@ -125,7 +125,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
 
   // This handles refreshing once index is changed
   useEffect(() => {
-    console.log(`Index change, getting page ${state.next} on index ${groups[state.selectedIndex]}`);
     getData();
   }, [state.selectedIndex])
 

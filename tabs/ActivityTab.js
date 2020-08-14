@@ -27,7 +27,7 @@ export default function ActivityTab({ navigation }) {
       <ActivityStack.Screen
         name="Profile"
         component={ProfileScreen}
-        initialParams={{ user: null }}
+        initialParams={{ user: null, hideCustomNav: true }}
       />
       <ActivityStack.Screen
         name="Workouts"

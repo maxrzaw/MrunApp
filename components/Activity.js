@@ -11,6 +11,7 @@ import { mapCategory } from '../helpers'
 export default function Activity({ navigation, item, deleteItem }) {
 
   const { workout, user } = item;
+  ;
 
   const getDate = () => {
     const itemTime = new Date(item.time)
@@ -54,17 +55,17 @@ export default function Activity({ navigation, item, deleteItem }) {
           </Text>
         </View>
         <View style={styles.commentView}>
-          <Pressable
-            onPress={() => navigation.push('Profile', { user })}
-          >
-            {({ pressed }) => (
-              <Text style={pressed ? styles.usernameTextPressed : styles.usernameText}>
-                {user.username}
-              </Text>
-            )}
-          </Pressable>
-
-          <Text style={styles.commentText}>{item.comment}</Text>
+          <Text>
+            <Text 
+              style={styles.usernameText} 
+              onPress={() => navigation.push('Profile', { user, hideCustomNav: true })}
+            >
+              {user.username + ' '}
+            </Text>
+            <Text style={styles.commentText}>
+              {item.comment}
+            </Text>
+          </Text>
         </View>
       </TouchableOpacity>
     </View>
