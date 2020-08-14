@@ -96,6 +96,7 @@ export default function ProfileScreen({ navigation, route }) {
       item={item}
       navigation={navigation}
       deleteItem={deleteItem}
+      profileUserId={selectedUser.id}
     />
   );
 

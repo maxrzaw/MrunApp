@@ -8,10 +8,21 @@ import {
 } from 'react-native';
 import { mapCategory } from '../helpers'
 
-export default function Activity({ navigation, item, deleteItem }) {
+export default function Activity({ navigation, item, deleteItem, profileUserId }) {
+
+  Activity.defaultProps = {
+    profileUserId: 0,
+    deleteItem: (id) => console.log(`Deleted Item ${id}`),
+  }
 
   const { workout, user } = item;
-  ;
+  const navigationEnabled = profileUserId != user.id;
+
+  const pushProfileScreen = () => {
+    if (navigationEnabled) {
+      navigation.push('Profile', { user, hideCustomNav: true });
+    }
+  }
 
   const getDate = () => {
     const itemTime = new Date(item.time)
@@ -47,7 +58,6 @@ export default function Activity({ navigation, item, deleteItem }) {
           <Text style={styles.date}>{getDate()}</Text>
 
         </View>
-
         <View style={{ flexDirection: 'row', alignItems: "flex-start", justifyContent: 'space-between' }}>
           <Text style={styles.descriptionText}>{workout.description}</Text>
           <Text style={styles.categoryText}>
@@ -56,9 +66,9 @@ export default function Activity({ navigation, item, deleteItem }) {
         </View>
         <View style={styles.commentView}>
           <Text>
-            <Text 
-              style={styles.usernameText} 
-              onPress={() => navigation.push('Profile', { user, hideCustomNav: true })}
+            <Text
+              style={styles.usernameText}
+              onPress={() => pushProfileScreen()}
             >
               {user.username + ' '}
             </Text>
@@ -69,7 +79,6 @@ export default function Activity({ navigation, item, deleteItem }) {
         </View>
       </TouchableOpacity>
     </View>
-
   );
 }
 
@@ -83,13 +92,11 @@ const styles = StyleSheet.create({
     marginVertical: 5,
     marginHorizontal: 5,
     borderRadius: 10,
-
   },
   titleText: {
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'left',
-    //marginTop: 5,
     marginHorizontal: 5,
     paddingVertical: 5,
   },
@@ -97,8 +104,6 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: 'left',
     paddingHorizontal: 5,
-    //width: '80%', // TODO: I don't like this
-    //backgroundColor: 'red',
   },
   footer: {
     flexDirection: 'row',
@@ -121,7 +126,6 @@ const styles = StyleSheet.create({
     color: '#000',
     fontWeight: 'bold',
     marginHorizontal: 5,
-    //backgroundColor: 'red'
   },
   date: {
     paddingRight: 5,

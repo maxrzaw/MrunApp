@@ -137,6 +137,21 @@ export default function UserWorkoutScreen({ navigation, route }) {
     // console.log(groups[state.selectedIndex]);
   }
 
+  const listEmptyComponent = () => {
+    if (state.selectedIndex == 0) {
+      return (
+        <Text style={{ alignSelf: 'center', marginTop: 20 }}>
+          {user.first_name} has no workouts :(
+        </Text>
+      )
+    }
+    return (
+      <Text style={{ alignSelf: 'center', marginTop: 20 }}>
+        {user.first_name} has no {buttons[state.selectedIndex]} workouts :(
+      </Text>
+    )
+  }
+
   return (
     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'stretch' }}>
       <ButtonGroup
@@ -146,6 +161,7 @@ export default function UserWorkoutScreen({ navigation, route }) {
         onPress={(val) => updateIndex(val)}
       />
       <FlatList
+        //style={{ flex: 0 }}
         data={state.data}
         showsVerticalScrollIndicator={false}
         renderItem={renderItem}
@@ -154,7 +170,9 @@ export default function UserWorkoutScreen({ navigation, route }) {
         keyExtractor={item => item.id.toString()}
         onEndReached={() => getData()}
         onEndReachedThreshold={0.5}
+        ListEmptyComponent={listEmptyComponent}
       />
+
     </View>
   );
 }
