@@ -11,6 +11,7 @@ import AuthContextProvider, { AuthContext } from './contexts/AuthContext';
 import TabScreen from './tabs/TabScreen'
 import NewWorkoutScreen from './screens/NewWorkoutScreen'
 import ActivityFromWorkout from './screens/ActivityFromWorkout'
+import SuggestionFromWorkout from './screens/SuggestWorkoutScreen';
 
 LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state',
@@ -22,7 +23,7 @@ const RootStack = createStackNavigator();
 const App = () => {
   return (
     <AuthContextProvider>
-      <Root/>
+      <Root />
     </AuthContextProvider>
   );
 }
@@ -54,6 +55,11 @@ const Root = () => {
             name="ActivityFromWorkout"
             component={ActivityFromWorkout}
             options={{ title: "New Activity" }}
+          />
+          <RootStack.Screen
+            name="SuggestionFromWorkout"
+            component={SuggestionFromWorkout}
+            options={{ title: "New Suggestion" }}
           />
         </RootStack.Navigator>
       </NavigationContainer>

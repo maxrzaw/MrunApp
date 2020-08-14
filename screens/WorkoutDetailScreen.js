@@ -66,6 +66,15 @@ export default function WorkoutDetailScreen({ navigation, route }) {
           <Text style={[styles.runWorkoutText, styles.button]}>Run Workout</Text>
         </Pressable>
         {
+          user.is_staff ?
+            <Pressable
+              onPress={() => navigation.navigate('SuggestionFromWorkout', { item })}
+            >
+              <Text style={[styles.runWorkoutText, styles.button]}>Suggest Workout</Text>
+            </Pressable>
+            : null
+        }
+        {
           item.owner == user.id && !disableDelete ?
             <Pressable
               onPress={() => onDelete()}
