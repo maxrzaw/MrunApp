@@ -5,7 +5,6 @@ import {
   View,
   Button,
   StyleSheet,
-  TextInput,
   Modal,
   TouchableWithoutFeedback,
   TouchableOpacity,
@@ -13,7 +12,7 @@ import {
   Keyboard,
   Pressable
 } from 'react-native';
-import { BASE_URL, mapCategory, handleNetworkError } from '../helpers';
+import { BASE_URL, handleNetworkError, mapCategory } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import CheckBox from '@react-native-community/checkbox';
@@ -23,6 +22,7 @@ import axios from 'axios';
 
 export default function SuggestionFromWorkout({ navigation, route: { params: { item } } }) {
   const { token, groupDict, groupList } = useContext(AuthContext);
+  const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
@@ -49,14 +49,12 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
               value={checkBoxValues[item.id]}
               onValueChange={(newValue) => checkBoxValues[item.id] = newValue}
               key={item.id}
-              style={{height: 20, width: 20, alignSelf: 'center', margin: 5}}
+              style={{ height: 20, width: 20, alignSelf: 'center', margin: 5 }}
             />
             <Text>{item.name}</Text>
           </View>
         );
       }));
-
-
       setCheckBoxes(items);
     }
   }, [groupList, groupDict]);
@@ -67,17 +65,7 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
     tempTime: new Date(),
     validComment: false,
     showPicker: true,
-    displayDate: '',
   });
-
-  const onCommentChange = (val) => {
-    valid = (val.trim().length > 0);
-    setState({
-      ...state,
-      comment: val,
-      validComment: valid,
-    });
-  };
 
   const onDateChange = (date) => {
     setState({
@@ -94,66 +82,66 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
     setModalVisible(false);
   }
 
-  useEffect(() => {
-    let date = getDate();
-    setState({
-      ...state,
-      displayDate: date,
-    })
-  }, [state.time])
-
-
-  const getDate = () => {
-    const today = new Date();
-    const yesterday = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1);
-    let day = ''
-    if (today.toDateString() == state.time.toDateString()) {
-      day = 'Today';
-    } else if (yesterday.toDateString() == state.time.toDateString()) {
-      day = 'Yesterday';
-    } else {
-      day = state.time.toDateString();
-    }
-    time = state.time.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
-    return `${day} at ${time}`;
-  }
-
   const save = async () => {
     try {
       // Do stuff
-      let body_data = {
-        "workout": item.id,
-        "comment": state.comment,
-        "time": state.time,
-      };
-      let response = await axios({
-        url: `${BASE_URL}/activities/`,
-        method: 'POST',
-        timeout: 5000,
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Token ${token}`,
-        },
-        data: JSON.stringify(body_data),
-        cancelToken: source.token,
-      });
-      if (response.status == 201) {
-        navigation.goBack();
+      var success = true;
+      for (const key in checkBoxValues) {
+        if (checkBoxValues.hasOwnProperty(key)) {
+          const value = checkBoxValues[key];
+          if (value) {
+            let body_data = {
+              "workout": item.id,
+              "group": key,
+              "date": state.time.toISOString().split('T')[0],
+            };
+            let response = await axios({
+              url: `${BASE_URL}/suggestions/`,
+              method: 'POST',
+              timeout: 5000,
+              headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Token ${token}`,
+              },
+              data: JSON.stringify(body_data),
+              cancelToken: source.token,
+            });
+            if (response.status != 201) {
+              success = false;
+            }
+          }
+        }
       }
+      if (success) {
+        navigation.goBack();
+      } else {
+        Alert.alert('Problem saving');
+      }
+
     } catch (error) {
-      handleNetworkError(error);
+      if (error.response && error.response.status != 409) {
+        handleNetworkError(error);
+      }
+      Alert.alert(
+        'Problem Saving',
+        `At least one group already had a suggestion on ${state.time.toLocaleDateString([], dateOptions)}`,
+        [
+          {
+            text: 'OK',
+            onPress: () => navigation.goBack()
+          },
+        ]);
     }
   };
 
   const onSave = throttle(save, 250, { trailing: false });
-
 
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
         <Button
           onPress={() => onSave()} title="Save"
-          disabled={!(state.validComment)}
+          disabled={false}
         />
       ),
       headerLeft: () => (
@@ -188,7 +176,7 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
         >
           <Text style={styles.textLabel}>Time:</Text>
           <Text style={[styles.textInput, { fontSize: 16 }]}>
-            {state.displayDate}
+            {state.time.toLocaleDateString([], dateOptions)}
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Training Groups:</Text>
