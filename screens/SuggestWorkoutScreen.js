@@ -28,36 +28,12 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
   const source = CancelToken.source();
   useEffect(() => {
     return () => {
-      source.cancel('Clean up from Suggest Workout Screen');
+      //source.cancel('Clean up from Suggest Workout Screen');
     }
   }, []);
 
   const [checkBoxes, setCheckBoxes] = useState(null);
-  const checkBoxValues = [];
-
-  useEffect(() => {
-    if (groupList && groupDict) {
-      let items = groupList.map((item => {
-        return (
-          <View style={styles.checkBoxView}>
-            <CheckBox
-              disabled={false}
-              boxType="square"
-              onAnimationType='bounce'
-              offAnimationType='bounce'
-              animationDuration={0.2}
-              value={checkBoxValues[item.id]}
-              onValueChange={(newValue) => checkBoxValues[item.id] = newValue}
-              key={item.id}
-              style={{ height: 20, width: 20, alignSelf: 'center', margin: 5 }}
-            />
-            <Text>{item.name}</Text>
-          </View>
-        );
-      }));
-      setCheckBoxes(items);
-    }
-  }, [groupList, groupDict]);
+  const [checkBoxValues, setCheckBoxValues] = useState({});
 
   const [modalVisible, setModalVisible] = useState(false);
   const [state, setState] = useState({
@@ -80,9 +56,45 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
       time: state.tempTime,
     });
     setModalVisible(false);
+    console.log(checkBoxValues);
   }
 
+  const updateCheckBoxValue = (id, value) => {
+    var temp = checkBoxValues;
+    temp[id] = value;
+    setCheckBoxValues(temp);
+  }
+
+  useEffect(() => {
+    if (groupList && groupDict) {
+      groupList.forEach(elt => {
+        updateCheckBoxValue(elt.id, false);
+      });
+      let items = groupList.map((item => {
+        return (
+          <View style={styles.checkBoxView} key={item.id}>
+            <CheckBox
+              disabled={false}
+              boxType="square"
+              onAnimationType='bounce'
+              offAnimationType='bounce'
+              animationDuration={0.2}
+              value={checkBoxValues[item.id]}
+              onValueChange={(newValue) => updateCheckBoxValue(item.id, newValue)}
+              //key={item.id}
+              style={{ height: 20, width: 20, alignSelf: 'center', margin: 5 }}
+            />
+            <Text>{item.name}</Text>
+          </View>
+        );
+      }));
+      setCheckBoxes(items);
+    }
+  }, [groupList, groupDict]);
+
   const save = async () => {
+    console.log('Save ran');
+    console.log(checkBoxValues);
     try {
       // Do stuff
       var success = true;
@@ -108,6 +120,8 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
             });
             if (response.status != 201) {
               success = false;
+            } else {
+              console.log(`success on ${key}!`);
             }
           }
         }

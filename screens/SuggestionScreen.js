@@ -56,7 +56,10 @@ export default function SuggestionScreen({ navigation }) {
         disableButtons: false,
       });
     } catch (error) {
-      handleNetworkError(error);
+      if (error.response && error.response.status != 404) {
+        // 404 are pretty common here so we ignore them kinda
+        handleNetworkError(error);
+      }
       // No suggestion for selected day
       setState({
         ...state,

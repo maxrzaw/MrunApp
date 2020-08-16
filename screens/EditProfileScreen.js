@@ -151,7 +151,8 @@ export default function EditProfile({ navigation }) {
       console.log(error);
     }
   }
-
+  console.log(groupDict);
+  console.log(`selected group: ${selectedGroup}`);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
