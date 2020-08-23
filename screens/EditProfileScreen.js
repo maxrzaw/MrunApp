@@ -151,8 +151,6 @@ export default function EditProfile({ navigation }) {
       console.log(error);
     }
   }
-  console.log(groupDict);
-  console.log(`selected group: ${selectedGroup}`);
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <View style={styles.container}>
@@ -220,6 +218,10 @@ export default function EditProfile({ navigation }) {
           transparent={true}
           visible={yearModalVisible}
         >
+          <TouchableWithoutFeedback
+            style={{flex: 1}}
+            onPress={() => setYearModalVisible(false)}
+          >
           <View style={styles.centered}>
             <View style={styles.modalView}>
               <View style={styles.LabelView}>
@@ -256,6 +258,7 @@ export default function EditProfile({ navigation }) {
               </View>
             </View>
           </View>
+          </TouchableWithoutFeedback>
         </Modal>
       </View >
     </TouchableWithoutFeedback>
