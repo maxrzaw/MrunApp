@@ -12,7 +12,7 @@ import {
   Pressable,
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL, handleNetworkError } from '../helpers';
+import { BASE_URL, handleNetworkError, colors } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 import axios from 'axios';
 
@@ -95,7 +95,6 @@ export default function ActivityDetailScreen({ navigation, route }) {
   // Gets the ativity object
   const getActivity = async () => {
     try {
-      console.log();
       response = await axiosBase.get(`/activities/${item.id}/`);
       data = await response.data;
       setItemState({
@@ -327,10 +326,10 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'flex-start',
     alignItems: 'flex-start',
-    backgroundColor: '#f0f0f0',
+    backgroundColor: colors.background,
   },
   headerContainer: {
-    backgroundColor: '#fff',
+    backgroundColor: colors.white,
     paddingHorizontal: 8,
     paddingTop: 5,
     paddingBottom: 10,

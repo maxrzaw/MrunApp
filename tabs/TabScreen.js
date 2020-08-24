@@ -7,6 +7,7 @@ import ProfileTab from './ProfileTab';
 import TodayTab from './TodayTab';
 import WorkoutsTab from './WorkoutsTab';
 import CoachTab from './CoachTab';
+import { colors } from '../helpers';
 
 const Tab = createBottomTabNavigator();
 
@@ -44,8 +45,8 @@ export default function TabScreen({ route }) {
         },
       })}
       tabBarOptions={{
-        activeTintColor: 'tomato',
-        inactiveTintColor: 'gray',
+        activeTintColor: colors.blue,
+        inactiveTintColor: colors.darkgrey,
       }}
     >
       <Tab.Screen

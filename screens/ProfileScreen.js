@@ -109,6 +109,24 @@ export default function ProfileScreen({ navigation, route }) {
     });
 
   }
+  const logout = () => {
+    Alert.alert(
+      'Are you sure?',
+      'You will have to log back in.',
+      [
+        {
+          text: 'Cancel',
+          onPress: () => null
+        },
+        {
+          text: 'Log Out',
+          onPress: () => signOut(),
+          style: 'destructive'
+        }
+      ],
+      { cancelable: false }
+    );
+  }
 
   // This handles refreshing once state is updated
   useEffect(() => {
@@ -146,7 +164,6 @@ export default function ProfileScreen({ navigation, route }) {
   useEffect(() => {
     async function fetchData() {
       try {
-        console.log('Code ran');
         response = await axiosBase.get(`/membership/?user=${selectedUser.id}`);
         let response_data = await response.data;
         setUserGroup(response_data['group']);
@@ -173,7 +190,7 @@ export default function ProfileScreen({ navigation, route }) {
         ),
         headerRight: () => (
           <Button
-            onPress={() => signOut()}
+            onPress={() => logout()}
             title="Log Out"
           />
         ),

@@ -11,7 +11,8 @@ import {
   TouchableOpacity,
   Alert,
   Keyboard,
-  Pressable
+  Pressable,
+  KeyboardAvoidingView
 } from 'react-native';
 import { BASE_URL, mapCategory, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
@@ -137,7 +138,12 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
-      <View style={styles.container}>
+      <KeyboardAvoidingView 
+        style={styles.container}
+        behavior='position'
+        contentContainerStyle={styles.container}
+        keyboardVerticalOffset={65}
+      >
 
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>Title:</Text>
@@ -163,7 +169,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Comment:</Text>
-        <View style={[styles.descriptionView, { flex: 0.3 }]}>
+        <View style={[styles.descriptionView, { flex: 1 }]}>
           <TextInput
             style={styles.textInput}
             autoCapitalize="sentences"
@@ -213,7 +219,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
           </TouchableWithoutFeedback>
 
         </Modal>
-      </View >
+      </KeyboardAvoidingView >
     </TouchableWithoutFeedback>
   );
 }

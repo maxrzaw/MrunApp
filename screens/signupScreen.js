@@ -88,7 +88,6 @@ export default function SignUpScreen({ navigation }) {
 
   const onSignUp = () => {
     // Lets do some validation here so I can focus a text input if I want.
-    console.log('Button Pressed');
     if (state.username.trim().length == 0) {
       // Username is not long enough
       Alert.alert("Please enter a username");

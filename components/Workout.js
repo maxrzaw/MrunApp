@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { mapCategory } from '../helpers'
+import { mapCategory, colors } from '../helpers'
 import Feather from 'react-native-vector-icons/Feather';
+import { Colors } from 'react-native/Libraries/NewAppScreen';
 
 export default function Workout({ navigation, item, loggedUser, deleteItem, disableDelete }) {
 
@@ -43,7 +44,7 @@ export default function Workout({ navigation, item, loggedUser, deleteItem, disa
           <Feather
             name="trash-2"
             size={20} 
-            color="darkred"
+            color={colors.deleteRed}
             style={{ marginRight: 5 }}
             onPress={() => onDelete()}
           />
@@ -101,14 +102,14 @@ const styles = StyleSheet.create({
   runWorkoutView: {
     padding: 6,
     margin: 5,
-    backgroundColor: '#00274C',
+    backgroundColor: colors.blue,
     borderRadius: 5,
     borderWidth: 1,
     alignContent: 'center',
-    borderColor: '#00274C',
+    borderColor: colors.blue,
   },
   maizeText: {
-    color: '#FFCB05',
+    color: colors.maize,
     textAlign: 'center'
   },
   categoryText: {

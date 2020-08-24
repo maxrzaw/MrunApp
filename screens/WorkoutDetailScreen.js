@@ -7,7 +7,7 @@ import {
   Alert
 } from 'react-native';
 import { AuthContext } from '../contexts/AuthContext';
-import { mapCategory } from '../helpers'
+import { mapCategory, colors } from '../helpers'
 
 
 export default function WorkoutDetailScreen({ navigation, route }) {
@@ -138,11 +138,11 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   runWorkoutText: {
-    color: '#FFCB05',
-    backgroundColor: '#00274C',
+    color: colors.maize,
+    backgroundColor: colors.blue,
   },
   deleteText: {
-    color: '#fff',
-    backgroundColor: 'darkred',
+    color: colors.white,
+    backgroundColor: colors.deleteRed,
   }
 });

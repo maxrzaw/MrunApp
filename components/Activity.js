@@ -6,7 +6,7 @@ import {
   TouchableOpacity,
   Pressable,
 } from 'react-native';
-import { mapCategory } from '../helpers'
+import { mapCategory, colors } from '../helpers'
 
 export default function Activity({ navigation, item, deleteItem, profileUserId }) {
 
@@ -55,14 +55,16 @@ export default function Activity({ navigation, item, deleteItem, profileUserId }
       >
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', }}>
           <Text style={styles.titleText}>{workout.title}</Text>
-          <Text style={styles.date}>{getDate()}</Text>
-
-        </View>
-        <View style={{ flexDirection: 'row', alignItems: "flex-start", justifyContent: 'space-between' }}>
-          <Text style={styles.descriptionText}>{workout.description}</Text>
           <Text style={styles.categoryText}>
             {mapCategory[workout.category]}
           </Text>
+
+        </View>
+        <View style={{ alignItems: "flex-start", justifyContent: 'space-between' }}>
+
+          <Text style={styles.date}>{getDate()}</Text>
+          <Text style={styles.descriptionText}>{workout.description}</Text>
+
         </View>
         <View style={styles.commentView}>
           <Text>
@@ -98,7 +100,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     textAlign: 'left',
     marginHorizontal: 5,
-    paddingVertical: 5,
+    paddingTop: 5,
   },
   descriptionText: {
     flex: 1,
@@ -118,7 +120,7 @@ const styles = StyleSheet.create({
     borderColor: '#00274C',
   },
   maizeText: {
-    color: '#FFCB05',
+    color: colors.maize,
     textAlign: 'center'
   },
   categoryText: {
@@ -129,6 +131,10 @@ const styles = StyleSheet.create({
   },
   date: {
     paddingRight: 5,
+    paddingLeft: 5,
+    fontSize: 12,
+    color: 'grey',
+    marginBottom: 10,
   },
   commentView: {
     borderTopColor: 'grey',

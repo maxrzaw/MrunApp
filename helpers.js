@@ -44,5 +44,18 @@ export const handleNetworkError = (error) => {
     } else {
         console.log(error);
     }
-
 }
+
+export const colors = {
+    'blue': '#00274C',
+    'maize': '#FFCB05',
+    'darkgrey': '#646464',
+    'black': '#000000',
+    'white': '#ffffff',
+    'deleteRed': '#9f0000',
+    'background': '#f0f0f0',
+}
+
+export const styles = StyleSheet.create({
+
+})

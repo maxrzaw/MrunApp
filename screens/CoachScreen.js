@@ -43,7 +43,6 @@ export default function CoachScreen({ navigation }) {
       let dateShort = date.toISOString().split('T')[0];
       let response = await axiosSuggestionBase.get(`/?date=${dateShort}`);
       let response_data = await response.data;
-      console.log(response_data);
       // There is a suggestion for selected day
       setState({
         ...state,

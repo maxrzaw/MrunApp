@@ -118,7 +118,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
   // This handles refreshing once state is updated
   useEffect(() => {
     if (state.refreshing) {
-      console.log(`Refreshing, getting page ${state.next}`);
       getData();
     }
   }, [state.refreshing])
@@ -134,7 +133,6 @@ export default function UserWorkoutScreen({ navigation, route }) {
       selectedIndex: index,
       next: 1,
     });
-    // console.log(groups[state.selectedIndex]);
   }
 
   const listEmptyComponent = () => {

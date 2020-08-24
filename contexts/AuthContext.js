@@ -189,7 +189,6 @@ const AuthContextProvider = (props) => {
   }
 
   const register = async (username, email, first, last, pass1, pass2, bio, year) => {
-    console.log('Register ran');
     try {
       const body_data = {
         "username": username,
@@ -201,7 +200,6 @@ const AuthContextProvider = (props) => {
         "bio": bio,
         "year": year,
       }
-      console.log(body_data);
       let response = await axios(`${BASE_URL}/register/`, {
         method: 'POST',
         headers: {

@@ -56,7 +56,6 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
       time: state.tempTime,
     });
     setModalVisible(false);
-    console.log(checkBoxValues);
   }
 
   const updateCheckBoxValue = (id, value) => {
@@ -93,8 +92,6 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
   }, [groupList, groupDict]);
 
   const save = async () => {
-    console.log('Save ran');
-    console.log(checkBoxValues);
     try {
       // Do stuff
       var success = true;
@@ -120,8 +117,6 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
             });
             if (response.status != 201) {
               success = false;
-            } else {
-              console.log(`success on ${key}!`);
             }
           }
         }
