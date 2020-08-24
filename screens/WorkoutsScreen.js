@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react';
 import { Text, View, FlatList, StyleSheet, Alert } from 'react-native';
 import Workout from '../components/Workout';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL, handleNetworkError } from '../helpers';
+import { BASE_URL, handleNetworkError, colors } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
 
@@ -132,6 +132,7 @@ export default function WorkoutScreen({ navigation }) {
         buttons={buttons}
         containerStyle={styles.btnGroup}
         onPress={(val) => updateIndex(val)}
+        selectedButtonStyle={{backgroundColor: colors.blue}}
       />
       <FlatList
         data={state.data}

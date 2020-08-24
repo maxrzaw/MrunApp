@@ -10,7 +10,7 @@ import {
 } from 'react-native';
 import Activity from '../components/Activity';
 import { AuthContext } from '../contexts/AuthContext';
-import { BASE_URL, handleNetworkError } from '../helpers';
+import { BASE_URL, handleNetworkError, colors } from '../helpers';
 import { ButtonGroup } from 'react-native-elements';
 import axios from 'axios';
 
@@ -126,6 +126,7 @@ export default function ActivityFeedScreen({ navigation, route }) {
     <View style={[styles.container, { alignItems: 'stretch' }]}>
       <ButtonGroup
         selectedIndex={selectedIndex}
+        selectedButtonStyle={{backgroundColor: colors.blue}}
         buttons={buttons}
         containerStyle={styles.btnGroup}
         onPress={(val) => setSelectedIndex(val)}
