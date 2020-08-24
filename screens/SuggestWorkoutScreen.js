@@ -203,6 +203,7 @@ export default function SuggestionFromWorkout({ navigation, route: { params: { i
               <View style={styles.modalView}>
                 <View style={styles.LabelView}>
                   <Text style={{ fontSize: 20 }}>Workout Time</Text>
+                  <Text>{state.tempTime.toLocaleDateString([],{weekday: 'long'})}</Text>
                 </View>
                 <DateTimePicker
                   testID="dateTimePicker"

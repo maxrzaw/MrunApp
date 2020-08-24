@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { Text, View, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { mapCategory } from '../helpers';
+import { mapCategory, colors } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../contexts/AuthContext';
 
@@ -36,16 +36,13 @@ export default function Suggestion({ navigation, item, loggedUser, deleteItem, d
 
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity
-        onPress={() => navigation.push('SuggestionDetail', { deleteItem, item })}
-      > */}
         <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
           <Text style={styles.titleText}>{item.workout.title}</Text>
           {canDelete ?
             <Feather
               name="trash-2"
               size={20}
-              color="darkred"
+              color={colors.deleteRed}
               style={{ marginRight: 5 }}
               onPress={() => onDelete()}
             />
@@ -62,7 +59,6 @@ export default function Suggestion({ navigation, item, loggedUser, deleteItem, d
             {mapCategory[item.category]}
           </Text>
         </View>
-      {/* </TouchableOpacity> */}
     </View>
 
   );
@@ -83,29 +79,12 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     textAlign: 'left',
-    //marginTop: 5,
     marginHorizontal: 5,
     paddingVertical: 5,
   },
   descriptionText: {
     textAlign: 'left',
     paddingHorizontal: 5,
-  },
-  footer: {
-    flexDirection: 'row',
-  },
-  runWorkoutView: {
-    padding: 6,
-    margin: 5,
-    backgroundColor: '#00274C',
-    borderRadius: 5,
-    borderWidth: 1,
-    alignContent: 'center',
-    borderColor: '#00274C',
-  },
-  maizeText: {
-    color: '#FFCB05',
-    textAlign: 'center'
   },
   categoryText: {
     padding: 6,
