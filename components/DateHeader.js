@@ -91,7 +91,7 @@ export default function DateHeader({ onDateChange, disableButtons, initialDate }
         {({ pressed }) => (
           <Feather
             name="chevron-left"
-            size={40}
+            size={33}
             color={pressed ? '#CCA404' : '#FFCB05'}
 
           />
@@ -118,7 +118,7 @@ export default function DateHeader({ onDateChange, disableButtons, initialDate }
         {({ pressed }) => (
           <Feather
             name="chevron-right"
-            size={40}
+            size={33}
             color={pressed ? '#CCA404' : '#FFCB05'}
 
           />

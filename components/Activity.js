@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
     alignItems: 'stretch',
     borderWidth: 1,
     borderColor: 'black',
-    marginVertical: 5,
+    marginTop: 5,
     marginHorizontal: 5,
     borderRadius: 10,
   },
