@@ -10,7 +10,9 @@ import {
   TouchableWithoutFeedback,
   TouchableOpacity,
   Alert,
-  Keyboard
+  Keyboard,
+  KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 import { BASE_URL, mapCategory, handleNetworkError } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
@@ -140,6 +142,16 @@ export default function EditActivity({ navigation, route: { params: { activity, 
 
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <KeyboardAvoidingView
+        style={{flex: 1}}
+        behavior='padding'
+        keyboardVerticalOffset={65}
+      >
+        <ScrollView
+          style={{flex: 1}}
+          ref={ref => this.scrollView = ref}
+          onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true, duration: 25})}
+        >
       <View style={styles.container}>
 
         <View style={styles.textInputView}>
@@ -175,6 +187,7 @@ export default function EditActivity({ navigation, route: { params: { activity, 
             placeholder="Comments about the workout."
             returnKeyType="default"
             onChangeText={(val) => onCommentChange(val)}
+            onFocus={() => this.scrollView.scrollToEnd({animated: true})}
           />
         </View>
         <Modal
@@ -240,6 +253,8 @@ export default function EditActivity({ navigation, route: { params: { activity, 
 
         </TouchableOpacity>
       </View >
+      </ScrollView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
