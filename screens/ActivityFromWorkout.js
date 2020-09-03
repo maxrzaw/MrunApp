@@ -12,7 +12,8 @@ import {
   Alert,
   Keyboard,
   Pressable,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  ScrollView
 } from 'react-native';
 import { BASE_URL, mapCategory, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
@@ -139,11 +140,16 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
   return (
     <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
       <KeyboardAvoidingView 
-        style={styles.container}
-        behavior='position'
-        contentContainerStyle={styles.container}
+        style={{flex: 1}}
+        behavior='padding'
         keyboardVerticalOffset={65}
       >
+      <ScrollView 
+        style={{flex: 1}}
+        ref={ref => this.scrollView = ref}
+        onContentSizeChange={() => this.scrollView.scrollToEnd({animated: true, duration: 25})}
+      >
+        <View style={styles.container}>
 
         <View style={styles.textInputView}>
           <Text style={styles.textLabel}>Title:</Text>
@@ -169,14 +175,17 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
           </Text>
         </TouchableOpacity>
         <Text style={styles.textLabel}>Comment:</Text>
-        <View style={[styles.descriptionView, { flex: 1 }]}>
+        <View 
+        style={[styles.descriptionView, {flex: 1}]}
+        >
           <TextInput
-            style={styles.textInput}
+            style={[styles.textInput, {minHeight: 60, maxHeight: 200}]}
             autoCapitalize="sentences"
             multiline
             placeholder="Comments about the workout."
             returnKeyType="default"
             onChangeText={(val) => onCommentChange(val)}
+            onFocus={() => this.scrollView.scrollToEnd({animated: true})}
           />
         </View>
         <Modal
@@ -219,7 +228,9 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
           </TouchableWithoutFeedback>
 
         </Modal>
-      </KeyboardAvoidingView >
+        </View>
+      </ScrollView>
+      </KeyboardAvoidingView>
     </TouchableWithoutFeedback>
   );
 }
