@@ -17,15 +17,18 @@ import {
 import { BASE_URL, mapCategory, handleNetworkError } from '../helpers';
 import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import axios from 'axios';
 
 
 export default function EditActivity({ navigation, route: { params: { activity, deleteItem } } }) {
   const { token } = useContext(AuthContext);
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
 
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
   useEffect(() => {
+    setStatusBarHeight(getStatusBarHeight(true));
     return () => {
       source.cancel('Clean up from Edit Activity Screen');
     }
@@ -145,7 +148,7 @@ export default function EditActivity({ navigation, route: { params: { activity, 
       <KeyboardAvoidingView
         style={{flex: 1}}
         behavior='padding'
-        keyboardVerticalOffset={65}
+        keyboardVerticalOffset={statusBarHeight + 45}
       >
         <ScrollView
           style={{flex: 1}}

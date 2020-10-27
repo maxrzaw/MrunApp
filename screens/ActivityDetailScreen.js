@@ -14,14 +14,19 @@ import {
 import { AuthContext } from '../contexts/AuthContext';
 import { BASE_URL, handleNetworkError, colors } from '../helpers';
 import Feather from 'react-native-vector-icons/Feather';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import axios from 'axios';
 
 
 export default function ActivityDetailScreen({ navigation, route }) {
 
+
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
+
   useEffect(() => {
+    setStatusBarHeight(getStatusBarHeight(true));
     return () => {
       source.cancel('Clean up from Activity Detail Screen');
     }
@@ -227,7 +232,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
   const renderItem = ({ item }) => (
     <View style={styles.commentView}>
       <Text>
-        <Text 
+        <Text
           style={styles.usernameText}
           onPress={() => navigation.push('Profile', { user: item.user, hideCustomNav: true })}
         >
@@ -286,7 +291,7 @@ export default function ActivityDetailScreen({ navigation, route }) {
     <KeyboardAvoidingView
       style={styles.container}
       behavior="height"
-      keyboardVerticalOffset={65}
+      keyboardVerticalOffset={statusBarHeight + 45}
     >
       <FlatList
         style={{ flex: 1, alignSelf: 'stretch' }}

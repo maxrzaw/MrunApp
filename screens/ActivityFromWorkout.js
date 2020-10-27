@@ -18,16 +18,19 @@ import {
 import { BASE_URL, mapCategory, handleNetworkError } from '../helpers'
 import { AuthContext } from '../contexts/AuthContext';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 import { throttle } from 'underscore';
 import axios from 'axios';
 
 
 export default function ActivityFromWorkout({ navigation, route: { params: { item } } }) {
   const { token } = useContext(AuthContext);
+  const [statusBarHeight, setStatusBarHeight] = useState(0);
 
   const CancelToken = axios.CancelToken;
   const source = CancelToken.source();
   useEffect(() => {
+    setStatusBarHeight(getStatusBarHeight(true));
     return () => {
       source.cancel('Clean up from Activity From Workout Screen');
     }
@@ -142,7 +145,7 @@ export default function ActivityFromWorkout({ navigation, route: { params: { ite
       <KeyboardAvoidingView 
         style={{flex: 1}}
         behavior='padding'
-        keyboardVerticalOffset={65}
+        keyboardVerticalOffset={statusBarHeight + 45}
       >
       <ScrollView 
         style={{flex: 1}}
