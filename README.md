@@ -1,4 +1,4 @@
-# MRun-App
+# Run With Max
 
 Source code for my iOS application I developed during the 2020 summer.
 
