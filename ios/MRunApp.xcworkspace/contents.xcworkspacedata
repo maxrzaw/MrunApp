@@ -2,7 +2,7 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "group:MRunApp.xcodeproj">
+      location = "group:/Users/max/dev/MRunApp/ios/RunWithMax.xcodeproj">
    </FileRef>
    <FileRef
       location = "group:Pods/Pods.xcodeproj">

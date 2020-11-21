@@ -41,19 +41,19 @@
 
 /* Begin PBXFileReference section */
 		008F07F21AC5B25A0029DE68 /* main.jsbundle */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = main.jsbundle; sourceTree = "<group>"; };
-		00E356EE1AD99517003FC87E /* MRunAppTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MRunAppTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		00E356EE1AD99517003FC87E /* RunWithMaxTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunWithMaxTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* MRunAppTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MRunAppTests.m; sourceTree = "<group>"; };
 		0E03ECFC150770D8D9C58ADC /* Pods-MRunApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRunApp.debug.xcconfig"; path = "Target Support Files/Pods-MRunApp/Pods-MRunApp.debug.xcconfig"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* MRunApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MRunApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* RunWithMax.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = RunWithMax.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = MRunApp/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = MRunApp/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB51A68108700A75B9A /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; name = Images.xcassets; path = MRunApp/Images.xcassets; sourceTree = "<group>"; };
 		13B07FB61A68108700A75B9A /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = Info.plist; path = MRunApp/Info.plist; sourceTree = "<group>"; };
 		13B07FB71A68108700A75B9A /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = MRunApp/main.m; sourceTree = "<group>"; };
 		1711DDAA93FED74FFA6FF4CB /* Pods-MRunApp-tvOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRunApp-tvOSTests.release.xcconfig"; path = "Target Support Files/Pods-MRunApp-tvOSTests/Pods-MRunApp-tvOSTests.release.xcconfig"; sourceTree = "<group>"; };
-		2D02E47B1E0B4A5D006451C7 /* MRunApp-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "MRunApp-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		2D02E4901E0B4A5D006451C7 /* MRunApp-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "MRunApp-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E47B1E0B4A5D006451C7 /* RunWithMax-tvOS.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "RunWithMax-tvOS.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D02E4901E0B4A5D006451C7 /* RunWithMax-tvOSTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "RunWithMax-tvOSTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64D5170A21BA5FC17019DA02 /* libPods-MRunApp-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-MRunApp-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6BA5132F974CF9AB76852AC7 /* Pods-MRunApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRunApp.release.xcconfig"; path = "Target Support Files/Pods-MRunApp/Pods-MRunApp.release.xcconfig"; sourceTree = "<group>"; };
 		6E0888F5CF1391A1760759E1 /* Pods-MRunApp-tvOS.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MRunApp-tvOS.release.xcconfig"; path = "Target Support Files/Pods-MRunApp-tvOS/Pods-MRunApp-tvOS.release.xcconfig"; sourceTree = "<group>"; };
@@ -189,10 +189,10 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* MRunApp.app */,
-				00E356EE1AD99517003FC87E /* MRunAppTests.xctest */,
-				2D02E47B1E0B4A5D006451C7 /* MRunApp-tvOS.app */,
-				2D02E4901E0B4A5D006451C7 /* MRunApp-tvOSTests.xctest */,
+				13B07F961A680F5B00A75B9A /* RunWithMax.app */,
+				00E356EE1AD99517003FC87E /* RunWithMaxTests.xctest */,
+				2D02E47B1E0B4A5D006451C7 /* RunWithMax-tvOS.app */,
+				2D02E4901E0B4A5D006451C7 /* RunWithMax-tvOSTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -200,9 +200,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		00E356ED1AD99517003FC87E /* MRunAppTests */ = {
+		00E356ED1AD99517003FC87E /* RunWithMaxTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MRunAppTests" */;
+			buildConfigurationList = 00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "RunWithMaxTests" */;
 			buildPhases = (
 				E9AD80F7D12B1E96A7D3C98C /* [CP] Check Pods Manifest.lock */,
 				00E356EA1AD99517003FC87E /* Sources */,
@@ -215,14 +215,14 @@
 			dependencies = (
 				00E356F51AD99517003FC87E /* PBXTargetDependency */,
 			);
-			name = MRunAppTests;
+			name = RunWithMaxTests;
 			productName = MRunAppTests;
-			productReference = 00E356EE1AD99517003FC87E /* MRunAppTests.xctest */;
+			productReference = 00E356EE1AD99517003FC87E /* RunWithMaxTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		13B07F861A680F5B00A75B9A /* MRunApp */ = {
+		13B07F861A680F5B00A75B9A /* RunWithMax */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MRunApp" */;
+			buildConfigurationList = 13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "RunWithMax" */;
 			buildPhases = (
 				CAD0169E13205F62141B2239 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F022414F080027D42C /* Start Packager */,
@@ -236,14 +236,14 @@
 			);
 			dependencies = (
 			);
-			name = MRunApp;
+			name = RunWithMax;
 			productName = MRunApp;
-			productReference = 13B07F961A680F5B00A75B9A /* MRunApp.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* RunWithMax.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E47A1E0B4A5D006451C7 /* MRunApp-tvOS */ = {
+		2D02E47A1E0B4A5D006451C7 /* RunWithMax-tvOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MRunApp-tvOS" */;
+			buildConfigurationList = 2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "RunWithMax-tvOS" */;
 			buildPhases = (
 				E55E150D9DDF6806EC2A88D3 /* [CP] Check Pods Manifest.lock */,
 				FD10A7F122414F3F0027D42C /* Start Packager */,
@@ -256,14 +256,14 @@
 			);
 			dependencies = (
 			);
-			name = "MRunApp-tvOS";
+			name = "RunWithMax-tvOS";
 			productName = "MRunApp-tvOS";
-			productReference = 2D02E47B1E0B4A5D006451C7 /* MRunApp-tvOS.app */;
+			productReference = 2D02E47B1E0B4A5D006451C7 /* RunWithMax-tvOS.app */;
 			productType = "com.apple.product-type.application";
 		};
-		2D02E48F1E0B4A5D006451C7 /* MRunApp-tvOSTests */ = {
+		2D02E48F1E0B4A5D006451C7 /* RunWithMax-tvOSTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MRunApp-tvOSTests" */;
+			buildConfigurationList = 2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "RunWithMax-tvOSTests" */;
 			buildPhases = (
 				58493C8A0D6E4C9CEA65ECE3 /* [CP] Check Pods Manifest.lock */,
 				2D02E48C1E0B4A5D006451C7 /* Sources */,
@@ -275,9 +275,9 @@
 			dependencies = (
 				2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */,
 			);
-			name = "MRunApp-tvOSTests";
+			name = "RunWithMax-tvOSTests";
 			productName = "MRunApp-tvOSTests";
-			productReference = 2D02E4901E0B4A5D006451C7 /* MRunApp-tvOSTests.xctest */;
+			productReference = 2D02E4901E0B4A5D006451C7 /* RunWithMax-tvOSTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -307,7 +307,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MRunApp" */;
+			buildConfigurationList = 83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "RunWithMax" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -320,10 +320,10 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				13B07F861A680F5B00A75B9A /* MRunApp */,
-				00E356ED1AD99517003FC87E /* MRunAppTests */,
-				2D02E47A1E0B4A5D006451C7 /* MRunApp-tvOS */,
-				2D02E48F1E0B4A5D006451C7 /* MRunApp-tvOSTests */,
+				13B07F861A680F5B00A75B9A /* RunWithMax */,
+				00E356ED1AD99517003FC87E /* RunWithMaxTests */,
+				2D02E47A1E0B4A5D006451C7 /* RunWithMax-tvOS */,
+				2D02E48F1E0B4A5D006451C7 /* RunWithMax-tvOSTests */,
 			);
 		};
 /* End PBXProject section */
@@ -659,12 +659,12 @@
 /* Begin PBXTargetDependency section */
 		00E356F51AD99517003FC87E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 13B07F861A680F5B00A75B9A /* MRunApp */;
+			target = 13B07F861A680F5B00A75B9A /* RunWithMax */;
 			targetProxy = 00E356F41AD99517003FC87E /* PBXContainerItemProxy */;
 		};
 		2D02E4921E0B4A5D006451C7 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 2D02E47A1E0B4A5D006451C7 /* MRunApp-tvOS */;
+			target = 2D02E47A1E0B4A5D006451C7 /* RunWithMax-tvOS */;
 			targetProxy = 2D02E4911E0B4A5D006451C7 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -689,7 +689,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MRunApp.app/MRunApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RunWithMax.app/RunWithMax";
 			};
 			name = Debug;
 		};
@@ -709,7 +709,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.$(PRODUCT_NAME:rfc1034identifier)";
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MRunApp.app/MRunApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RunWithMax.app/RunWithMax";
 			};
 			name = Release;
 		};
@@ -730,7 +730,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxzawisa.runwithmax;
-				PRODUCT_NAME = MRunApp;
+				PRODUCT_NAME = RunWithMax;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
@@ -753,7 +753,7 @@
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.maxzawisa.runwithmax;
-				PRODUCT_NAME = MRunApp;
+				PRODUCT_NAME = RunWithMax;
 				SWIFT_VERSION = 5.0;
 				VERSIONING_SYSTEM = "apple-generic";
 			};
@@ -837,7 +837,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.MRunApp-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MRunApp-tvOS.app/MRunApp-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RunWithMax-tvOS.app/RunWithMax-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Debug;
@@ -864,7 +864,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "org.reactjs.native.example.MRunApp-tvOSTests";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SDKROOT = appletvos;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/MRunApp-tvOS.app/MRunApp-tvOS";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/RunWithMax-tvOS.app/RunWithMax-tvOS";
 				TVOS_DEPLOYMENT_TARGET = 10.1;
 			};
 			name = Release;
@@ -985,7 +985,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "MRunAppTests" */ = {
+		00E357021AD99517003FC87E /* Build configuration list for PBXNativeTarget "RunWithMaxTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				00E356F61AD99517003FC87E /* Debug */,
@@ -994,7 +994,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "MRunApp" */ = {
+		13B07F931A680F5B00A75B9A /* Build configuration list for PBXNativeTarget "RunWithMax" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				13B07F941A680F5B00A75B9A /* Debug */,
@@ -1003,7 +1003,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MRunApp-tvOS" */ = {
+		2D02E4BA1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "RunWithMax-tvOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4971E0B4A5E006451C7 /* Debug */,
@@ -1012,7 +1012,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "MRunApp-tvOSTests" */ = {
+		2D02E4BB1E0B4A5E006451C7 /* Build configuration list for PBXNativeTarget "RunWithMax-tvOSTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				2D02E4991E0B4A5E006451C7 /* Debug */,
@@ -1021,7 +1021,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "MRunApp" */ = {
+		83CBB9FA1A601CBA00E9B192 /* Build configuration list for PBXProject "RunWithMax" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				83CBBA201A601CBA00E9B192 /* Debug */,
