@@ -3,12 +3,12 @@ require_relative '../node_modules/@react-native-community/cli-platform-ios/nativ
 
 platform :ios, '10.0'
 
-target 'MRunApp' do
+target 'RunWithMax' do
   config = use_native_modules!
 
   use_react_native!(:path => config["reactNativePath"])
 
-  target 'MRunAppTests' do
+  target 'RunWithMaxTests' do
     inherit! :complete
     # Pods for testing
   end
@@ -23,10 +23,10 @@ target 'MRunApp' do
   end
 end
 
-target 'MRunApp-tvOS' do
-  # Pods for MRunApp-tvOS
+target 'RunWithMax-tvOS' do
+  # Pods for RunWithMax-tvOS
 
-  target 'MRunApp-tvOSTests' do
+  target 'RunWithMax-tvOSTests' do
     inherit! :search_paths
     # Pods for testing
   end
