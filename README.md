@@ -14,7 +14,7 @@ Commands I ran may be different for you
 ``` bash
 brew install node
 brew install watchman
-sudo gem install cocoapods
+brew install cocoapods
 npx react-native init MRun-App
 cd MRun-App
 npm install @react-navigation/native
