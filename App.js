@@ -3,8 +3,8 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, View, ActivityIndicator, Text } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack'
-import LoginScreen from './screens/LoginScreen'
-import SignupScreen from './screens/SignupScreen'
+import LoginScreen from './screens/loginScreen'
+import SignupScreen from './screens/signupScreen'
 import { BASE_URL } from './helpers'
 import { LogBox } from 'react-native';
 import AuthContextProvider, { AuthContext } from './contexts/AuthContext';
