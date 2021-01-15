@@ -17,7 +17,7 @@ brew inatall tree
 brew install watchman
 brew install cocoapods
 cd MrunApp
-npm update 
+npm update --legacy-peer-deps
 npx pod-install ios
 npx react-native run-ios --simulator="iPhone 8"  (I like iPhone 8 over the default)
 ```
